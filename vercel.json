@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "datphu-onebase",
+  "routes": [
+    {
+      "src": "/admin",
+      "dest": "/admin.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

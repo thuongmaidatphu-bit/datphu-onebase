@@ -1,0 +1,16 @@
+{
+  "name": "datphu-onebase",
+  "version": "1.0.0",
+  "description": "Nền tảng một điểm dừng kết nối lao động bản địa & thương mại điện tử Đất Phú",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "datphu",
+    "supabase",
+    "labor-commerce",
+    "6k-os"
+  ],
+  "author": "CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ",
+  "license": "MIT"
+}

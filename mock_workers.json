@@ -1,0 +1,56 @@
+[
+  {
+    "id": "thotung-diennuoc-01",
+    "full_name": "Nguyễn Văn Tùng (Chú Tùng)",
+    "phone": "0912345678",
+    "trade_category": "dien_nuoc",
+    "trade_name": "Sửa Chữa Điện Nước Gia Đình",
+    "address": "Phường 7, TP. Tuy Hòa, Phú Yên",
+    "location": { "lat": 13.0955, "lng": 109.3142 },
+    "rating": 4.9,
+    "review_count": 68,
+    "is_verified": true,
+    "is_available": true,
+    "inventory": [
+      { "item_name": "Van giảm áp phi 27", "stock": 4, "cost": 45000, "price": 60000 },
+      { "item_name": "Vòi rửa chén inox 304", "stock": 2, "cost": 120000, "price": 160000 },
+      { "item_name": "Cuộn băng keo cách điện Nano", "stock": 10, "cost": 6000, "price": 10000 },
+      { "item_name": "Aptomat chống giật Panasonic 30A", "stock": 3, "cost": 180000, "price": 230000 }
+    ]
+  },
+  {
+    "id": "thohung-dienlanh-02",
+    "full_name": "Trần Quốc Hưng",
+    "phone": "0987654321",
+    "trade_category": "dien_lanh",
+    "trade_name": "Điện Lạnh & Máy Giặt Minh Phát",
+    "address": "Phường 5, TP. Tuy Hòa, Phú Yên",
+    "location": { "lat": 13.0892, "lng": 109.3085 },
+    "rating": 5.0,
+    "review_count": 42,
+    "is_verified": true,
+    "is_available": true,
+    "inventory": [
+      { "item_name": "Bình gas lạnh R32 (sạc)", "stock": 5, "cost": 80000, "price": 150000 },
+      { "item_name": "Tụ kích máy lạnh 35uF", "stock": 4, "cost": 65000, "price": 110000 },
+      { "item_name": "Dây curoa máy giặt Toshiba", "stock": 2, "cost": 40000, "price": 80000 }
+    ]
+  },
+  {
+    "id": "tholong-khoa-03",
+    "full_name": "Lê Văn Long (Long Khóa)",
+    "phone": "0903112233",
+    "trade_category": "khoa",
+    "trade_name": "Mở Khóa Khẩn Cấp & Đổi Ổ Khóa",
+    "address": "Trần Hưng Đạo, Phường 4, TP. Tuy Hòa",
+    "location": { "lat": 13.0841, "lng": 109.3110 },
+    "rating": 4.8,
+    "review_count": 95,
+    "is_verified": true,
+    "is_available": true,
+    "inventory": [
+      { "item_name": "Ruột khóa cửa tay gạt Việt Tiệp", "stock": 6, "cost": 95000, "price": 140000 },
+      { "item_name": "Ổ khóa treo chống cắt", "stock": 5, "cost": 130000, "price": 180000 }
+    ]
+  }
+]

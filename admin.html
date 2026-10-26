@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đất Phú OneBase - Dashboard Trực Tiếp</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased p-4 min-h-screen">
+  <div class="max-w-6xl mx-auto space-y-4">
+    
+    <!-- Header Thông tin Pháp nhân -->
+    <header class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-600 to-emerald-500 text-white font-black flex items-center justify-center text-xl shadow-md shadow-sky-600/20">
+          ĐP
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="font-bold text-lg text-slate-900 tracking-tight">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</h1>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold border border-emerald-200">MST: 4401020233</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 font-semibold border border-sky-200">Supabase Connected 🟢</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">
+            📍 21/146 Ngô Gia Tự, KP. Phú Đông 2, Phường Phú Yên, Tỉnh Đắk Lắk • Đại diện: <strong>Phạm Thanh Hân</strong>
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="refreshData()" class="text-xs px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
+          🔄 Đồng bộ lại dữ liệu
+        </button>
+      </div>
+    </header>
+
+    <!-- Thống kê nhanh -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-slate-500 font-medium">Đội Thợ Lành Nghề (6K)</div>
+        <div id="statWorkers" class="text-2xl font-black text-sky-600 mt-1">5 thợ</div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-0.5">Đã đồng bộ trên Supabase</div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-slate-500 font-medium">Phiếu Gọi Thợ (Requests)</div>
+        <div id="statRequests" class="text-2xl font-black text-amber-600 mt-1">0 phiếu</div>
+        <div class="text-[11px] text-slate-500 font-medium mt-0.5">Thời gian thực</div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-slate-500 font-medium">Hóa Đơn Điện Tử (E-Invoice)</div>
+        <div id="statInvoices" class="text-2xl font-black text-indigo-600 mt-1">0 HĐ</div>
+        <div class="text-[11px] text-slate-500 font-medium mt-0.5">Ký hiệu: 1C26TDP</div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-slate-500 font-medium">Dự Án Supabase</div>
+        <div class="text-sm font-bold text-slate-800 mt-1 font-mono truncate">ckyydvyzucvcdunvedmg</div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-0.5">Máy chủ: Singapore ⚡</div>
+      </div>
+    </div>
+
+    <!-- Nội dung chính: Danh sách thợ & Tạo phiếu gọi thợ -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      
+      <!-- Cột Trái: Đội Thợ Lành Nghề Đang Trực (Supabase Live) -->
+      <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h2 class="font-bold text-base text-slate-900">🔧 Đội Thợ 6K Đang Hoạt Động (Cloud Live)</h2>
+            <p class="text-xs text-slate-500">Dữ liệu đọc trực tiếp từ bảng <code>workers</code> của dự án Supabase</p>
+          </div>
+          <span class="text-xs px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">5 Đã Kích Hoạt</span>
+        </div>
+
+        <div id="workersList" class="space-y-2.5">
+          <div class="text-center py-8 text-xs text-slate-400">Đang tải dữ liệu từ Supabase...</div>
+        </div>
+      </div>
+
+      <!-- Cột Phải: Tạo Phiếu Thợ Mới 6K (Ghi trực tiếp lên Supabase) -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="pb-3 border-b border-slate-100">
+          <h2 class="font-bold text-base text-slate-900">⚡ Điều Phối Ca Thợ Mới (K1)</h2>
+          <p class="text-xs text-slate-500">Ghi dữ liệu tức thì vào bảng <code>service_requests</code></p>
+        </div>
+
+        <form id="createRequestForm" onsubmit="handleCreateRequest(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tên khách hàng</label>
+            <input id="reqCustName" required type="text" placeholder="VD: Cô Nguyễn Thị Lan" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Số điện thoại</label>
+            <input id="reqCustPhone" required type="tel" placeholder="VD: 0905123456" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Địa chỉ thi công</label>
+            <input id="reqCustAddress" required type="text" placeholder="VD: Số 45 Nguyễn Huệ, P.7, Tuy Hòa" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Chọn Thợ tiếp nhận</label>
+            <select id="reqWorkerSelect" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-sky-500 bg-white">
+              <option value="">-- Đang nạp danh sách thợ --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Mô tả sự cố & yêu cầu</label>
+            <textarea id="reqDesc" required rows="2" placeholder="VD: Chập aptomat âm tường, thay công tắc mới" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-sky-500"></textarea>
+          </div>
+          <button type="submit" id="btnSubmitReq" class="w-full text-xs py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition shadow-sm shadow-sky-600/30">
+            🚀 Khởi Tạo Phiếu Thợ (Mốc K1)
+          </button>
+        </form>
+        <div id="reqMsg" class="hidden text-xs p-2.5 rounded-xl font-medium"></div>
+      </div>
+    </div>
+
+    <!-- Danh Sách Phiếu Yêu Cầu Đang Xử Lý (K1 - K6) -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">📋 Tiến Độ Kiểm Toán Phiếu Thợ 6K (Kín Kẽ OS)</h2>
+          <p class="text-xs text-slate-500">K1 (Tiếp nhận) ➔ K2 (Xuất phát) ➔ K3 (Khảo sát) ➔ K4 (Báo giá) ➔ K5 (Nghiệm thu) ➔ K6 (Bảo hành số)</p>
+        </div>
+      </div>
+      <div id="requestsList" class="space-y-2">
+        <div class="text-center py-6 text-xs text-slate-400">Chưa có phiếu gọi thợ nào. Hãy tạo thử phiếu ở góc phải trên!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://ckyydvyzucvcdunvedmg.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_jAkkgpNicp_xFBYPOFBvFQ_1w1GBDAC";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let cachedWorkers = [];
+
+    async function loadWorkers() {
+      const { data, error } = await sb.from('workers').select('*').order('rating', { ascending: false });
+      const container = document.getElementById('workersList');
+      const select = document.getElementById('reqWorkerSelect');
+      
+      if (error) {
+        container.innerHTML = `<div class="text-xs text-rose-500 font-semibold">Lỗi tải dữ liệu: ${error.message}</div>`;
+        return;
+      }
+
+      cachedWorkers = data || [];
+      document.getElementById('statWorkers').textContent = `${cachedWorkers.length} thợ`;
+
+      if (cachedWorkers.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400">Chưa có thợ trong cơ sở dữ liệu.</div>';
+        return;
+      }
+
+      container.innerHTML = cachedWorkers.map(w => `
+        <div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-slate-200 bg-slate-50/50 hover:bg-white transition">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center text-xs">
+              ${w.trade_category === 'dien_nuoc' ? '⚡' : w.trade_category === 'dien_lanh' ? '❄️' : w.trade_category === 'khoa' ? '🔑' : w.trade_category === 'dien_nlmt' ? '☀️' : '🧱'}
+            </div>
+            <div>
+              <div class="font-bold text-xs text-slate-900">${w.full_name}</div>
+              <div class="text-[11px] text-slate-500">📞 ${w.phone} • 📍 ${w.district}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">⭐ ${w.rating}</span>
+            <div class="text-[10px] text-emerald-600 font-medium mt-1">Sẵn sàng nhận ca</div>
+          </div>
+        </div>
+      `).join('');
+
+      select.innerHTML = '<option value="">-- Chọn thợ tiếp nhận ca --</option>' + cachedWorkers.map(w => `
+        <option value="${w.id}">${w.full_name} (${w.trade_category} - ${w.district})</option>
+      `).join('');
+    }
+
+    async function loadRequests() {
+      const { data, error } = await sb.from('service_requests').select('*, workers(full_name)').order('created_at', { ascending: false });
+      const container = document.getElementById('requestsList');
+      if (error) return;
+
+      const requests = data || [];
+      document.getElementById('statRequests').textContent = `${requests.length} phiếu`;
+
+      if (requests.length === 0) {
+        container.innerHTML = '<div class="text-center py-6 text-xs text-slate-400">Chưa có phiếu gọi thợ nào. Hãy tạo thử phiếu ở góc trên!</div>';
+        return;
+      }
+
+      container.innerHTML = requests.map(r => `
+        <div class="p-3 rounded-xl border border-slate-200 bg-white flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xs text-slate-900">${r.customer_name}</span>
+              <span class="text-[11px] text-slate-500">(${r.customer_phone})</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${r.k_stage === 'K6' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">Mốc ${r.k_stage}</span>
+            </div>
+            <div class="text-xs text-slate-600 mt-0.5">📍 ${r.customer_address} • <strong>Yêu cầu:</strong> ${r.issue_description}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">Thợ phụ trách: <span class="text-sky-600 font-semibold">${r.workers?.full_name || 'Chưa gán thợ'}</span></div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="advanceStage('${r.id}', '${r.k_stage}')" class="text-xs px-2.5 py-1.5 rounded-lg bg-sky-50 text-sky-700 hover:bg-sky-100 font-semibold border border-sky-200 transition">
+              Tiến mốc tiếp theo ➔
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function handleCreateRequest(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitReq');
+      const msg = document.getElementById('reqMsg');
+      btn.disabled = true;
+      btn.textContent = 'Đang lưu vào Supabase...';
+
+      const payload = {
+        customer_name: document.getElementById('reqCustName').value,
+        customer_phone: document.getElementById('reqCustPhone').value,
+        customer_address: document.getElementById('reqCustAddress').value,
+        assigned_worker_id: document.getElementById('reqWorkerSelect').value || null,
+        issue_description: document.getElementById('reqDesc').value,
+        k_stage: 'K1',
+        status: 'PENDING'
+      };
+
+      const { data, error } = await sb.from('service_requests').insert([payload]);
+
+      btn.disabled = false;
+      btn.textContent = '🚀 Khởi Tạo Phiếu Thợ (Mốc K1)';
+
+      if (error) {
+        msg.className = 'text-xs p-2.5 rounded-xl font-medium bg-rose-50 text-rose-700 border border-rose-200 block';
+        msg.textContent = 'Lỗi tạo phiếu: ' + error.message;
+      } else {
+        msg.className = 'text-xs p-2.5 rounded-xl font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 block';
+        msg.textContent = '✅ Đã tạo phiếu và lưu vào Supabase thành công!';
+        document.getElementById('createRequestForm').reset();
+        loadRequests();
+        setTimeout(() => msg.classList.add('hidden'), 4000);
+      }
+    }
+
+    async function advanceStage(id, currentStage) {
+      const stages = ['K1', 'K2', 'K3', 'K4', 'K5', 'K6'];
+      const idx = stages.indexOf(currentStage);
+      const nextStage = idx < stages.length - 1 ? stages[idx + 1] : 'K6';
+
+      const { error } = await sb.from('service_requests').update({ k_stage: nextStage }).eq('id', id);
+      if (!error) loadRequests();
+    }
+
+    function refreshData() {
+      loadWorkers();
+      loadRequests();
+    }
+
+    // Khởi chạy khi tải trang
+    refreshData();
+  </script>
+</body>
+</html>

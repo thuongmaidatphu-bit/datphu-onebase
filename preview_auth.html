@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đất Phú OneBase - Đăng Ký / Đăng Nhập</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] min-h-screen flex items-center justify-center p-4 antialiased">
+
+  <!-- Container Form chính -->
+  <div class="w-full max-w-md bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 p-6 sm:p-8 transition-all duration-300">
+    
+    <!-- 1. Header: Logo & Lời chào -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-50 border border-sky-100 rounded-full text-xs font-semibold text-sky-700 mb-2">
+        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+        Đất Phú OneBase
+      </div>
+      <h2 id="header-title" class="text-2xl font-bold text-slate-900 tracking-tight">Chào mừng bạn trở lại</h2>
+      <p class="text-xs text-slate-500 mt-1">Nền tảng số kết nối tiện ích đời sống & kinh tế Đất Phú</p>
+    </div>
+
+    <!-- 2. HAI NÚT CHỌN NHÓM: GIA ĐÌNH vs TIỆM/SHOP -->
+    <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-100/80 rounded-2xl mb-5">
+      <!-- Nút 1: Gia Đình, Cá Nhân -->
+      <button 
+        id="btn-role-individual"
+        onclick="setRole('individual')" 
+        class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-white text-slate-900 shadow-sm border border-slate-200/60"
+      >
+        <i data-lucide="home" class="w-4 h-4 text-sky-600"></i>
+        <span>Gia đình, Cá nhân</span>
+      </button>
+
+      <!-- Nút 2: Tiệm, Shop & Thợ -->
+      <button 
+        id="btn-role-shop"
+        onclick="setRole('shop')" 
+        class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-semibold transition-all duration-200 text-slate-500 hover:text-slate-900"
+      >
+        <i data-lucide="store" class="w-4 h-4 text-slate-400"></i>
+        <span>Tiệm, Shop & Thợ</span>
+      </button>
+    </div>
+
+    <!-- Thông báo bối cảnh vai trò -->
+    <div class="mb-5 p-3 rounded-xl text-xs bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+      <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+      <span id="role-context-text" class="text-slate-600">
+        Tài khoản dành cho gia đình tìm thợ sửa chữa, mua đặc sản địa phương & bảo hành 30 ngày.
+      </span>
+    </div>
+
+    <!-- 3. NÚT ĐĂNG NHẬP 1-CHẠM VỚI ZALO -->
+    <button 
+      type="button" 
+      onclick="alert('Đang kích hoạt xác thực 1-chạm Zalo ID...')" 
+      class="w-full py-3 px-4 bg-[#0068FF] hover:bg-[#0057D9] text-white rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20 active:scale-[0.99] mb-5"
+    >
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 48 48">
+        <path d="M24 4C13 4 4 12.1 4 22c0 5.4 2.8 10.3 7.4 13.7L9.6 42.4c-.3 1 .8 1.8 1.6 1.2l8.1-5.4c1.5.4 3.1.6 4.7.6 11 0 20-8.1 20-18S35 4 24 4z"/>
+      </svg>
+      <span>Tiếp tục với Zalo (Xác thực 1-chạm)</span>
+    </button>
+
+    <!-- Đường kẻ phân cách -->
+    <div class="relative flex items-center justify-center mb-5">
+      <div class="border-t border-slate-200 w-full"></div>
+      <span class="bg-white px-3 text-[11px] font-medium text-slate-400 uppercase tracking-wider">hoặc dùng SĐT</span>
+    </div>
+
+    <!-- 4. FORM NHẬP LIỆU -->
+    <form id="auth-form" onsubmit="handleFormSubmit(event)" class="space-y-3.5">
+      
+      <!-- Trường chỉ hiện khi Đăng ký Tiệm/Shop: Tên tiệm -->
+      <div id="field-shop-name" class="hidden">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Tên Tiệm / Đội Thợ</label>
+        <div class="relative">
+          <i data-lucide="store" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <input type="text" placeholder="VD: Điện Lạnh Minh Phát, Chú Tùng Sửa Nước" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all">
+        </div>
+      </div>
+
+      <!-- Trường chỉ hiện khi Đăng ký Tiệm/Shop: Ngành nghề -->
+      <div id="field-shop-category" class="hidden">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Ngành Nghề Hoạt Động</label>
+        <div class="relative">
+          <i data-lucide="wrench" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <select class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all cursor-pointer">
+            <option value="dien_nuoc">Sửa Chữa Điện Nước Gia Đình</option>
+            <option value="dien_lanh">Điện Lạnh (Máy Lạnh, Tủ Lạnh, Máy Giặt)</option>
+            <option value="khoa">Sửa Khóa & Mở Khóa Cấp Tốc</option>
+            <option value="nong_san">Bán Nông Sản & Đặc Sản Đất Phú</option>
+            <option value="co_khi">Cơ Khí, Cửa Sắt, Nhôm Kính</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Trường Họ và Tên (chỉ hiện khi Đăng ký) -->
+      <div id="field-full-name" class="hidden">
+        <label id="label-full-name" class="block text-xs font-semibold text-slate-700 mb-1">Họ và Tên của Bạn</label>
+        <div class="relative">
+          <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <input type="text" placeholder="VD: Nguyễn Văn Tùng" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all">
+        </div>
+      </div>
+
+      <!-- Trường Số Điện Thoại (luôn có) -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Số Điện Thoại</label>
+        <div class="relative">
+          <i data-lucide="phone" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <input type="tel" required placeholder="VD: 0912 345 678" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all">
+        </div>
+      </div>
+
+      <!-- Trường Khu vực (chỉ hiện khi Đăng ký) -->
+      <div id="field-district" class="hidden">
+        <label class="block text-xs font-semibold text-slate-700 mb-1">Khu Vực Tại Đất Phú</label>
+        <div class="relative">
+          <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <select class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all cursor-pointer">
+            <option value="tuy_hoa">TP. Tuy Hòa</option>
+            <option value="song_cau">Thị xã Sông Cầu</option>
+            <option value="dong_hoa">Thị xã Đông Hòa</option>
+            <option value="tuy_an">Huyện Tuy An</option>
+            <option value="tay_hoa">Huyện Tây Hòa</option>
+            <option value="song_hinh">Huyện Sông Hinh</option>
+            <option value="phu_hoa">Huyện Phú Hòa</option>
+            <option value="dong_xuan">Huyện Đồng Xuân</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Trường Mật Khẩu -->
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <label class="block text-xs font-semibold text-slate-700">Mật Khẩu</label>
+          <a id="link-forgot-pw" href="javascript:void(0)" onclick="alert('Đã gửi mã khôi phục về SĐT qua Zalo!')" class="text-[11px] text-sky-600 hover:text-sky-700 hover:underline">Quên mật khẩu?</a>
+        </div>
+        <div class="relative">
+          <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <input id="input-password" type="password" required placeholder="Tối thiểu 6 ký tự" class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all">
+          <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600">
+            <i id="icon-eye" data-lucide="eye" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Nút Submit -->
+      <button type="submit" class="w-full mt-2 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md shadow-slate-900/10 active:scale-[0.98]">
+        <span id="btn-submit-text">Đăng Nhập Vào Hệ Thống</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </form>
+
+    <!-- 5. Chuyển đổi Đăng nhập / Đăng ký -->
+    <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+      <p class="text-xs text-slate-500">
+        <span id="switch-prompt">Bạn chưa có tài khoản?</span>
+        <button type="button" onclick="toggleAuthMode()" class="ml-1.5 font-semibold text-sky-600 hover:text-sky-700 hover:underline inline-flex items-center">
+          <span id="switch-button-text">Đăng ký ngay</span>
+        </button>
+      </p>
+
+      <div class="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-slate-400">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+        <span>Bảo mật an toàn theo tiêu chuẩn Đất Phú OneBase</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // State
+    let currentRole = 'individual'; // 'individual' hoặc 'shop'
+    let currentMode = 'login';       // 'login' hoặc 'register'
+    let isPasswordVisible = false;
+
+    function renderUI() {
+      // 1. Cập nhật nút Role
+      const btnInd = document.getElementById('btn-role-individual');
+      const btnShop = document.getElementById('btn-role-shop');
+      const contextText = document.getElementById('role-context-text');
+      const labelFullName = document.getElementById('label-full-name');
+
+      if (currentRole === 'individual') {
+        btnInd.className = 'flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-white text-slate-900 shadow-sm border border-slate-200/60';
+        btnShop.className = 'flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-semibold transition-all duration-200 text-slate-500 hover:text-slate-900';
+        contextText.innerText = 'Tài khoản dành cho gia đình tìm thợ sửa chữa, mua đặc sản địa phương & bảo hành 30 ngày.';
+        labelFullName.innerText = 'Họ và Tên của Bạn';
+      } else {
+        btnShop.className = 'flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-white text-slate-900 shadow-sm border border-slate-200/60';
+        btnInd.className = 'flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-semibold transition-all duration-200 text-slate-500 hover:text-slate-900';
+        contextText.innerText = 'Tài khoản dành cho chủ tiệm, hộ kinh doanh & đội thợ để nhận đơn và quản lý sổ nợ.';
+        labelFullName.innerText = 'Tên Chủ Tiệm / Người Phụ Trách';
+      }
+
+      // 2. Cập nhật Mode (Login / Register)
+      const headerTitle = document.getElementById('header-title');
+      const fieldShopName = document.getElementById('field-shop-name');
+      const fieldShopCategory = document.getElementById('field-shop-category');
+      const fieldFullName = document.getElementById('field-full-name');
+      const fieldDistrict = document.getElementById('field-district');
+      const linkForgot = document.getElementById('link-forgot-pw');
+      const btnSubmitText = document.getElementById('btn-submit-text');
+      const switchPrompt = document.getElementById('switch-prompt');
+      const switchButtonText = document.getElementById('switch-button-text');
+
+      if (currentMode === 'login') {
+        headerTitle.innerText = 'Chào mừng bạn trở lại';
+        fieldShopName.classList.add('hidden');
+        fieldShopCategory.classList.add('hidden');
+        fieldFullName.classList.add('hidden');
+        fieldDistrict.classList.add('hidden');
+        linkForgot.classList.remove('hidden');
+        btnSubmitText.innerText = 'Đăng Nhập Vào Hệ Thống';
+        switchPrompt.innerText = 'Bạn chưa có tài khoản?';
+        switchButtonText.innerText = 'Đăng ký ngay';
+      } else {
+        headerTitle.innerText = 'Tạo tài khoản mới';
+        fieldFullName.classList.remove('hidden');
+        fieldDistrict.classList.remove('hidden');
+        linkForgot.classList.add('hidden');
+        btnSubmitText.innerText = 'Hoàn Tất Đăng Ký Tài Khoản';
+        switchPrompt.innerText = 'Đã có tài khoản Đất Phú?';
+        switchButtonText.innerText = 'Đăng nhập';
+
+        if (currentRole === 'shop') {
+          fieldShopName.classList.remove('hidden');
+          fieldShopCategory.classList.remove('hidden');
+        } else {
+          fieldShopName.classList.add('hidden');
+          fieldShopCategory.classList.add('hidden');
+        }
+      }
+
+      lucide.createIcons();
+    }
+
+    function setRole(role) {
+      currentRole = role;
+      renderUI();
+    }
+
+    function toggleAuthMode() {
+      currentMode = currentMode === 'login' ? 'register' : 'login';
+      renderUI();
+    }
+
+    function togglePasswordVisibility() {
+      isPasswordVisible = !isPasswordVisible;
+      const pwInput = document.getElementById('input-password');
+      const iconEye = document.getElementById('icon-eye');
+      if (isPasswordVisible) {
+        pwInput.type = 'text';
+        iconEye.setAttribute('data-lucide', 'eye-off');
+      } else {
+        pwInput.type = 'password';
+        iconEye.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const roleName = currentRole === 'shop' ? 'Tiệm, Shop & Thợ' : 'Gia đình, Cá nhân';
+      const modeName = currentMode === 'login' ? 'Đăng nhập' : 'Đăng ký';
+      alert(`🎉 Thành công! Đã gửi yêu cầu [${modeName}] cho vai trò [${roleName}] trong hệ sinh thái Đất Phú OneBase!`);
+    }
+
+    // Khởi tạo icons lúc tải trang
+    document.addEventListener('DOMContentLoaded', () => {
+      renderUI();
+    });
+  </script>
+</body>
+</html>

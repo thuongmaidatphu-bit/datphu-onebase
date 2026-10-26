@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đất Phú OneBase - Bộ Điều Khiển Tổng Quan (Dashboard)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] pb-24 antialiased text-slate-800">
+
+  <!-- 1. THANH TIÊU ĐỀ TRÊN CÙNG (HEADER) -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-sm">
+    <!-- Thông tin thợ & Trạng thái -->
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <img 
+          src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120" 
+          alt="Chú Tùng" 
+          class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
+        />
+        <span id="status-indicator" class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white bg-emerald-500"></span>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <h1 class="text-sm font-bold text-slate-900 leading-tight">Nguyễn Văn Tùng</h1>
+          <i data-lucide="shield-check" class="w-4 h-4 text-sky-500"></i>
+        </div>
+        <p class="text-[11px] text-slate-500 font-medium">Điện Nước • Phường 7, Tuy Hòa</p>
+      </div>
+    </div>
+
+    <!-- Nút Bật/Tắt Nhận Việc & Chuông Thông Báo -->
+    <div class="flex items-center gap-2">
+      <button 
+        id="btn-toggle-online"
+        onclick="toggleOnlineStatus()"
+        class="px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+      >
+        <i data-lucide="power" class="w-3.5 h-3.5"></i>
+        <span id="text-online-status">Đang Sẵn Sàng</span>
+      </button>
+
+      <button onclick="alert('🔔 Thông báo Bảng Điều Khiển:\n- Khách hàng Chị Lan vừa yêu cầu sửa ống nước khẩn cấp.\n- Van giảm áp phi 27 trong cốp xe sắp hết hàng (chỉ còn 1 cái).')" class="relative p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-all">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH (MAIN CONTAINER) -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-5 space-y-6">
+
+    <!-- 2. BỐN THẺ CHỈ SỐ TỔNG QUAN (METRIC CARDS) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      
+      <!-- Thẻ 1: Doanh thu -->
+      <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium text-slate-500">Doanh Thu Hôm Nay</span>
+          <div class="p-2 bg-sky-50 rounded-xl text-sky-600">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">850.000 đ</div>
+        <div class="flex items-center gap-1 mt-1 text-[11px] font-semibold text-emerald-600">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+          <span>+18% so với hôm qua</span>
+        </div>
+      </div>
+
+      <!-- Thẻ 2: Tiền lời đút túi -->
+      <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium text-slate-500">Tiền Lời Thực Tế</span>
+          <div class="p-2 bg-emerald-50 rounded-xl text-emerald-600">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">520.000 đ</div>
+        <p class="text-[11px] text-slate-400 mt-1">Đã trừ 330k tiền vật tư</p>
+      </div>
+
+      <!-- Thẻ 3: Đơn hoàn thành -->
+      <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium text-slate-500">Đơn Hoàn Thành</span>
+          <div class="p-2 bg-amber-50 rounded-xl text-amber-600">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">4 ca</div>
+        <p class="text-[11px] text-slate-400 mt-1">100% đánh giá hài lòng</p>
+      </div>
+
+      <!-- Thẻ 4: Điểm uy tín -->
+      <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium text-slate-500">Điểm Uy Tín</span>
+          <div class="p-2 bg-purple-50 rounded-xl text-purple-600">
+            <i data-lucide="star" class="w-4 h-4 fill-purple-600"></i>
+          </div>
+        </div>
+        <div class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-baseline gap-1">
+          4.9 <span class="text-xs text-slate-400 font-normal">/ 5.0</span>
+        </div>
+        <p class="text-[11px] text-sky-600 mt-1 font-semibold">Huy hiệu Thợ Chuẩn 5★</p>
+      </div>
+
+    </div>
+
+    <!-- 3. THANH THAO TÁC NHANH (QUICK SHORTCUTS) -->
+    <div class="grid grid-cols-3 gap-2.5 sm:gap-3">
+      <button onclick="alert('⚡ Đang mở giao diện Tạo mã VietQR động để thu tiền...')" class="p-3 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-sm text-left flex items-center gap-3 transition-all active:scale-[0.98]">
+        <div class="p-2.5 bg-sky-50 text-sky-600 rounded-xl">
+          <i data-lucide="qr-code" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-slate-900">Tạo VietQR</div>
+          <div class="text-[11px] text-slate-400">Thu tiền tức thì</div>
+        </div>
+      </button>
+
+      <button onclick="alert('📖 Đang mở Sổ Ghi Nợ Văn Minh (Tự động gửi tin nhắn Zalo kèm VietQR nhắc nợ)')" class="p-3 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-sm text-left flex items-center gap-3 transition-all active:scale-[0.98]">
+        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+          <i data-lucide="file-text" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-slate-900">Ghi Sổ Nợ</div>
+          <div class="text-[11px] text-slate-400">Tự động nhắc Zalo</div>
+        </div>
+      </button>
+
+      <button onclick="alert('📦 Đang mở Danh mục Kho Cốp Xe: Kiểm kê phụ tùng tồn trong xe')" class="p-3 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-sm text-left flex items-center gap-3 transition-all active:scale-[0.98]">
+        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+          <i data-lucide="package" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-slate-900">Kho Cốp Xe</div>
+          <div class="text-[11px] text-slate-400">Kiểm tra phụ tùng</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- 4. RADAR YÊU CẦU SỬA CHỮA QUANH ĐÂY (REAL-TIME JOBS) -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <h2 class="text-base font-bold text-slate-900">Yêu Cầu Sửa Chữa Quanh Đây</h2>
+          <span id="badge-count" class="px-2 py-0.5 bg-rose-50 text-rose-600 text-xs font-bold rounded-full animate-pulse">
+            2 đơn mới
+          </span>
+        </div>
+        <button onclick="alert('🗺️ Đang mở Google Maps hiển thị vị trí các ca sửa chữa quanh Tuy Hòa')" class="text-xs font-semibold text-sky-600 hover:text-sky-700 flex items-center gap-0.5">
+          <span>Xem trên bản đồ</span>
+          <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <div id="job-list-container" class="space-y-3">
+        <!-- Đơn 1 -->
+        <div id="job-card-101" class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-200">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-bold text-slate-900">Chị Hoàng Lan</span>
+                <span class="text-[11px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="map-pin" class="w-3 h-3"></i> Cách 800m
+                </span>
+                <span class="text-[11px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">
+                  Ưu tiên khẩn cấp
+                </span>
+                <span class="text-[11px] text-slate-400 flex items-center gap-1 ml-auto sm:ml-0">
+                  <i data-lucide="clock" class="w-3 h-3"></i> 2 phút trước
+                </span>
+              </div>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                Vỡ van giảm áp ống nước bồn rửa chén, nước xịt mạnh gây ngập bếp
+              </p>
+              <p class="text-[11px] text-slate-400 flex items-center gap-1">
+                <i data-lucide="map-pin" class="w-3 h-3 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate">Đường Hùng Vương, Phường 7, TP. Tuy Hòa</span>
+              </p>
+            </div>
+
+            <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+              <div class="text-left sm:text-right">
+                <div class="text-sm font-extrabold text-slate-900">125.000 đ</div>
+                <div class="text-[10px] text-slate-400">(Công: 80k + Van: 45k)</div>
+              </div>
+              <button onclick="acceptJob('job-card-101', 'Chị Hoàng Lan', '125.000 đ')" class="py-2 px-5 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                Nhận Việc Ngay
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Đơn 2 -->
+        <div id="job-card-102" class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-200">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-bold text-slate-900">Anh Quốc Bảo</span>
+                <span class="text-[11px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="map-pin" class="w-3 h-3"></i> Cách 1.4 km
+                </span>
+                <span class="text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                  Có thể hỏng Aptomat
+                </span>
+                <span class="text-[11px] text-slate-400 flex items-center gap-1 ml-auto sm:ml-0">
+                  <i data-lucide="clock" class="w-3 h-3"></i> 15 phút trước
+                </span>
+              </div>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                Aptomat tổng bị nhảy liên tục mỗi khi bật máy lạnh phòng khách
+              </p>
+              <p class="text-[11px] text-slate-400 flex items-center gap-1">
+                <i data-lucide="map-pin" class="w-3 h-3 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate">Đường Nguyễn Huệ, Phường 5, TP. Tuy Hòa</span>
+              </p>
+            </div>
+
+            <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+              <div class="text-left sm:text-right">
+                <div class="text-sm font-extrabold text-slate-900">280.000 đ</div>
+                <div class="text-[10px] text-slate-400">(Công: 100k + Aptomat: 180k)</div>
+              </div>
+              <button onclick="acceptJob('job-card-102', 'Anh Quốc Bảo', '280.000 đ')" class="py-2 px-5 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                Nhận Việc Ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CẢNH BÁO KHO VẬT TƯ CỐP XE -->
+    <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <i data-lucide="package" class="w-4 h-4 text-amber-500"></i>
+          <span>Tình Trạng Vật Tư Trong Cốp Xe Chú Tùng</span>
+        </h3>
+        <button onclick="alert('Đã cập nhật danh mục phụ tùng mới!')" class="text-[11px] font-semibold text-sky-600 hover:underline">
+          Cập nhật kho
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+        <div class="p-2.5 bg-rose-50/70 border border-rose-100 rounded-xl flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500 flex-shrink-0"></i>
+            <span class="font-medium text-slate-800">Van giảm áp phi 27</span>
+          </div>
+          <span class="font-bold text-rose-600 bg-white px-2 py-0.5 rounded-md border border-rose-200">
+            Chỉ còn 1 cái
+          </span>
+        </div>
+
+        <div class="p-2.5 bg-emerald-50/70 border border-emerald-100 rounded-xl flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+            <span class="font-medium text-slate-800">Băng keo Nano & Cầu chì</span>
+          </div>
+          <span class="font-bold text-emerald-700 bg-white px-2 py-0.5 rounded-md border border-emerald-200">
+            Còn 10 cuộn
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let isOnline = true;
+    let jobCount = 2;
+
+    function toggleOnlineStatus() {
+      isOnline = !isOnline;
+      const btn = document.getElementById('btn-toggle-online');
+      const text = document.getElementById('text-online-status');
+      const dot = document.getElementById('status-indicator');
+
+      if (isOnline) {
+        btn.className = 'px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100';
+        text.innerText = 'Đang Sẵn Sàng';
+        dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white bg-emerald-500';
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-200';
+        text.innerText = 'Tạm Nghỉ';
+        dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white bg-slate-400';
+      }
+      lucide.createIcons();
+    }
+
+    function acceptJob(cardId, customerName, price) {
+      alert(`🎉 Chúc mừng Chú Tùng!\n\nĐã nhận ca sửa chữa của: ${customerName}\nƯớc tính thu: ${price}\n\nHệ thống đang kích hoạt Google Maps chỉ đường đến nhà khách...`);
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        card.style.transition = 'all 0.3s ease';
+        setTimeout(() => {
+          card.remove();
+          jobCount--;
+          const badge = document.getElementById('badge-count');
+          if (badge) {
+            badge.innerText = `${jobCount} đơn mới`;
+            if (jobCount === 0) {
+              badge.classList.remove('bg-rose-50', 'text-rose-600', 'animate-pulse');
+              badge.classList.add('bg-slate-100', 'text-slate-500');
+              badge.innerText = 'Hết đơn chờ';
+            }
+          }
+        }, 300);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
