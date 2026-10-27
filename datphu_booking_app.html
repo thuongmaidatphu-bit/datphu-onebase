@@ -9,12 +9,51 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+    
+    /* Radar & Glow Animations */
     .pulse-radar { animation: radar-pulse 2s infinite ease-out; }
     @keyframes radar-pulse {
       0% { transform: scale(0.95); opacity: 0.9; }
-      50% { transform: scale(1.2); opacity: 0.3; }
-      100% { transform: scale(1.4); opacity: 0; }
+      50% { transform: scale(1.25); opacity: 0.35; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .shimmer-btn {
+      background-size: 200% auto;
+      animation: shimmer 3s infinite linear;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-input {
+      background: rgba(2, 6, 23, 0.65) !important;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(51, 65, 85, 0.8) !important;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-input:focus {
+      background: rgba(15, 23, 42, 0.9) !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 15px -2px rgba(245, 158, 11, 0.4);
+    }
+
+    /* 3D Icon Badge */
+    .icon-badge-3d {
+      box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
   </style>
 </head>
@@ -49,19 +88,22 @@
     <header class="bg-gradient-to-b from-slate-900 to-slate-950 p-4 border-b border-slate-800 space-y-3 shrink-0">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl font-black border border-sky-500/30 shadow-inner">
-            🧭
+          <div class="flex items-center gap-3">
+          <div onclick="switchTab('explore')" class="cursor-pointer bg-white px-2 py-1 rounded-xl shadow-md border border-slate-700/80 hover:scale-105 transition flex items-center justify-center" title="Logo Chính Thức Công Ty TNHH Thương Mại Đất Phú">
+            <img src="assets/logo_datphu.jpg" alt="Logo Công Ty TNHH Thương Mại Đất Phú" class="h-8 sm:h-9 object-contain" />
           </div>
           <div>
-            <div class="flex items-center gap-2">
-              <h1 class="font-black text-lg text-white tracking-tight cursor-pointer" onclick="switchTab('explore')">ĐẤT PHÚ CHỢ PHIÊN</h1>
-              <span class="text-[10px] bg-sky-500 text-slate-950 font-black px-2 py-0.5 rounded-full">GEN 4</span>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="font-black text-base sm:text-lg text-white tracking-tight cursor-pointer" onclick="switchTab('explore')">ĐẤT PHÚ ONEBASE</h1>
+              <span class="text-[9px] bg-gradient-to-r from-red-600 to-rose-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Chính Thức</span>
             </div>
-            <p class="text-xs text-slate-400 flex items-center gap-1">
-              <i class="fa-solid fa-location-dot text-rose-500 text-[11px]"></i>
-              <span>TP. Tuy Hòa, Phú Yên (GPS: 21/146 Ngô Gia Tự)</span>
+            <p class="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+              <span class="text-amber-400 font-bold font-mono">MST: 4401020233</span>
+              <span>•</span>
+              <span class="truncate max-w-[190px] sm:max-w-none">TP. Tuy Hòa, Phú Yên (GPS: 21/146 Ngô Gia Tự)</span>
             </p>
           </div>
+        </div>
         </div>
 
         <!-- Controls: Notifications, Cart & User -->
@@ -127,41 +169,49 @@
         </div>
       </div>
 
-      <!-- Categories Pills -->
-      <div class="flex gap-2 overflow-x-auto pb-1 text-xs custom-scroll">
-        <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-3.5 py-1.5 rounded-2xl bg-sky-600 text-white font-bold shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-layer-group"></i>
+      <!-- Categories Pills 3D High-Tech -->
+      <div class="flex gap-2.5 overflow-x-auto pb-1 text-xs custom-scroll pt-1">
+        <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black shrink-0 flex items-center gap-2 shadow-lg shadow-sky-500/25 border border-sky-400/40 transition transform hover:scale-[1.03]">
+          <i class="fa-solid fa-layer-group text-sm"></i>
           <span>Tất cả</span>
-          <span id="badgeCountAll" class="text-[10px] bg-white/20 px-1.5 py-0.2 rounded-full">10</span>
+          <span id="badgeCountAll" class="text-[10px] bg-black/25 px-2 py-0.5 rounded-full font-mono">10</span>
         </button>
 
-        <button onclick="filterCategory('sach_cu')" id="cat-sach_cu" class="cat-pill px-3.5 py-1.5 rounded-2xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-book text-amber-400"></i>
-          <span>Sách cũ & Tư liệu</span>
-          <span id="badgeCountSach" class="text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">3</span>
+        <button onclick="filterCategory('sach_cu')" id="cat-sach_cu" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-amber-500/50">
+          <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-book"></i>
+          </span>
+          <span class="font-bold">Sách Cũ & Tư Liệu</span>
+          <span id="badgeCountSach" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-amber-400">3</span>
         </button>
 
-        <button onclick="filterCategory('do_cu')" id="cat-do_cu" class="cat-pill px-3.5 py-1.5 rounded-2xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-wrench text-emerald-400"></i>
-          <span>Đồ thanh lý 6K</span>
-          <span id="badgeCountDocu" class="text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">3</span>
+        <button onclick="filterCategory('do_cu')" id="cat-do_cu" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-emerald-500/50">
+          <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-wrench"></i>
+          </span>
+          <span class="font-bold">Đồ Thanh Lý 6K</span>
+          <span id="badgeCountDocu" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-emerald-400">3</span>
         </button>
 
-        <button onclick="filterCategory('dac_san')" id="cat-dac_san" class="cat-pill px-3.5 py-1.5 rounded-2xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-bowl-food text-orange-400"></i>
-          <span>Đặc sản xứ Nẫu</span>
-          <span id="badgeCountDacsan" class="text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">4</span>
+        <button onclick="filterCategory('dac_san')" id="cat-dac_san" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-orange-500/50">
+          <span class="w-6 h-6 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-bowl-food"></i>
+          </span>
+          <span class="font-bold">Đặc Sản Xứ Nẫu</span>
+          <span id="badgeCountDacsan" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-orange-400">4</span>
         </button>
 
-        <button onclick="filterCategory('xe_du_lich')" id="cat-xe_du_lich" class="cat-pill px-3.5 py-1.5 rounded-2xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-taxi text-yellow-400"></i>
-          <span>Taxi & Xe máy du lịch</span>
-          <span id="badgeCountXe" class="text-[10px] bg-slate-800 px-1.5 py-0.2 rounded-full">3</span>
+        <button onclick="filterCategory('xe_du_lich')" id="cat-xe_du_lich" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-yellow-500/50">
+          <span class="w-6 h-6 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-taxi"></i>
+          </span>
+          <span class="font-bold">Taxi & Xe Máy Tour</span>
+          <span id="badgeCountXe" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-yellow-400">3</span>
         </button>
 
-        <button onclick="toggleOnly6K()" id="btnOnly6K" class="px-3.5 py-1.5 rounded-2xl bg-slate-950 border border-emerald-800 text-emerald-400 hover:bg-emerald-950/40 font-semibold shrink-0 flex items-center gap-1.5">
-          <i class="fa-solid fa-shield-check"></i>
-          <span>Chỉ hàng test 6K ⇅</span>
+        <button onclick="toggleOnly6K()" id="btnOnly6K" class="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-emerald-700/60 text-emerald-400 hover:bg-emerald-950/60 font-bold shrink-0 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-shield-halved text-xs"></i>
+          <span>Chỉ Hàng 6K ⇅</span>
         </button>
       </div>
     </header>
@@ -220,172 +270,393 @@
       <!-- ================= SECTION 2: GỌI THỢ 6K & CỨU HỘ TIỆM ================= -->
       <section id="sectionDispatch" class="hidden space-y-4">
         
-        <div class="bg-gradient-to-r from-amber-950/60 via-slate-900 to-orange-950/40 border border-amber-800/60 rounded-3xl p-4 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl border border-amber-500/30">
-              ⚡
+        <!-- Banner Radar Cứu Hộ 6K Đẳng Cấp -->
+        <div class="relative overflow-hidden rounded-3xl p-5 bg-gradient-to-r from-amber-950/70 via-slate-900/90 to-orange-950/60 border border-amber-500/40 shadow-2xl glass-panel">
+          <div class="absolute -right-10 -top-10 w-44 h-44 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -left-10 -bottom-10 w-44 h-44 bg-orange-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5">
+              <div class="relative">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 flex items-center justify-center text-slate-950 text-2xl font-black shadow-lg shadow-amber-500/30 icon-badge-3d">
+                  <i class="fa-solid fa-shield-halved text-slate-950 drop-shadow-sm"></i>
+                </div>
+                <span class="absolute -top-1 -right-1 flex h-4 w-4">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-900"></span>
+                </span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="font-black text-base text-white tracking-wide">ĐIỀU PHỐI THỢ 6K & CỨU HỘ TIỆM 24/7</h2>
+                  <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 uppercase tracking-wider">Khẩn cấp 15P</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-0.5 flex items-center gap-2 flex-wrap">
+                  <span>⚡ Cam kết có mặt 15–20 phút</span>
+                  <span class="text-slate-600">•</span>
+                  <span class="text-emerald-400 font-semibold">✔ Xuất HĐĐT có mã CQT (1C26TDP)</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 class="font-extrabold text-sm text-white">Điều Phối Thợ 6K & Cứu Hộ Tiệm 24/7</h2>
-              <p class="text-xs text-slate-400">Cam kết có mặt trong 15-20 phút • Xuất HĐĐT có mã CQT (1C26TDP)</p>
+
+            <div class="flex items-center gap-2 bg-slate-950/80 border border-emerald-500/40 px-3.5 py-1.5 rounded-2xl shadow-inner">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs font-black text-emerald-400 tracking-wide">5 THỢ TRỰC SẴN</span>
             </div>
           </div>
-          <span class="text-xs px-2.5 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold">5 Thợ Trực Sẵn</span>
         </div>
 
-        <!-- Form Gọi Thợ & Đặt Xe Nhanh -->
-        <form onsubmit="handleQuickDispatch(event)" class="bg-slate-950 p-4 rounded-3xl border border-slate-800 space-y-3 text-xs">
-          <!-- Service Type Selector -->
-          <div class="space-y-1">
-            <label class="block text-slate-400 font-semibold">Chọn loại dịch vụ bạn cần điều phối 6K:</label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-              <button type="button" onclick="setDispatchServiceType('tho_6k')" id="srvBtn-tho_6k" class="py-2 px-2 rounded-xl bg-amber-500 text-slate-950 font-bold flex items-center justify-center gap-1 text-[11px] transition">
-                <span>🔧 Cứu Hộ Tiệm 15p</span>
+        <!-- Form Gọi Thợ & Đặt Xe Nhanh (Glassmorphism & Neon Design) -->
+        <form onsubmit="handleQuickDispatch(event)" class="glass-panel p-5 rounded-3xl border border-slate-700/60 space-y-4 text-xs shadow-2xl relative">
+          
+          <!-- Hàng 4 Card Dịch Vụ 3D Đa Sắc -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between items-center text-slate-300">
+              <label class="font-bold text-xs flex items-center gap-1.5 text-white">
+                <i class="fa-solid fa-shapes text-amber-400"></i>
+                <span>Chọn phân hệ dịch vụ cần điều phối:</span>
+              </label>
+              <span class="text-[10px] text-sky-400">Tự động kết nối thợ gần nhất</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <!-- Dịch vụ 1: Cứu Hộ Tiệm 15p -->
+              <button type="button" onclick="setDispatchServiceType('tho_6k')" id="srvBtn-tho_6k" class="p-3 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500 text-slate-950 font-black flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02] shadow-lg shadow-amber-500/25 border border-amber-300">
+                <div class="w-8 h-8 rounded-xl bg-slate-950/20 flex items-center justify-center text-base">
+                  <i class="fa-solid fa-bolt-lightning text-slate-950"></i>
+                </div>
+                <div class="text-[11px] leading-tight">Cứu Hộ Tiệm 15p</div>
+                <div class="text-[9px] font-normal opacity-90">Điện, nước, máy lạnh</div>
               </button>
-              <button type="button" onclick="setDispatchServiceType('taxi')" id="srvBtn-taxi" class="py-2 px-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center justify-center gap-1 text-[11px] transition">
-                <span>🚕 Gọi Xe Taxi 4-7c</span>
+
+              <!-- Dịch vụ 2: Taxi Du Lịch 4-7c -->
+              <button type="button" onclick="setDispatchServiceType('taxi')" id="srvBtn-taxi" class="p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 text-slate-200 hover:text-white font-bold flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02]">
+                <div class="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-base">
+                  <i class="fa-solid fa-taxi"></i>
+                </div>
+                <div class="text-[11px] leading-tight">Gọi Xe Taxi 4-7c</div>
+                <div class="text-[9px] text-slate-400 font-normal">Sân bay & nội thành</div>
               </button>
-              <button type="button" onclick="setDispatchServiceType('xemay')" id="srvBtn-xemay" class="py-2 px-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center justify-center gap-1 text-[11px] transition">
-                <span>🛵 Thuê Xe Máy Tour</span>
+
+              <!-- Dịch vụ 3: Thuê Xe Máy Tour -->
+              <button type="button" onclick="setDispatchServiceType('xemay')" id="srvBtn-xemay" class="p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 text-slate-200 hover:text-white font-bold flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02]">
+                <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-base">
+                  <i class="fa-solid fa-motorcycle"></i>
+                </div>
+                <div class="text-[11px] leading-tight">Thuê Xe Máy Tour</div>
+                <div class="text-[9px] text-slate-400 font-normal">Chỉ 120k/ngày tự lái</div>
               </button>
-              <button type="button" onclick="setDispatchServiceType('tour')" id="srvBtn-tour" class="py-2 px-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center justify-center gap-1 text-[11px] transition">
-                <span>🏖️ Bao Xe Hợp Đồng</span>
+
+              <!-- Dịch vụ 4: Bao Xe Hợp Đồng -->
+              <button type="button" onclick="setDispatchServiceType('tour')" id="srvBtn-tour" class="p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 text-slate-200 hover:text-white font-bold flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02]">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base">
+                  <i class="fa-solid fa-van-shuttle"></i>
+                </div>
+                <div class="text-[11px] leading-tight">Bao Xe Tour Đi Đảo</div>
+                <div class="text-[9px] text-slate-400 font-normal">Bãi Xép, Mũi Điện</div>
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <!-- Các Trường Nhập Liệu Có Icon Phía Trước -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
             <div>
-              <label class="block text-slate-400 mb-1" id="lblDispName">Tên Tiệm hoặc Họ Tên Khách</label>
-              <input id="dispName" required type="text" value="Tiệm Tóc Hair Salon Tuy Hòa" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500" />
+              <label class="block text-slate-300 font-semibold mb-1" id="lblDispName">Tên Tiệm hoặc Họ Tên Khách</label>
+              <div class="relative">
+                <i class="fa-solid fa-store absolute left-3.5 top-3 text-amber-400 text-xs"></i>
+                <input id="dispName" required type="text" value="Tiệm Tóc Hair Salon Tuy Hòa" class="w-full pl-9 pr-3 py-2.5 rounded-xl text-white glass-input text-xs font-medium" />
+              </div>
             </div>
+
             <div>
-              <label class="block text-slate-400 mb-1">Số điện thoại liên hệ</label>
-              <input id="dispPhone" required type="tel" value="0935123456" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500" />
+              <label class="block text-slate-300 font-semibold mb-1">Số điện thoại liên hệ</label>
+              <div class="relative">
+                <i class="fa-solid fa-phone-volume absolute left-3.5 top-3 text-emerald-400 text-xs"></i>
+                <input id="dispPhone" required type="tel" value="0935123456" class="w-full pl-9 pr-3 py-2.5 rounded-xl text-white glass-input text-xs font-mono" />
+              </div>
             </div>
           </div>
 
           <div>
-            <label class="block text-slate-400 mb-1" id="lblDispAddress">Địa chỉ sự cố tại Tuy Hòa / Đắk Lắk</label>
-            <input id="dispAddress" required type="text" value="Số 88 Lê Thánh Tôn, TP. Tuy Hòa" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500" />
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-slate-300 font-semibold" id="lblDispAddress">Địa chỉ sự cố tại Tuy Hòa / Phú Yên</label>
+              <button type="button" onclick="getLocationGPS()" class="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 font-semibold">
+                <i class="fa-solid fa-crosshairs text-sky-400"></i> Lấy tọa độ GPS
+              </button>
+            </div>
+            <div class="relative">
+              <i class="fa-solid fa-map-location-dot absolute left-3.5 top-3 text-rose-400 text-xs"></i>
+              <input id="dispAddress" required type="text" value="Số 88 Lê Thánh Tôn, TP. Tuy Hòa" class="w-full pl-9 pr-3 py-2.5 rounded-xl text-white glass-input text-xs" />
+            </div>
           </div>
 
           <div>
-            <label class="block text-slate-400 mb-1" id="lblDispDesc">Mô tả sự cố hoặc yêu cầu xe</label>
-            <textarea id="dispDesc" rows="2" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500">Bồn gội đầu bị tắc nước, máy sấy uốn bị chập nhảy cầu dao</textarea>
+            <label class="block text-slate-300 font-semibold mb-1" id="lblDispDesc">Mô tả sự cố hoặc yêu cầu xe</label>
+            <div class="relative">
+              <i class="fa-solid fa-wrench absolute left-3.5 top-3 text-amber-400 text-xs"></i>
+              <textarea id="dispDesc" rows="2" class="w-full pl-9 pr-3 py-2.5 rounded-xl text-white glass-input text-xs">Bồn gội đầu bị tắc nước, máy sấy uốn bị chập nhảy cầu dao</textarea>
+            </div>
           </div>
 
-          <button type="submit" id="btnDispSubmit" class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:opacity-90 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-truck-fast"></i>
-            <span id="btnDispSubmitText">BẮN PHIẾU ĐIỀU THỢ GẦN NHẤT NGAY (15 PHÚT)</span>
+          <!-- Nút Bấm Kích Hoạt Lệnh Bắn Thợ Siêu Cấp -->
+          <button type="submit" id="btnDispSubmit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 text-slate-950 font-black text-xs transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] flex items-center justify-center gap-2 tracking-wide shimmer-btn">
+            <i class="fa-solid fa-truck-fast text-sm"></i>
+            <span id="btnDispSubmitText" class="text-sm font-black">BẮN PHIẾU ĐIỀU THỢ GẦN NHẤT NGAY (15 PHÚT)</span>
           </button>
         </form>
 
-        <!-- Danh Sách 5 Thợ Lành Nghề Chuẩn 6K Đang Trực Sẵn -->
+        <!-- Danh Sách 5 Thợ Lành Nghề Chuẩn 6K (Thiết Kế Thẻ 3D Sống Động) -->
         <div class="space-y-3 pt-2">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <i class="fa-solid fa-users-gear text-amber-400"></i>
-              <h3 class="font-bold text-xs text-white">Đội Thợ 6K Đang Ứng Trực Tại Tuy Hòa</h3>
+              <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-bold">
+                <i class="fa-solid fa-user-astronaut"></i>
+              </div>
+              <h3 class="font-black text-xs text-white uppercase tracking-wider">Đội Thợ 6K Đang Ứng Trực Bán Kính Tuy Hòa</h3>
             </div>
-            <span class="text-[10px] text-slate-400">Đồng bộ Cloud Supabase</span>
+            <span class="text-[10px] text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800/80 font-mono">PostGIS GPS Real-Time</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <!-- Thợ 1: Chú Tùng -->
-            <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
-              <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
-                  ⚡
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-amber-500/60 flex justify-between items-center transition shadow-lg group">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shadow-amber-500/20">
+                  <i class="fa-solid fa-bolt"></i>
                 </div>
                 <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs text-white">Chú Tùng</span>
-                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-800">4.95⭐</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-xs text-white">Chú Tùng</span>
+                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded font-bold border border-emerald-800">4.95 ⭐</span>
                   </div>
-                  <div class="text-[11px] text-slate-400">Điện nước khẩn cấp • Trực P.7 (0.8km)</div>
-                  <div class="text-[10px] text-amber-400/90">Sẵn sàng xuất phát trong 5p</div>
+                  <div class="text-[11px] text-slate-300">Điện nước khẩn cấp • Trực P.7 (0.8km)</div>
+                  <div class="text-[10px] text-amber-400 font-semibold flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-motorcycle text-[9px]"></i> Sẵn sàng xuất phát trong 5p
+                  </div>
                 </div>
               </div>
-              <button onclick="selectWorkerForDispatch('Chú Tùng - Điện Nước', 'Sự cố chập điện nước')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-amber-500 hover:text-slate-950 rounded-xl text-slate-200 text-[11px] font-bold transition">
+              <button onclick="openWorkerPortfolioModal('DP-W01'); // selectWorkerForDispatch('Chú Tùng - Điện Nước', 'Sự cố chập điện nước')" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black rounded-xl text-[11px] hover:opacity-90 transition shadow">
                 Chọn
               </button>
             </div>
 
             <!-- Thợ 2: Trần Quốc Hưng -->
-            <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
-              <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm">
-                  ❄️
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/60 flex justify-between items-center transition shadow-lg group">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-400 to-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md shadow-sky-500/20">
+                  <i class="fa-solid fa-snowflake"></i>
                 </div>
                 <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs text-white">Trần Quốc Hưng</span>
-                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-800">4.98⭐</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-xs text-white">Trần Quốc Hưng</span>
+                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded font-bold border border-emerald-800">4.98 ⭐</span>
                   </div>
-                  <div class="text-[11px] text-slate-400">Điện lạnh & Tủ đông • Trực P.5 (1.2km)</div>
-                  <div class="text-[10px] text-sky-400/90">Đã chuẩn bị gas & đồng hồ đo</div>
+                  <div class="text-[11px] text-slate-300">Điện lạnh & Tủ đông • Trực P.5 (1.2km)</div>
+                  <div class="text-[10px] text-sky-400 font-semibold flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-gauge-high text-[9px]"></i> Đã chuẩn bị sẵn gas & đồng hồ
+                  </div>
                 </div>
               </div>
-              <button onclick="selectWorkerForDispatch('Trần Quốc Hưng - Điện Lạnh', 'Máy lạnh/tủ đông không mát')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-sky-500 hover:text-slate-950 rounded-xl text-slate-200 text-[11px] font-bold transition">
+              <button onclick="openWorkerPortfolioModal('DP-W02'); // selectWorkerForDispatch('Trần Quốc Hưng', 'Máy lạnh/tủ đông không mát')" class="px-3 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black rounded-xl text-[11px] hover:opacity-90 transition shadow">
                 Chọn
               </button>
             </div>
 
             <!-- Thợ 3: Lê Văn Long -->
-            <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
-              <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-sm">
-                  🔑
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-rose-500/60 flex justify-between items-center transition shadow-lg group">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500 to-red-600 text-white flex items-center justify-center font-black text-lg shadow-md shadow-rose-500/20">
+                  <i class="fa-solid fa-key"></i>
                 </div>
                 <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs text-white">Lê Văn Long</span>
-                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-800">4.90⭐</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-xs text-white">Lê Văn Long</span>
+                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded font-bold border border-emerald-800">4.90 ⭐</span>
                   </div>
-                  <div class="text-[11px] text-slate-400">Thợ khóa & Cửa cuốn • Trực P.2 (1.5km)</div>
-                  <div class="text-[10px] text-rose-400/90">Xử lý kẹt khóa trong 10p</div>
+                  <div class="text-[11px] text-slate-300">Thợ khóa & Cửa cuốn • Trực P.2 (1.5km)</div>
+                  <div class="text-[10px] text-rose-400 font-semibold flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-clock text-[9px]"></i> Mở khóa khẩn cấp trong 10p
+                  </div>
                 </div>
               </div>
-              <button onclick="selectWorkerForDispatch('Lê Văn Long - Thợ Khóa', 'Kẹt khóa tiệm/cửa cuốn')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-rose-500 hover:text-slate-950 rounded-xl text-slate-200 text-[11px] font-bold transition">
+              <button onclick="openWorkerPortfolioModal('DP-W03'); // selectWorkerForDispatch('Lê Văn Long', 'Kẹt khóa tiệm/cửa cuốn')" class="px-3 py-1.5 bg-gradient-to-r from-rose-500 to-red-600 text-white font-black rounded-xl text-[11px] hover:opacity-90 transition shadow">
                 Chọn
               </button>
             </div>
 
-            <!-- Thợ 4: Đặng Hoàng Tuấn -->
-            <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
-              <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
-                  ☀️
+            <!-- Thợ 4: Hoàng Tuấn -->
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-yellow-500/60 flex justify-between items-center transition shadow-lg group">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-yellow-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shadow-yellow-500/20">
+                  <i class="fa-solid fa-solar-panel"></i>
                 </div>
                 <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-xs text-white">Đặng Hoàng Tuấn</span>
-                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-800">4.92⭐</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-xs text-white">Hoàng Tuấn</span>
+                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded font-bold border border-emerald-800">4.92 ⭐</span>
                   </div>
-                  <div class="text-[11px] text-slate-400">NLMT, Camera & Mạng Tiệm • P.9 (2.1km)</div>
-                  <div class="text-[10px] text-emerald-400/90">Trang bị thang nhôm rút</div>
+                  <div class="text-[11px] text-slate-300">Đèn năng lượng & Camera • Bình Kiến (2.0km)</div>
+                  <div class="text-[10px] text-yellow-400 font-semibold flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-video text-[9px]"></i> Phụ tùng chính hãng có sẵn
+                  </div>
                 </div>
               </div>
-              <button onclick="selectWorkerForDispatch('Đặng Hoàng Tuấn - NLMT & Camera', 'Mất mạng camera tiệm')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 rounded-xl text-slate-200 text-[11px] font-bold transition">
+              <button onclick="openWorkerPortfolioModal('DP-W04'); // selectWorkerForDispatch('Hoàng Tuấn', 'Sửa camera/đèn năng lượng')" class="px-3 py-1.5 bg-gradient-to-r from-yellow-400 to-amber-600 text-slate-950 font-black rounded-xl text-[11px] hover:opacity-90 transition shadow">
                 Chọn
               </button>
             </div>
-          </div>
-        </div>
 
-        <!-- Quy chuẩn 6K Minh Bạch -->
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
-          <div class="font-bold text-white text-xs flex items-center gap-1.5 mb-1">
-            <i class="fa-solid fa-certificate text-amber-400"></i>
-            <span>Quy Chuẩn 6K Kín Kẽ - Đạt Tiêu Chuẩn Bộ Công Thương:</span>
+            <!-- Bác Tài: Tấn Dũng Taxi -->
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-cyan-500/60 flex justify-between items-center transition shadow-lg group sm:col-span-2">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md shadow-cyan-500/20">
+                  <i class="fa-solid fa-car-side"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-xs text-white">Bác Tài Tấn Dũng (Đội Xe 6K)</span>
+                    <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.2 rounded font-bold border border-emerald-800">5.0 ⭐</span>
+                  </div>
+                  <div class="text-[11px] text-slate-300">Taxi 4-7 chỗ & Xe máy du lịch • Trực Đại lộ Hùng Vương (1.0km)</div>
+                  <div class="text-[10px] text-cyan-400 font-semibold flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-gas-pump text-[9px]"></i> Xe đời mới, sạch sẽ, đón trong 10 phút
+                  </div>
+                </div>
+              </div>
+              <button onclick="openWorkerPortfolioModal('DP-T01'); // selectWorkerForDispatch('Bác Tài Tấn Dũng', 'Đón khách đi tour/sân bay')" class="px-3.5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black rounded-xl text-[11px] hover:opacity-90 transition shadow">
+                Chọn Xe
+              </button>
+            </div>
           </div>
-          <p>• <strong>K1</strong>: Tiếp nhận ca & định vị qua PostGIS • <strong>K2</strong>: Bắn thợ gần nhất • <strong>K3</strong>: Có mặt sau 15-20p • <strong>K4</strong>: Báo giá niêm yết trước khi làm • <strong>K5</strong>: Nghiệm thu & dán tem bảo hành • <strong>K6</strong>: Xuất HĐĐT có mã CQT ký hiệu 1C26TDP.</p>
         </div>
 
       </section>
 
-      <!-- ================= SECTION 3: MÓN ĐỒ YÊU THÍCH ================= -->
+      
+      <!-- ================= SECTION COMMUNITY: BẢN TIN PHỐ BIỂN & CỘNG ĐỒNG TUY HÒA ================= -->
+      <section id="sectionCommunity" class="hidden space-y-4">
+        
+        <!-- Header Banner Phố Biển -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-sky-950 border border-emerald-800/70 p-4 sm:p-5 shadow-2xl">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 relative z-10">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  Nhịp Sống Tuy Hòa 24/7
+                </span>
+                <span class="text-[10px] text-amber-400 font-mono">Bản Tin Bản Địa</span>
+              </div>
+              <h2 class="text-base sm:text-lg font-black text-white mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-newspaper text-emerald-400"></i>
+                <span>Bản Tin Phố Biển • Chuyện Xóm Làng Đất Phú</span>
+              </h2>
+              <p class="text-xs text-slate-400 max-w-xl">
+                Nơi Thợ 6K chia sẻ nhật ký cứu hộ, bà con khoe đặc sản mùa vụ xứ Nẫu và trao đổi tương trợ nhau không phí trung gian.
+              </p>
+            </div>
+
+            <!-- Nút Tạo Bài Viết Mới -->
+            <button onclick="toggleCreatePostModal(true)" type="button" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition transform hover:scale-105 shrink-0">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>ĐĂNG BÀI LÊN BẢN TIN</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bộ Lọc Chủ Đề Bản Tin (Topic Pills) -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar text-xs font-bold">
+          <button onclick="filterCommunityFeed('all')" id="feedFilter-all" class="feed-filter-btn px-3 py-1.5 rounded-xl bg-emerald-600 text-white shadow-sm shadow-emerald-600/30 transition shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-earth-asia"></i> Tất Cả Tin
+          </button>
+          <button onclick="filterCommunityFeed('tho_6k')" id="feedFilter-tho_6k" class="feed-filter-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-wrench text-amber-400"></i> Nhật Ký Thợ 6K
+          </button>
+          <button onclick="filterCommunityFeed('dac_san')" id="feedFilter-dac_san" class="feed-filter-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-drumstick-bite text-rose-400"></i> Đặc Sản Xứ Nẫu
+          </button>
+          <button onclick="filterCommunityFeed('do_cu')" id="feedFilter-do_cu" class="feed-filter-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-book-open text-sky-400"></i> Ký Gửi & Sách Cũ
+          </button>
+          <button onclick="filterCommunityFeed('tuong_tro')" id="feedFilter-tuong_tro" class="feed-filter-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-hand-holding-heart text-emerald-400"></i> Tương Trợ Xóm Làng
+          </button>
+        </div>
+
+        <!-- Modal Đăng Bài Viết Lên Bản Tin -->
+        <div id="createPostModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+          <div class="bg-slate-900 border border-emerald-900/80 rounded-3xl p-5 w-full max-w-lg space-y-4 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+              <h3 class="font-black text-sm text-white flex items-center gap-2">
+                <i class="fa-solid fa-feather-pointed text-emerald-400"></i>
+                <span>Chia Sẻ Chuyện Xóm Làng & Nhật Ký Nghề</span>
+              </h3>
+              <button onclick="toggleCreatePostModal(false)" type="button" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <form onsubmit="handleCreateCommunityPost(event)" class="space-y-3 text-xs">
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-slate-400 mb-1">Tên của bạn / Tên Tiệm</label>
+                  <input id="postAuthorName" required type="text" placeholder="VD: Anh Hưng (Thợ điện lạnh)..." class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500" />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Khu vực tại Tuy Hòa / Phú Yên</label>
+                  <input id="postAuthorDistrict" required type="text" placeholder="VD: Phường 7, TP. Tuy Hòa" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 mb-1">Chủ đề bài đăng</label>
+                <select id="postTopic" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500">
+                  <option value="tho_6k">🛠️ Nhật Ký Thợ 6K (Ca cứu hộ, mẹo đồ bền)</option>
+                  <option value="dac_san">🥩 Đặc Sản Xứ Nẫu (Món ngon, nông sản mùa vụ)</option>
+                  <option value="do_cu">📚 Ký Gửi, Đồ Cũ & Sách Tư Liệu Xưa</option>
+                  <option value="tuong_tro">📢 Tương Trợ, Tìm Thợ Gấp & Trao Đổi Đồ</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 mb-1">Nội dung bài viết (Chân thật, chi tiết)</label>
+                <textarea id="postContent" required rows="3" placeholder="Chia sẻ câu chuyện của bạn: Hôm nay thợ đã xử lý ca máy lạnh thế nào, mẻ bò phơi nắng ra sao, hoặc cần giúp đỡ việc gì..." class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-slate-400 mb-1">Hình ảnh thực tế (URL ảnh hoặc chọn có sẵn)</label>
+                <input id="postImageUrl" type="url" placeholder="https://images.unsplash.com/... (để trống nếu không có)" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500 font-mono text-[11px]" />
+              </div>
+
+              <!-- Shoppable Tag đính kèm -->
+              <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2">
+                <label class="font-bold text-white text-[11px] flex items-center gap-1.5">
+                  <i class="fa-solid fa-bag-shopping text-amber-400"></i>
+                  <span>Gắn Kèm Sản Phẩm / Dịch Vụ Đặt Mua Trực Tiếp (Shoppable Feed)</span>
+                </label>
+                <div class="grid grid-cols-2 gap-2">
+                  <input id="postShopTitle" type="text" placeholder="Tên món: VD: Vệ sinh máy lạnh Daikin" class="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-[11px]" />
+                  <input id="postShopPrice" type="text" placeholder="Giá: 150.000 đ" class="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-[11px] font-mono" />
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="toggleCreatePostModal(false)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold">Hủy</button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 shadow-lg shadow-emerald-600/30">
+                  <i class="fa-solid fa-paper-plane"></i> Đăng Lên Bản Tin Ngay
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Danh Sách Bài Viết Đang Hiển Thị (Feed Stream) -->
+        <div id="communityFeedContainer" class="space-y-4">
+          <!-- Rendered dynamically by JS -->
+        </div>
+
+      </section>
+
       <section id="sectionFavorites" class="hidden space-y-4">
         <div class="flex items-center justify-between pb-2 border-b border-slate-800">
           <div class="flex items-center gap-2">
@@ -568,6 +839,421 @@
             <span>ĐĂNG BÁN LÊN CHỢ PHIÊN NGAY</span>
           </button>
         </form>
+
+        <!-- ================= TRUNG TÂM QUẢN TRỊ 3-TRONG-1: ERP MINI • CRM BẢN ĐỊA • KẾ TOÁN 1 NGƯỜI (TT 88/2021) ================= -->
+        <div id="sellerBusinessManagementSuite" class="bg-slate-900/90 rounded-3xl border border-emerald-900/70 p-4 sm:p-5 space-y-4 shadow-2xl mt-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-700 font-bold text-[10px] uppercase tracking-wider">
+                  Doanh Nghiệp 1 Người & Hộ Kinh Doanh
+                </span>
+                <span class="text-[10px] text-amber-400 font-mono flex items-center gap-1">
+                  <i class="fa-solid fa-scale-balanced"></i> TT 88/2021/TT-BTC
+                </span>
+              </div>
+              <h3 class="text-base font-black text-white mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-emerald-400"></i>
+                <span>Bộ Ba Quản Trị Đất Phú: ERP Mini • CRM • Sổ Kế Toán</span>
+              </h3>
+              <p class="text-xs text-slate-400">Tối ưu cho chủ tiệm thanh lý, hộ kinh doanh đặc sản và thợ kỹ thuật 6K tại Phú Yên</p>
+            </div>
+
+            <!-- Nút In Sổ / Xuất Báo Cáo Kế Toán -->
+            <button onclick="openAccountingPrintModal()" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition self-start sm:self-auto">
+              <i class="fa-solid fa-print"></i>
+              <span>Xuất / In Sổ Thuế Chuẩn TT 88</span>
+            </button>
+          </div>
+
+          <!-- Sub-Tab Navigation Bar -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar border-b border-slate-800/80">
+            <button type="button" onclick="switchBusinessSubTab('overview')" id="btnBizTabOverview" class="biz-subtab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm shadow-emerald-600/30">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>Dòng Tiền & Lãi Ròng</span>
+            </button>
+            <button type="button" onclick="switchBusinessSubTab('erp')" id="btnBizTabERP" class="biz-subtab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-950 text-slate-400 hover:text-white border border-slate-800">
+              <i class="fa-solid fa-boxes-stacked"></i>
+              <span>ERP Mini (Kho & Giá Vốn)</span>
+            </button>
+            <button type="button" onclick="switchBusinessSubTab('crm')" id="btnBizTabCRM" class="biz-subtab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-950 text-slate-400 hover:text-white border border-slate-800">
+              <i class="fa-solid fa-users-viewfinder"></i>
+              <span>CRM Khách Quen & Bảo Dưỡng</span>
+            </button>
+            <button type="button" onclick="switchBusinessSubTab('accounting')" id="btnBizTabAccounting" class="biz-subtab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-950 text-slate-400 hover:text-white border border-slate-800">
+              <i class="fa-solid fa-book-bookmark"></i>
+              <span>Sổ Kế Toán 1 Người (S1-S4)</span>
+            </button>
+          </div>
+
+          <!-- ================= TAB 1: DÒNG TIỀN & LÃI RÒNG ================= -->
+          <div id="bizPaneOverview" class="space-y-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+                <span class="text-[10px] text-slate-400 block">Doanh Thu Gộp (Tháng)</span>
+                <span id="bizStatRevenue" class="text-base sm:text-lg font-black text-white font-mono">18,500,000 đ</span>
+                <span class="text-[9px] text-emerald-400 flex items-center gap-1">
+                  <i class="fa-solid fa-arrow-trend-up"></i> +12% so với tháng trước
+                </span>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+                <span class="text-[10px] text-slate-400 block">Giá Vốn Hàng Nhập (COGS)</span>
+                <span id="bizStatCOGS" class="text-base sm:text-lg font-black text-sky-400 font-mono">11,200,000 đ</span>
+                <span class="text-[9px] text-slate-500">Chi phí nhập gốc vật tư</span>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+                <span class="text-[10px] text-slate-400 block">Phí Sàn Đất Phú (8-15%)</span>
+                <span id="bizStatFloorFee" class="text-base sm:text-lg font-black text-amber-400 font-mono">1,680,000 đ</span>
+                <span class="text-[9px] text-amber-500/90">AI & Hạ tầng Tuy Hòa</span>
+              </div>
+              <div class="bg-gradient-to-br from-emerald-950/80 to-slate-950 p-3 rounded-2xl border border-emerald-800/80 space-y-1">
+                <span class="text-[10px] text-emerald-300 font-semibold block">Lợi Nhuận Ròng Thực Nhận</span>
+                <span id="bizStatNetProfit" class="text-base sm:text-lg font-black text-emerald-400 font-mono">5,620,000 đ</span>
+                <span class="text-[9px] text-emerald-300">Tỷ suất sinh lời: 30.4%</span>
+              </div>
+            </div>
+
+            <!-- Thanh Minh Bạch Cơ Cấu Dòng Tiền -->
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center text-xs font-bold text-white">
+                <span>Cơ Cấu Phân Bổ 100 Đồng Doanh Thu (Mô hình Tinh Gọn)</span>
+                <span class="text-[11px] text-emerald-400 font-mono">Lãi ròng: 30.4%</span>
+              </div>
+              <div class="w-full h-3.5 bg-slate-900 rounded-full overflow-hidden flex text-[8px] font-bold text-slate-950">
+                <div style="width: 60.5%;" class="bg-sky-500 flex items-center justify-center" title="Giá vốn hàng nhập (60.5%)">Giá vốn 60%</div>
+                <div style="width: 9.1%;" class="bg-amber-400 flex items-center justify-center" title="Phí sàn Đất Phú (9.1%)">Sàn 9%</div>
+                <div style="width: 30.4%;" class="bg-emerald-400 flex items-center justify-center" title="Lãi ròng thực nhận (30.4%)">Lãi 30%</div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between text-[10px] text-slate-400 pt-1">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Giá vốn nhập linh kiện/hàng hóa</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Phí sàn Đất Phú (đã gồm hóa đơn & QR)</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Tiền tươi đút túi (Ròng)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= TAB 2: ERP MINI (KHO HÀNG & GIÁ VỐN) ================= -->
+          <div id="bizPaneERP" class="hidden space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <div>
+                <h4 class="font-bold text-xs text-white flex items-center gap-1.5">
+                  <i class="fa-solid fa-warehouse text-sky-400"></i>
+                  <span>Quản Lý Tồn Kho, Giá Vốn & Lãi Từng Món (ERP Tinh Gọn)</span>
+                </h4>
+                <p class="text-[10px] text-slate-400">Theo dõi số lượng hàng thực tế, tự tính tiền lời sau trừ biểu phí sàn 8% - 15%</p>
+              </div>
+              <button onclick="toggleAddStockModal(true)" type="button" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1 transition shadow">
+                <i class="fa-solid fa-plus"></i> Nhập Hàng / Vật Tư Mới
+              </button>
+            </div>
+
+            <!-- Bảng danh sách tồn kho -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 bg-slate-900/80 text-[10px] text-slate-400 uppercase font-semibold">
+                    <th class="p-2.5">Mặt Hàng / Linh Kiện</th>
+                    <th class="p-2.5 text-center">Ngành & Phí</th>
+                    <th class="p-2.5 text-right">Giá Vốn</th>
+                    <th class="p-2.5 text-right">Giá Bán</th>
+                    <th class="p-2.5 text-right">Lãi Ròng / Món</th>
+                    <th class="p-2.5 text-center">Tồn Kho</th>
+                    <th class="p-2.5 text-center">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="bizInventoryTableBody" class="divide-y divide-slate-800/60 font-mono">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Form Thêm Mặt Hàng Vào Kho (ẩn/hiện) -->
+            <div id="addStockFormContainer" class="hidden bg-slate-950 p-4 rounded-2xl border border-sky-900/60 space-y-3">
+              <div class="flex justify-between items-center text-xs font-bold text-white border-b border-slate-800 pb-2">
+                <span class="flex items-center gap-1.5 text-sky-400">
+                  <i class="fa-solid fa-cart-plus"></i> Nhập Mặt Hàng / Vật Tư Vào Kho Mini
+                </span>
+                <button type="button" onclick="toggleAddStockModal(false)" class="text-slate-400 hover:text-white">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <form onsubmit="handleAddNewInventoryItem(event)" class="space-y-3 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Tên sản phẩm / Linh kiện</label>
+                    <input id="invItemName" required type="text" placeholder="VD: Tụ ngậm quạt dàn nóng 35uF..." class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-sky-500 font-sans" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Ngành hàng (Tự tính phí sàn)</label>
+                    <select id="invItemCat" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-sky-500 font-sans">
+                      <option value="dac_san">Đặc sản Xứ Nẫu (Phí 8%)</option>
+                      <option value="do_cu">Đồ Thanh Lý Kiểm Định 6K (Phí 10%)</option>
+                      <option value="sach_cu">Sách Cũ & Tư Liệu (Phí 12%)</option>
+                      <option value="vat_tu">Vật tư kỹ thuật / Linh kiện (Phí 8%)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Giá nhập vốn (VNĐ)</label>
+                    <input id="invItemCost" required type="number" placeholder="45000" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-sky-500 font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Giá bán ra (VNĐ)</label>
+                    <input id="invItemPrice" required type="number" placeholder="95000" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-sky-500 font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Số lượng nhập</label>
+                    <input id="invItemQty" required type="number" value="10" min="1" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-sky-500 font-mono" />
+                  </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-1">
+                  <button type="button" onclick="toggleAddStockModal(false)" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 font-bold">Hủy</button>
+                  <button type="submit" class="px-4 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Vào Kho ERP
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- ================= TAB 3: CRM KHÁCH QUEN BẢN ĐỊA & BẢO DƯỠNG ================= -->
+          <div id="bizPaneCRM" class="hidden space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <div>
+                <h4 class="font-bold text-xs text-white flex items-center gap-1.5">
+                  <i class="fa-solid fa-address-book text-emerald-400"></i>
+                  <span>Sổ Khách Quen Tuy Hòa & Nhắc Lịch Bảo Dưỡng Định Kỳ (CRM Bản Địa)</span>
+                </h4>
+                <p class="text-[10px] text-slate-400">Giữ chân khách hàng thân thiết, chủ động nhắn Zalo nhắc vệ sinh máy lạnh / thay lọc nước</p>
+              </div>
+              <button onclick="toggleAddCustomerModal(true)" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1 transition shadow">
+                <i class="fa-solid fa-user-plus"></i> Thêm Khách Quen
+              </button>
+            </div>
+
+            <!-- Bảng danh sách CRM -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 bg-slate-900/80 text-[10px] text-slate-400 uppercase font-semibold">
+                    <th class="p-2.5">Khách Hàng & Địa Chỉ Tuy Hòa</th>
+                    <th class="p-2.5">Thiết Bị / Hàng Mua</th>
+                    <th class="p-2.5 text-center">Lần Làm Cuối</th>
+                    <th class="p-2.5 text-center">Hạn Bảo Dưỡng Tiếp</th>
+                    <th class="p-2.5 text-center">Trạng Thái</th>
+                    <th class="p-2.5 text-center">Chăm Sóc Ngay</th>
+                  </tr>
+                </thead>
+                <tbody id="bizCRMTableBody" class="divide-y divide-slate-800/60 font-sans">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Form Thêm Khách Hàng Quen Mới -->
+            <div id="addCustomerFormContainer" class="hidden bg-slate-950 p-4 rounded-2xl border border-emerald-900/60 space-y-3">
+              <div class="flex justify-between items-center text-xs font-bold text-white border-b border-slate-800 pb-2">
+                <span class="flex items-center gap-1.5 text-emerald-400">
+                  <i class="fa-solid fa-user-shield"></i> Thêm Khách Hàng Vào Sổ CRM Bản Địa
+                </span>
+                <button type="button" onclick="toggleAddCustomerModal(false)" class="text-slate-400 hover:text-white">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <form onsubmit="handleAddNewCustomer(event)" class="space-y-3 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Tên khách hàng / Chủ quán</label>
+                    <input id="crmCustName" required type="text" placeholder="VD: Chị Mai (Cơm gà Tuy Hòa)..." class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Số điện thoại (Zalo)</label>
+                    <input id="crmCustPhone" required type="tel" placeholder="VD: 0914xxxxxx" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500 font-mono" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Địa chỉ tại Tuy Hòa / Phú Yên</label>
+                    <input id="crmCustAddress" required type="text" placeholder="VD: 182 Hùng Vương, Phường 7, TP. Tuy Hòa" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Thiết bị hoặc Sản phẩm quan tâm</label>
+                    <input id="crmCustDevice" required type="text" placeholder="VD: Máy lạnh Daikin 1.5HP Inverter phòng ngủ" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Chu kỳ bảo dưỡng định kỳ</label>
+                    <select id="crmCustCycle" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500">
+                      <option value="3">3 Tháng (Vệ sinh máy lạnh / bếp chiên)</option>
+                      <option value="6" selected>6 Tháng (Thay lõi lọc nước / máy bơm)</option>
+                      <option value="12">12 Tháng (Bảo dưỡng toàn diện hàng năm)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Phân loại khách</label>
+                    <select id="crmCustTier" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500">
+                      <option value="VIP">Khách Quen Thân Thiết (VIP)</option>
+                      <option value="TIEM">Chủ Tiệm / Quán Ăn</option>
+                      <option value="STANDARD">Khách Gia Đình Thường</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-1">
+                  <button type="button" onclick="toggleAddCustomerModal(false)" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 font-bold">Hủy</button>
+                  <button type="submit" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Hồ Sơ CRM
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- ================= TAB 4: CHẾ ĐỘ KẾ TOÁN 1 NGƯỜI (THÔNG TƯ 88/2021/TT-BTC) ================= -->
+          <div id="bizPaneAccounting" class="hidden space-y-4">
+            <div class="bg-gradient-to-r from-amber-950/40 via-slate-950 to-slate-900 p-3.5 rounded-2xl border border-amber-800/60 space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-bold text-xs text-amber-300 flex items-center gap-2">
+                  <i class="fa-solid fa-landmark"></i>
+                  <span>Chế Độ Kế Toán Tinh Gọn Cho Hộ Kinh Doanh & Cá Nhân (Thông tư 88/2021/TT-BTC)</span>
+                </span>
+                <span class="text-[10px] bg-amber-950 px-2 py-0.5 rounded border border-amber-700/80 text-amber-300 font-mono">
+                  MST: 4401020233 • HĐĐT: 1C26TDP
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-300">
+                Pháp luật kế toán quy định Doanh nghiệp siêu nhỏ 1 người và Hộ kinh doanh <strong>không bắt buộc</strong> phải có Kế toán trưởng chuyên trách hay ghi nợ/có phức tạp. Bạn chỉ cần duy trì <strong>Bộ 4 Sổ Chuẩn</strong> để hoàn thành 100% nghĩa vụ thuế với Nhà nước.
+              </p>
+            </div>
+
+            <!-- Thanh chọn 4 Mẫu Sổ Kế Toán -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button type="button" onclick="switchAccountingBook('S1')" id="btnBookS1" class="acc-book-tab p-2.5 rounded-2xl bg-amber-600 text-slate-950 font-bold text-xs border border-amber-500 text-left transition shadow-sm">
+                <div class="text-[9px] uppercase tracking-wide opacity-80">Mẫu S1-HKD</div>
+                <div class="font-black mt-0.5">Sổ Doanh Thu</div>
+                <div class="text-[9px] font-normal opacity-90 mt-0.5">Bán hàng & Dịch vụ</div>
+              </button>
+              <button type="button" onclick="switchAccountingBook('S2')" id="btnBookS2" class="acc-book-tab p-2.5 rounded-2xl bg-slate-950 text-slate-400 font-bold text-xs border border-slate-800 hover:text-white text-left transition">
+                <div class="text-[9px] uppercase tracking-wide opacity-70">Mẫu S2-HKD</div>
+                <div class="font-black mt-0.5 text-white">Sổ Nhập Xuất Tồn</div>
+                <div class="text-[9px] font-normal opacity-70 mt-0.5">Vật liệu, dụng cụ, hàng</div>
+              </button>
+              <button type="button" onclick="switchAccountingBook('S3')" id="btnBookS3" class="acc-book-tab p-2.5 rounded-2xl bg-slate-950 text-slate-400 font-bold text-xs border border-slate-800 hover:text-white text-left transition">
+                <div class="text-[9px] uppercase tracking-wide opacity-70">Mẫu S3-HKD</div>
+                <div class="font-black mt-0.5 text-white">Sổ Chi Phí SXKD</div>
+                <div class="text-[9px] font-normal opacity-70 mt-0.5">Xăng, điện, bao bì</div>
+              </button>
+              <button type="button" onclick="switchAccountingBook('S4')" id="btnBookS4" class="acc-book-tab p-2.5 rounded-2xl bg-slate-950 text-slate-400 font-bold text-xs border border-slate-800 hover:text-white text-left transition">
+                <div class="text-[9px] uppercase tracking-wide opacity-70">Mẫu S4-HKD</div>
+                <div class="font-black mt-0.5 text-white">Sổ Nghĩa Vụ Thuế</div>
+                <div class="text-[9px] font-normal opacity-70 mt-0.5">GTGT & TNCN NSNN</div>
+              </button>
+            </div>
+
+            <!-- Bảng hiển thị nội dung Sổ Kế Toán đang chọn -->
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 p-3 sm:p-4 space-y-3">
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800/80 pb-2">
+                <div>
+                  <h5 id="accountingBookTitle" class="font-black text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice-dollar text-amber-400"></i>
+                    <span>SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ (Mẫu S1-HKD)</span>
+                  </h5>
+                  <p id="accountingBookSub" class="text-[10px] text-slate-400">Căn cứ Thông tư 88/2021/TT-BTC - Áp dụng kỳ kê khai Tháng 10/2026</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="toggleAddExpenseModal(true)" id="btnAddExpenseBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] flex items-center gap-1 transition">
+                    <i class="fa-solid fa-plus"></i> Ghi Khoản Chi Mới
+                  </button>
+                  <button type="button" onclick="openAccountingPrintModal()" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] flex items-center gap-1 transition">
+                    <i class="fa-solid fa-print"></i> Xem & In Sổ
+                  </button>
+                </div>
+              </div>
+
+              <!-- Khu vực render bảng sổ kế toán -->
+              <div id="accountingTableContainer" class="overflow-x-auto">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Form Thêm Khoản Chi S3 (Ẩn/Hiện) -->
+            <div id="addExpenseFormContainer" class="hidden bg-slate-950 p-4 rounded-2xl border border-amber-900/60 space-y-3">
+              <div class="flex justify-between items-center text-xs font-bold text-white border-b border-slate-800 pb-2">
+                <span class="flex items-center gap-1.5 text-amber-400">
+                  <i class="fa-solid fa-receipt"></i> Ghi Nhận Chi Phí SXKD (Sổ S3-HKD)
+                </span>
+                <button type="button" onclick="toggleAddExpenseModal(false)" class="text-slate-400 hover:text-white">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <form onsubmit="handleAddNewExpense(event)" class="space-y-3 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Nội dung chi phí</label>
+                    <input id="expDesc" required type="text" placeholder="VD: Xăng xe đi cứu hộ tiệm bánh Phường 7..." class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Khoản mục chi phí</label>
+                    <select id="expCategory" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500">
+                      <option value="xang_xe">Xăng xe & Đi lại cứu hộ</option>
+                      <option value="dien_nuoc">Điện, Nước & Internet tiệm</option>
+                      <option value="bao_bi">Bao bì & Thùng carton đóng gói</option>
+                      <option value="cong_cu">Hao mòn đồ nghề & Dụng cụ</option>
+                      <option value="khac">Chi phí quản lý khác</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Số tiền chi (VNĐ)</label>
+                    <input id="expAmount" required type="number" placeholder="150000" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500 font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Ngày chi</label>
+                    <input id="expDate" required type="date" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500" />
+                  </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-1">
+                  <button type="button" onclick="toggleAddExpenseModal(false)" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 font-bold">Hủy</button>
+                  <button type="submit" class="px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk"></i> Ghi Vào Sổ S3
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Tóm Tắt Tự Động Thuế Suất Phải Nộp -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+              <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+                <span class="text-[10px] text-slate-400 block">Ngành Hàng Hóa (Đặc sản, Sách, Đồ cũ)</span>
+                <div class="text-white font-mono font-bold">Thuế suất: 1.5%</div>
+                <p class="text-[10px] text-slate-400">GTGT 1% + TNCN 0.5% trên doanh thu</p>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+                <span class="text-[10px] text-slate-400 block">Ngành Dịch Vụ Thợ Kỹ Thuật (Sửa chữa 6K)</span>
+                <div class="text-white font-mono font-bold">Thuế suất: 7.0%</div>
+                <p class="text-[10px] text-slate-400">GTGT 5% + TNCN 2.0% trên tiền công</p>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-2xl border border-emerald-900/60 space-y-1">
+                <span class="text-[10px] text-emerald-400 block">Số Thuế Đã Tự Động Trích Nộp</span>
+                <div id="bizStatTaxTotal" class="text-emerald-400 font-mono font-bold text-sm">345,000 đ</div>
+                <p class="text-[10px] text-slate-400">Kho bạc Nhà nước tỉnh Phú Yên</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       <!-- ================= SECTION 6: TÀI KHOẢN & HỒ SƠ THÀNH VIÊN ================= -->
@@ -640,11 +1326,57 @@
           </button>
         </form>
 
+        
+        <!-- BỘ BA QUẢN TRỊ DOANH NGHIỆP 1 NGƯỜI & HỘ KINH DOANH TRONG PROFILE -->
+        <div class="bg-gradient-to-r from-emerald-950/60 via-slate-950 to-sky-950/50 p-4 rounded-3xl border border-emerald-800/80 space-y-3 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center font-black">
+                <i class="fa-solid fa-chart-pie"></i>
+              </span>
+              <div>
+                <h3 class="font-black text-white text-sm">Hệ Thống ERP Mini, CRM & Kế Toán 1 Người</h3>
+                <p class="text-[10px] text-slate-400">Chuẩn Thông tư 88/2021/TT-BTC & TT 133/2016 cho Chủ Shop / Thợ 6K</p>
+              </div>
+            </div>
+            <button onclick="switchRole('seller'); setTimeout(() => switchBusinessSubTab('overview'), 100);" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở Trung Tâm Quản Trị
+            </button>
+          </div>
+
+          <!-- Quick 3 Cards -->
+          <div class="grid grid-cols-3 gap-2 pt-1 font-mono text-center">
+            <div onclick="switchRole('seller'); setTimeout(() => switchBusinessSubTab('erp'), 100);" class="bg-slate-950 p-2.5 rounded-2xl border border-slate-800 cursor-pointer hover:border-sky-500 transition">
+              <div class="text-[10px] text-slate-400 font-sans">Kho ERP Mini</div>
+              <div class="font-black text-sky-400 text-xs sm:text-sm mt-0.5">6 Mặt hàng</div>
+              <div class="text-[9px] text-emerald-400 font-sans">Lãi ròng: +30%</div>
+            </div>
+            <div onclick="switchRole('seller'); setTimeout(() => switchBusinessSubTab('crm'), 100);" class="bg-slate-950 p-2.5 rounded-2xl border border-slate-800 cursor-pointer hover:border-emerald-500 transition">
+              <div class="text-[10px] text-slate-400 font-sans">CRM Tuy Hòa</div>
+              <div class="font-black text-emerald-400 text-xs sm:text-sm mt-0.5">5 Khách VIP</div>
+              <div class="text-[9px] text-rose-400 font-sans animate-pulse">3 Ca cần bảo dưỡng</div>
+            </div>
+            <div onclick="switchRole('seller'); setTimeout(() => switchBusinessSubTab('accounting'), 100);" class="bg-slate-950 p-2.5 rounded-2xl border border-slate-800 cursor-pointer hover:border-amber-500 transition">
+              <div class="text-[10px] text-slate-400 font-sans">Sổ Thuế TT 88</div>
+              <div class="font-black text-amber-400 text-xs sm:text-sm mt-0.5">Mẫu S1 - S4</div>
+              <div class="text-[9px] text-slate-400 font-sans">Đầy đủ HĐĐT</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Thông Tin Pháp Nhân & Tra Cứu HĐĐT -->
         <div class="bg-slate-950 p-4 rounded-3xl border border-slate-800 space-y-2 text-xs">
-          <div class="font-bold text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-scale-balanced text-amber-400"></i>
-            <span>Đơn Vị Vận Hành Pháp Lý: CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</span>
+          <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-slate-800">
+            <div class="flex items-center gap-2.5">
+              <div class="bg-white px-2 py-1 rounded-xl shadow-sm border border-slate-700">
+                <img src="assets/logo_datphu.jpg" alt="Logo Đất Phú" class="h-6 object-contain" />
+              </div>
+              <div>
+                <div class="font-bold text-white text-xs">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</div>
+                <div class="text-[10px] text-amber-400 font-mono">MST: 4401020233 • Người đại diện: Phạm Thanh Hân</div>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold">Pháp Lý Doanh Nghiệp</span>
           </div>
           <div class="text-[11px] text-slate-400 space-y-1">
             <p>• <strong>Mã số thuế:</strong> 4401020233 • Đại diện pháp luật: <strong>Phạm Thanh Hân</strong></p>
@@ -929,35 +1661,56 @@
 
     </main>
 
-    <!-- Bottom Navigation Bar (5 Tab Chuẩn) -->
-    <nav class="bg-slate-950 border-t border-slate-800 px-4 sm:px-8 py-2.5 flex justify-between items-center text-[10px] text-slate-400 shrink-0">
-      <button onclick="switchTab('explore')" id="nav-explore" class="nav-tab-btn flex flex-col items-center gap-1 text-sky-400 font-bold transition">
-        <i class="fa-solid fa-compass text-base"></i>
-        <span>Khám phá</span>
-      </button>
+    <!-- Floating Bottom Navigation Dock (Glassmorphism & Glow Design) -->
+    <div class="px-3 sm:px-6 py-2 shrink-0 bg-slate-950/95 border-t border-slate-800/80">
+      <nav class="glass-panel px-3 sm:px-6 py-2.5 rounded-2xl flex justify-between items-center text-[11px] text-slate-400 shadow-2xl">
+        <button onclick="switchTab('explore')" id="nav-explore" class="nav-tab-btn flex flex-col items-center gap-1 text-sky-400 font-black transition transform hover:scale-105">
+          <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-compass"></i>
+          </div>
+          <span class="tracking-tight text-[10px]">Khám Phá</span>
+        </button>
 
-      <button onclick="switchTab('dispatch')" id="nav-dispatch" class="nav-tab-btn flex flex-col items-center gap-1 hover:text-slate-200 transition">
-        <i class="fa-solid fa-wrench text-base"></i>
-        <span>Gọi thợ 6K</span>
-      </button>
+        <button onclick="switchTab('dispatch')" id="nav-dispatch" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-400 hover:text-amber-400 font-bold transition transform hover:scale-105">
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-amber-400 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <span class="tracking-tight text-[10px]">Gọi Thợ 6K</span>
+        </button>
 
-      <button onclick="switchTab('favorites')" id="nav-favorites" class="nav-tab-btn flex flex-col items-center gap-1 hover:text-slate-200 transition relative">
-        <i class="fa-solid fa-heart text-base text-rose-500"></i>
-        <span id="favBadge" class="absolute -top-1 -right-2 bg-rose-500 text-white font-black text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center">0</span>
-        <span>Yêu thích</span>
-      </button>
+        <button onclick="switchTab('community')" id="nav-community" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-400 font-bold transition transform hover:scale-105 relative">
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-emerald-400 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <span class="absolute -top-1 right-1 bg-rose-500 text-white font-black text-[8px] w-4 h-4 rounded-full flex items-center justify-center shadow animate-pulse">Hot</span>
+          <span class="tracking-tight text-[10px]">Bản Tin</span>
+        </button>
 
-      <button onclick="switchTab('orders')" id="nav-orders" class="nav-tab-btn flex flex-col items-center gap-1 hover:text-slate-200 transition relative">
-        <i class="fa-solid fa-receipt text-base text-emerald-400"></i>
-        <span id="ordersBadge" class="absolute -top-1 -right-2 bg-emerald-500 text-slate-950 font-black text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center">1</span>
-        <span>Đơn của tôi</span>
-      </button>
 
-      <button onclick="switchTab('profile')" id="nav-profile" class="nav-tab-btn flex flex-col items-center gap-1 hover:text-slate-200 transition">
-        <i class="fa-solid fa-user text-base"></i>
-        <span>Tài khoản</span>
-      </button>
-    </nav>
+        <button onclick="switchTab('favorites')" id="nav-favorites" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-400 hover:text-rose-400 font-bold transition transform hover:scale-105 relative">
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-rose-500 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <span id="favBadge" class="absolute -top-1 right-1 bg-rose-500 text-white font-black text-[8px] w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
+          <span class="tracking-tight text-[10px]">Yêu Thích</span>
+        </button>
+
+        <button onclick="switchTab('orders')" id="nav-orders" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-400 font-bold transition transform hover:scale-105 relative">
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-emerald-400 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-receipt"></i>
+          </div>
+          <span id="ordersBadge" class="absolute -top-1 right-1 bg-emerald-500 text-slate-950 font-black text-[8px] w-4 h-4 rounded-full flex items-center justify-center shadow">1</span>
+          <span class="tracking-tight text-[10px]">Đơn Hàng</span>
+        </button>
+
+        <button onclick="switchTab('profile')" id="nav-profile" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-400 hover:text-indigo-400 font-bold transition transform hover:scale-105">
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-indigo-400 flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid fa-user-gear"></i>
+          </div>
+          <span class="tracking-tight text-[10px]">Tài Khoản</span>
+        </button>
+      </nav>
+    </div>
 
     <!-- ================= MODAL ĐÁNH GIÁ & BÌNH LUẬN ================= -->
     <div id="reviewModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
@@ -1230,6 +1983,165 @@
     </div>
 
   </div>
+
+
+    <!-- ================= MODAL TRANG GIAN HÀNG NGƯỜI BÁN KÝ GỬI ================= -->
+    <div id="sellerShopModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+      <div class="glass-panel bg-slate-900 border border-slate-700/80 rounded-3xl p-5 w-full max-w-xl space-y-4 shadow-2xl relative max-h-[92vh] flex flex-col custom-scroll overflow-hidden">
+        <!-- Header Shop -->
+        <div id="shopModalHeaderBg" class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-amber-950 via-slate-900 to-emerald-950 p-4 border border-slate-800">
+          <button onclick="closeSellerShopModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/70 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+          
+          <div class="flex items-center gap-3.5">
+            <div id="shopModalAvatar" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-600 text-slate-950 font-black text-2xl flex items-center justify-center shadow-lg shadow-amber-500/30 icon-badge-3d border border-amber-300">
+              🏪
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 id="shopModalName" class="font-black text-base text-white">Gian Hàng Đặc Sản Chị Ba Tuy Hòa</h3>
+                <span class="text-[9px] bg-emerald-950 text-emerald-400 font-bold px-2 py-0.5 rounded-full border border-emerald-800">✔ Đã Xác Minh 6K</span>
+              </div>
+              <p id="shopModalAddress" class="text-xs text-slate-300 mt-0.5">📍 Phường 7, TP. Tuy Hòa, Tỉnh Phú Yên</p>
+              <div class="flex items-center gap-3 text-[11px] text-slate-400 mt-1">
+                <span class="text-amber-400 font-bold flex items-center gap-1">
+                  <i class="fa-solid fa-star text-xs"></i> <span id="shopModalRating">4.96</span> (<span id="shopModalReviews">128</span> đánh giá)
+                </span>
+                <span>•</span>
+                <span id="shopModalTotalItems" class="text-slate-300">8 món ký gửi</span>
+                <span>•</span>
+                <span class="text-emerald-400 font-medium">Phản hồi 100%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p id="shopModalDesc" class="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-2xl border border-slate-800 leading-relaxed">
+          Chuyên cung cấp các sản phẩm chuẩn bản địa Tuy Hòa đã qua quy trình thẩm định 6K nghiêm ngặt.
+        </p>
+
+        <!-- Action Call/Zalo -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <a id="shopModalCallBtn" href="tel:0935123456" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center justify-center gap-2 transition border border-slate-700">
+            <i class="fa-solid fa-phone text-emerald-400"></i>
+            <span>Gọi Chủ Tiệm</span>
+          </a>
+          <button onclick="alert('Đã gửi yêu cầu kết nối Zalo OA tới Chủ gian hàng!')" class="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold flex items-center justify-center gap-2 transition shadow">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span>Nhắn Tin Zalo</span>
+          </button>
+        </div>
+
+        <!-- Danh sách sản phẩm của gian hàng -->
+        <div class="space-y-2 flex-1 overflow-y-auto custom-scroll pr-1">
+          <div class="flex justify-between items-center text-xs pb-1 border-b border-slate-800">
+            <span class="font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-boxes-stacked text-amber-400"></i>
+              <span>Sản Phẩm Đang Ký Gửi Trên Sàn</span>
+            </span>
+            <span class="text-[10px] text-emerald-400 font-mono">Bảo hành 30 ngày</span>
+          </div>
+
+          <div id="shopModalProductList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL HỒ SƠ NĂNG LỰC THỢ KỸ THUẬT 6K ================= -->
+    <div id="workerPortfolioModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+      <div class="glass-panel bg-slate-900 border border-slate-700/80 rounded-3xl p-5 w-full max-w-lg space-y-4 shadow-2xl relative max-h-[92vh] flex flex-col custom-scroll overflow-hidden">
+        
+        <!-- Header Thợ -->
+        <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-amber-950/80 p-4 border border-slate-800">
+          <button onclick="closeWorkerPortfolioModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/70 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+
+          <div class="flex items-center gap-3.5">
+            <div id="workerModalAvatar" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 font-black text-2xl flex items-center justify-center shadow-lg shadow-amber-500/30 icon-badge-3d border border-amber-300">
+              ⚡
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 id="workerModalName" class="font-black text-base text-white">Trần Quốc Hưng</h3>
+                <span class="text-[9px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase">Thợ Nòng Cốt 6K</span>
+              </div>
+              <p id="workerModalSkill" class="text-xs text-amber-400 font-semibold mt-0.5">Kỹ Sư Điện Lạnh & Tủ Đông Dân Dụng</p>
+              <p id="workerModalStation" class="text-[11px] text-slate-400">📍 Bán kính trực: Phường 5, Tuy Hòa (Bán kính 5.0 km)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Chỉ Số Tín Nhiệm & KPI -->
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="bg-slate-950/80 p-2.5 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400">Đánh giá khách hàng</div>
+            <div id="workerModalRating" class="font-black text-amber-400 text-sm mt-0.5">⭐ 4.98</div>
+          </div>
+          <div class="bg-slate-950/80 p-2.5 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400">Số ca hoàn thành</div>
+            <div id="workerModalCases" class="font-black text-emerald-400 text-sm mt-0.5">348 ca</div>
+          </div>
+          <div class="bg-slate-950/80 p-2.5 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400">Tốc độ có mặt</div>
+            <div id="workerModalETA" class="font-black text-sky-400 text-sm mt-0.5">12-15 phút</div>
+          </div>
+        </div>
+
+        <!-- Hồ Sơ Chứng Chỉ & An Toàn -->
+        <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800 space-y-1.5 text-xs">
+          <div class="font-bold text-white flex items-center gap-1.5 text-[11px]">
+            <i class="fa-solid fa-certificate text-amber-400"></i>
+            <span>Chứng Chỉ Nghề & Đăng Ký Pháp Lý:</span>
+          </div>
+          <div id="workerModalCertsList" class="text-[11px] text-slate-300 space-y-1">
+            <p>• Bằng nghề Kỹ thuật Điện - Lạnh Dân Dụng (Bậc 4/7).</p>
+            <p>• Đã ký cam kết bảo mật & Quy chuẩn đạo đức nghề nghiệp Kín Kẽ 6K.</p>
+            <p>• Bảo hiểm trách nhiệm dân sự nghề nghiệp có giá trị.</p>
+          </div>
+        </div>
+
+        <!-- Trang Bị Cốp Xe Thợ Sẵn Sàng -->
+        <div class="space-y-1.5 text-xs">
+          <div class="font-bold text-white flex items-center gap-1.5 text-[11px]">
+            <i class="fa-solid fa-toolbox text-sky-400"></i>
+            <span>Vật Tư Sẵn Có Trong Cốp Xe (Bảo Hành 30 Ngày):</span>
+          </div>
+          <div id="workerModalToolsList" class="flex flex-wrap gap-1.5 text-[10px]">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        
+        <!-- Quản Trị Cốp Xe Mini ERP & Doanh Thu 80/20 -->
+        <div class="bg-gradient-to-r from-amber-950/40 via-slate-950 to-slate-900 p-3 rounded-2xl border border-amber-800/60 space-y-2 text-xs">
+          <div class="flex justify-between items-center text-[11px] font-bold">
+            <span class="text-amber-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-coins"></i> Cơ Chế Thu Nhập Thợ Kỹ Thuật 6K:
+            </span>
+            <span class="text-emerald-400 font-mono font-black">Thợ Nhận 80% • Sàn 20%</span>
+          </div>
+          <div class="text-[10px] text-slate-300">
+            • Tiền công dịch vụ & tiền chênh lệch linh kiện được tự động kết toán hàng ngày qua VietQR Vietcombank: <strong>0751000025858</strong>.<br/>
+            • Tự động xuất hóa đơn điện tử <strong>1C26TDP</strong> và nộp thuế TNCN 2% + GTGT 5% chuẩn Thông tư 88/2021/TT-BTC.
+          </div>
+        </div>
+
+        <!-- Nút Kích Hoạt Điều Thợ -->
+        <div class="pt-2 border-t border-slate-800 flex gap-2">
+          <a id="workerModalCallLink" href="tel:0914223344" class="px-4 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition border border-slate-700">
+            <i class="fa-solid fa-phone text-emerald-400"></i> Gọi
+          </a>
+          <button id="workerModalBookBtn" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 text-slate-950 font-black text-xs transition shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 shimmer-btn">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span id="workerModalBookText">BẮN PHIẾU GỌI THỢ NÀY NGAY (15 PHÚT)</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
   <script>
     const SUPABASE_URL = "https://ckyydvyzucvcdunvedmg.supabase.co";
@@ -1713,6 +2625,13 @@
                 </div>
 
                 <h3 class="font-bold text-xs text-white leading-snug line-clamp-2 h-8" title="${p.title}">${p.title}</h3>
+                <div class="flex items-center justify-between text-[10px] pt-1 border-t border-slate-900/80">
+                  <button type="button" onclick="event.stopPropagation(); openSellerShopModal(p.category === 'dac_san' ? 'shop-chiba' : p.category === 'sach_cu' ? 'shop-sach-tuyhoa' : 'shop-dienmay-phulam')" class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 hover:underline truncate max-w-[140px]">
+                    <i class="fa-solid fa-store text-[9px] text-amber-400"></i>
+                    <span>${p.category === 'dac_san' ? 'Hộ ĐS Chị Ba' : p.category === 'sach_cu' ? 'Tiệm Sách Cũ Tuy Hòa' : 'Kho Máy 6K Phú Lâm'}</span>
+                  </button>
+                  <span class="text-[9px] text-emerald-400 font-bold">✔ 6K</span>
+                </div>
 
                 <!-- Reviews Trigger Button -->
                 <div class="flex items-center justify-between pt-1">
@@ -1892,14 +2811,55 @@
     // ================= DISPATCH WORKER & TOURIST TRANSPORT =================
     let currentDispatchType = 'tho_6k';
 
+    
+    function getLocationGPS() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            const lat = pos.coords.latitude.toFixed(4);
+            const lng = pos.coords.longitude.toFixed(4);
+            const addrInput = document.getElementById('dispAddress');
+            if (addrInput) {
+              addrInput.value = `Vị trí GPS: ${lat}, ${lng} (Gần TP. Tuy Hòa)`;
+              alert(`Đã xác định tọa độ GPS thành công [${lat}, ${lng}]! Thợ sẽ định vị chính xác vị trí của bạn.`);
+            }
+          },
+          err => {
+            alert('Không thể lấy GPS tự động. Vui lòng gõ địa chỉ thủ công!');
+          }
+        );
+      } else {
+        alert('Thiết bị của bạn không hỗ trợ định vị GPS!');
+      }
+    }
+
     function setDispatchServiceType(type) {
       currentDispatchType = type;
+      const defaultBtnClass = 'p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 text-slate-200 hover:text-white font-bold flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02]';
+      
       ['srvBtn-tho_6k', 'srvBtn-taxi', 'srvBtn-xemay', 'srvBtn-tour'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.className = 'py-2 px-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center justify-center gap-1 text-[11px] transition';
+        if (el) el.className = defaultBtnClass;
       });
+
       const activeBtn = document.getElementById('srvBtn-' + type);
-      if (activeBtn) activeBtn.className = 'py-2 px-2 rounded-xl bg-amber-500 text-slate-950 font-bold flex items-center justify-center gap-1 text-[11px] transition';
+      const submitBtn = document.getElementById('btnDispSubmit');
+
+      if (activeBtn) {
+        if (type === 'tho_6k') {
+          activeBtn.className = 'p-3 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500 text-slate-950 font-black flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02] shadow-lg shadow-amber-500/25 border border-amber-300';
+          if (submitBtn) submitBtn.className = 'w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 text-slate-950 font-black text-xs transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] flex items-center justify-center gap-2 tracking-wide shimmer-btn';
+        } else if (type === 'taxi') {
+          activeBtn.className = 'p-3 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-600 text-white font-black flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02] shadow-lg shadow-cyan-500/25 border border-cyan-300';
+          if (submitBtn) submitBtn.className = 'w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 text-white font-black text-xs transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center justify-center gap-2 tracking-wide shimmer-btn';
+        } else if (type === 'xemay') {
+          activeBtn.className = 'p-3 rounded-2xl bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500 text-white font-black flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02] shadow-lg shadow-purple-500/25 border border-purple-300';
+          if (submitBtn) submitBtn.className = 'w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white font-black text-xs transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] flex items-center justify-center gap-2 tracking-wide shimmer-btn';
+        } else if (type === 'tour') {
+          activeBtn.className = 'p-3 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white font-black flex flex-col items-center justify-center gap-1.5 transition transform hover:scale-[1.02] shadow-lg shadow-emerald-500/25 border border-emerald-300';
+          if (submitBtn) submitBtn.className = 'w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600 text-white font-black text-xs transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2 tracking-wide shimmer-btn';
+        }
+      }
 
       const lblAddress = document.getElementById('lblDispAddress');
       const inAddress = document.getElementById('dispAddress');
@@ -2371,7 +3331,7 @@
 
     // ================= TABS & ROLES SWITCHER =================
     function switchTab(tab) {
-      ['sectionExplore', 'sectionDispatch', 'sectionFavorites', 'sectionMyOrders', 'sectionSeller', 'sectionProfile'].forEach(s => {
+      ['sectionExplore', 'sectionDispatch', 'sectionCommunity', 'sectionFavorites', 'sectionMyOrders', 'sectionSeller', 'sectionProfile'].forEach(s => {
         const el = document.getElementById(s);
         if (el) el.classList.add('hidden');
       });
@@ -2386,6 +3346,12 @@
       } else if (tab === 'dispatch') {
         document.getElementById('sectionDispatch').classList.remove('hidden');
         document.getElementById('nav-dispatch').className = 'nav-tab-btn flex flex-col items-center gap-1 text-amber-400 font-bold transition';
+      } else if (tab === 'community') {
+        document.getElementById('sectionCommunity').classList.remove('hidden');
+        if (document.getElementById('nav-community')) {
+          document.getElementById('nav-community').className = 'nav-tab-btn flex flex-col items-center gap-1 text-emerald-400 font-black transition';
+        }
+        renderCommunityFeed();
       } else if (tab === 'favorites') {
         document.getElementById('sectionFavorites').classList.remove('hidden');
         document.getElementById('nav-favorites').className = 'nav-tab-btn flex flex-col items-center gap-1 text-rose-400 font-bold transition';
@@ -2406,7 +3372,7 @@
         if (el) el.className = 'px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[11px] transition';
       });
 
-      const allSections = ['sectionExplore', 'sectionDispatch', 'sectionFavorites', 'sectionMyOrders', 'sectionSeller', 'sectionProfile', 'sectionAITools'];
+      const allSections = ['sectionExplore', 'sectionDispatch', 'sectionCommunity', 'sectionFavorites', 'sectionMyOrders', 'sectionSeller', 'sectionProfile', 'sectionAITools'];
       allSections.forEach(s => {
         const el = document.getElementById(s);
         if (el) el.classList.add('hidden');
@@ -2893,6 +3859,1399 @@
     }
 
     init();
-  </script>
+
+    // ================= DỮ LIỆU GIAN HÀNG & THỢ KỸ THUẬT 6K =================
+    const SELLER_SHOPS = {
+  "shop-chiba": {
+    "id": "shop-chiba",
+    "name": "Hộ Đặc Sản Xứ Nẫu Chị Ba",
+    "owner": "Chị Ba Tuy Hòa",
+    "phone": "0905.889.911",
+    "address": "Số 45 Trần Hưng Đạo, P. 4, TP. Tuy Hòa",
+    "rating": 4.98,
+    "reviewsCount": 142,
+    "badge": "Hộ Nghề Truyền Thống OCOP",
+    "avatar": "🥩",
+    "bgGradient": "from-orange-950 via-slate-900 to-amber-950",
+    "description": "Chuyên cung cấp Bò một nắng hai sương Krông Pa, muối kiến vàng, nước mắm Gành Đỏ chính gốc đóng chai thuỷ tinh."
+  },
+  "shop-sach-tuyhoa": {
+    "id": "shop-sach-tuyhoa",
+    "name": "Tiệm Sách Cũ & Tư Liệu Tuy Hòa",
+    "owner": "Thầy Hưng Khảo Cứu",
+    "phone": "0935.123.789",
+    "address": "Số 88 Lê Thánh Tôn, P. 1, TP. Tuy Hòa",
+    "rating": 4.96,
+    "reviewsCount": 89,
+    "badge": "Kho Tư Liệu Bản Địa",
+    "avatar": "📚",
+    "bgGradient": "from-amber-950 via-slate-900 to-yellow-950",
+    "description": "Bảo tồn và ký gửi các tác phẩm địa chí, văn học Phú Yên, tạp chí khảo cứu xưa trước năm 1975 và sách học nghề thực chiến."
+  },
+  "shop-dienmay-phulam": {
+    "id": "shop-dienmay-phulam",
+    "name": "Kho Điện Máy Thanh Lý 6K Phú Lâm",
+    "owner": "Anh Hoàng Kỹ Thuật",
+    "phone": "0914.333.555",
+    "address": "21/146 Ngô Gia Tự, P. Phú Yên, TP. Tuy Hòa",
+    "rating": 4.95,
+    "reviewsCount": 215,
+    "badge": "Trạm Kiểm Định Kỹ Thuật 6K",
+    "avatar": "🌀",
+    "bgGradient": "from-sky-950 via-slate-900 to-blue-950",
+    "description": "Thu mua và ký gửi quạt Nhật bãi, máy sấy tóc salon, máy bơm nước và camera an ninh đã qua kiểm định bo mạch đạt chuẩn 6K."
+  }
+};
+    const WORKERS_PORTFOLIO = {
+  "DP-W01": {
+    "id": "DP-W01",
+    "name": "Chú Tùng",
+    "title": "Chuyên Gia Điện Nước Khẩn Cấp (15 Năm Kinh Nghiệm)",
+    "phone": "0905.112.233",
+    "rating": 4.95,
+    "cases": 420,
+    "eta": "8–12 phút",
+    "station": "Trực trạm Phường 7 (Bán kính 0.8km)",
+    "avatar": "⚡",
+    "badge": "Trưởng Nhóm Cứu Hộ Tiệm",
+    "certs": [
+      "Bằng Thợ Điện Công Nghiệp & Dân Dụng Bậc 5/7",
+      "Chứng nhận an toàn điện lực và PCCC Tuy Hòa",
+      "Cam kết ứng cứu tiệm tóc, tiệm cà phê trong 15 phút"
+    ],
+    "tools": [
+      "Máy hàn nhiệt ống PPR",
+      "Aptomat chống rò 32A",
+      "Van bi đồng phi 21-27",
+      "Bút thử điện điện tử",
+      "Dây cáp Cadivi"
+    ]
+  },
+  "DP-W02": {
+    "id": "DP-W02",
+    "name": "Trần Quốc Hưng",
+    "title": "Kỹ Sư Điện Lạnh, Điều Hòa & Tủ Đông",
+    "phone": "0914.223.344",
+    "rating": 4.98,
+    "cases": 356,
+    "eta": "10–15 phút",
+    "station": "Trực trạm Phường 5 (Bán kính 1.2km)",
+    "avatar": "❄️",
+    "badge": "Kỹ Sư Điều Hòa Inverter",
+    "certs": [
+      "Kỹ sư Kỹ thuật Nhiệt - Điện Lạnh Đại học Bách Khoa",
+      "Chứng chỉ bảo hành ủy quyền Daikin, Panasonic, Casper",
+      "Đạt chuẩn kiểm định 6K Đất Phú cấp năm 2026"
+    ],
+    "tools": [
+      "Bình gas lạnh R32 & R410A chính hãng",
+      "Bơm hút chân không 2 tầng",
+      "Đồng hồ đo áp suất đôi",
+      "Que hàn bạc cao cấp"
+    ]
+  },
+  "DP-W03": {
+    "id": "DP-W03",
+    "name": "Lê Văn Long",
+    "title": "Chuyên Viên Mở Khóa & Sửa Cửa Cuốn",
+    "phone": "0935.334.455",
+    "rating": 4.9,
+    "cases": 285,
+    "eta": "5–10 phút",
+    "station": "Trực trạm Phường 2 (Bán kính 1.5km)",
+    "avatar": "🔑",
+    "badge": "Bàn Tay Vàng Mở Khóa",
+    "certs": [
+      "Chứng chỉ Cơ điện tử khóa bảo mật & Cửa cuốn thông minh",
+      "Cam kết không cạy phá hư hỏng tài sản của gia chủ",
+      "Bảo hành ổ khóa và motor cửa cuốn 6 tháng"
+    ],
+    "tools": [
+      "Bộ mở khóa chuyên dụng cao cấp",
+      "Bộ sao chép remote cửa cuốn mã nhảy",
+      "Hộp điều khiển motor 220V",
+      "Dầu bôi trơn chuyên dụng"
+    ]
+  },
+  "DP-W04": {
+    "id": "DP-W04",
+    "name": "Hoàng Tuấn",
+    "title": "Kỹ Thuật Viên Đèn Năng Lượng Mặt Trời & Camera 6K",
+    "phone": "0942.445.566",
+    "rating": 4.92,
+    "cases": 198,
+    "eta": "15 phút",
+    "station": "Trực trạm Bình Kiến (Bán kính 2.0km)",
+    "avatar": "☀️",
+    "badge": "Chuyên Gia Điện Mặt Trời & Camera",
+    "certs": [
+      "Chứng chỉ Lắp đặt hệ thống Solar & Camera IP thông minh",
+      "Kỹ thuật viên đối tác Ezviz, Imou, Dahua tại Phú Yên"
+    ],
+    "tools": [
+      "Pin Lithium năng lượng mặt trời 300W",
+      "Bộ camera wifi Ezviz/Imou",
+      "Đồng hồ vạn năng Fluke",
+      "Thang nhôm rút chữ A"
+    ]
+  },
+  "DP-T01": {
+    "id": "DP-T01",
+    "name": "Bác Tài Tấn Dũng",
+    "title": "Đội Trưởng Đội Xe 6K (Taxi 4-7 Chỗ & Xe Máy Du Lịch)",
+    "phone": "0905.778.899",
+    "rating": 5,
+    "cases": 620,
+    "eta": "10 phút",
+    "station": "Đại lộ Hùng Vương, Tuy Hòa (Bán kính 1.0km)",
+    "avatar": "🚕",
+    "badge": "Tài Xế Du Lịch Bản Địa 5 Sao",
+    "certs": [
+      "Giấy phép lái xe Hạng D (20 năm an toàn giao thông)",
+      "Thẻ hướng dẫn viên du lịch bản địa Phú Yên",
+      "Bảo hiểm trách nhiệm dân sự hành khách tối đa"
+    ],
+    "tools": [
+      "Xe 7 chỗ Xpander đời mới sạch sẽ",
+      "Xe máy AirBlade/Vision cho thuê tự lái 120k",
+      "Wifi 4G miễn phí trên xe",
+      "Nước suối lạnh phục vụ"
+    ]
+  }
+};
+
+    function openSellerShopModal(shopId) {
+      const shop = SELLER_SHOPS[shopId] || SELLER_SHOPS['shop-chiba'];
+      if (!shop) return;
+
+      document.getElementById('shopModalName').textContent = shop.name;
+      document.getElementById('shopModalAvatar').textContent = shop.avatar;
+      document.getElementById('shopModalAddress').textContent = '📍 ' + shop.address;
+      document.getElementById('shopModalRating').textContent = shop.rating;
+      document.getElementById('shopModalReviews').textContent = shop.reviewsCount;
+      document.getElementById('shopModalDesc').textContent = shop.description;
+      document.getElementById('shopModalCallBtn').href = 'tel:' + shop.phone.replace(/[^0-9]/g, '');
+
+      // Tìm các sản phẩm của shop này
+      const shopProducts = PRODUCTS.filter(p => (p.sellerId === shopId) || (shopId === 'shop-chiba' && p.category === 'dac_san') || (shopId === 'shop-sach-tuyhoa' && p.category === 'sach_cu') || (shopId === 'shop-dienmay-phulam' && p.category === 'do_cu'));
+      
+      const listEl = document.getElementById('shopModalProductList');
+      document.getElementById('shopModalTotalItems').textContent = `${shopProducts.length} món ký gửi`;
+
+      listEl.innerHTML = shopProducts.map(p => `
+        <div class="p-2.5 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">${p.icon}</span>
+            <div>
+              <div class="font-bold text-white text-[11px] truncate max-w-[130px]">${p.title}</div>
+              <div class="text-[10px] text-amber-400 font-black">${p.price.toLocaleString('vi-VN')} đ</div>
+            </div>
+          </div>
+          <button onclick="addToCart('${p.id}'); closeSellerShopModal();" class="px-2.5 py-1 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] transition">
+            + Mua
+          </button>
+        </div>
+      `).join('');
+
+      document.getElementById('sellerShopModal').classList.remove('hidden');
+    }
+
+    function closeSellerShopModal() {
+      document.getElementById('sellerShopModal').classList.add('hidden');
+    }
+
+    function openWorkerPortfolioModal(workerId) {
+      const w = WORKERS_PORTFOLIO[workerId] || WORKERS_PORTFOLIO['DP-W01'];
+      if (!w) return;
+
+      document.getElementById('workerModalName').textContent = w.name;
+      document.getElementById('workerModalAvatar').textContent = w.avatar;
+      document.getElementById('workerModalSkill').textContent = w.title;
+      document.getElementById('workerModalStation').textContent = '📍 ' + w.station;
+      document.getElementById('workerModalRating').textContent = '⭐ ' + w.rating;
+      document.getElementById('workerModalCases').textContent = w.cases + ' ca';
+      document.getElementById('workerModalETA').textContent = w.eta;
+      document.getElementById('workerModalCallLink').href = 'tel:' + w.phone.replace(/[^0-9]/g, '');
+
+      // Render certs
+      const certsContainer = document.getElementById('workerModalCertsList');
+      certsContainer.innerHTML = w.certs.map(c => `<p>• ${c}</p>`).join('');
+
+      // Render tools
+      const toolsContainer = document.getElementById('workerModalToolsList');
+      toolsContainer.innerHTML = w.tools.map(t => `<span class="px-2.5 py-1 rounded-lg bg-slate-800/90 text-slate-200 border border-slate-700 font-medium">${t}</span>`).join('');
+
+      // Action Book Button
+      const bookBtn = document.getElementById('workerModalBookBtn');
+      bookBtn.onclick = function() {
+        closeWorkerPortfolioModal();
+        switchTab('dispatch');
+        selectWorkerForDispatch(w.name + ' - ' + w.title, 'Yêu cầu điều phối trực tiếp');
+      };
+
+      document.getElementById('workerPortfolioModal').classList.remove('hidden');
+    }
+
+    function closeWorkerPortfolioModal() {
+      document.getElementById('workerPortfolioModal').classList.add('hidden');
+    }
+
+  
+
+    // =========================================================================
+    // DỮ LIỆU & BỘ MÁY QUẢN TRỊ 3-TRONG-1: ERP MINI • CRM • KẾ TOÁN TT 88/2021
+    // =========================================================================
+
+    const DEFAULT_INVENTORY_DATA = [
+      { id: 'inv-01', name: 'Tụ ngậm quạt Daikin/Panasonic 35uF 450V', cat: 'vat_tu', catName: 'Vật tư kỹ thuật (8%)', feeRate: 0.08, cost: 45000, price: 120000, stock: 8, unit: 'cái' },
+      { id: 'inv-02', name: 'Bò một nắng Krông Pa - Sơn Hòa (Hút chân không 1kg)', cat: 'dac_san', catName: 'Đặc sản Xứ Nẫu (8%)', feeRate: 0.08, cost: 460000, price: 620000, stock: 15, unit: 'kg' },
+      { id: 'inv-03', name: 'Bộ 3 cuốn Khảo cứu Địa chí & Văn hóa Phú Yên (Bìa cứng)', cat: 'sach_cu', catName: 'Sách cũ & Tư liệu (12%)', feeRate: 0.12, cost: 110000, price: 185000, stock: 3, unit: 'bộ' },
+      { id: 'inv-04', name: 'Máy bơm nước tăng áp Sena 150W (Kiểm định 6K)', cat: 'do_cu', catName: 'Đồ cũ kiểm định (10%)', feeRate: 0.10, cost: 350000, price: 550000, stock: 2, unit: 'cái' },
+      { id: 'inv-05', name: 'Bánh tráng Hòa Đa nướng mè thượng hạng (Xâu 20 cái)', cat: 'dac_san', catName: 'Đặc sản Xứ Nẫu (8%)', feeRate: 0.08, cost: 35000, price: 65000, stock: 30, unit: 'xâu' },
+      { id: 'inv-06', name: 'Bình gas lạnh R32 mini nạp cứu hộ (1kg van chống nổ)', cat: 'vat_tu', catName: 'Vật tư kỹ thuật (8%)', feeRate: 0.08, cost: 180000, price: 280000, stock: 5, unit: 'bình' }
+    ];
+
+    const DEFAULT_CRM_DATA = [
+      { id: 'crm-01', name: 'Chị Lan', phone: '0905123456', address: 'Số 45 Nguyễn Huệ, P.7, TP. Tuy Hòa', device: 'Máy giặt Toshiba 8.5kg & Bò một nắng', cycleMonths: 3, lastDate: '2026-07-20', nextDate: '2026-10-20', tier: 'VIP' },
+      { id: 'crm-02', name: 'Anh Tuấn (Quán phở Phú Yên)', phone: '0914987654', address: '182 Hùng Vương, P.7, TP. Tuy Hòa', device: 'Tủ đông Sanaky 400L & Nồi ninh điện', cycleMonths: 6, lastDate: '2026-06-10', nextDate: '2026-12-10', tier: 'TIEM' },
+      { id: 'crm-03', name: 'Chú Ba Đức', phone: '0983222333', address: 'Đường Nguyễn Văn Linh, P. Phú Lâm, Tuy Hòa', device: 'Máy bơm nước giếng khoan 750W', cycleMonths: 6, lastDate: '2026-04-15', nextDate: '2026-10-15', tier: 'STANDARD' },
+      { id: 'crm-04', name: 'Cô Thảo', phone: '0935555666', address: 'Khu phố 3, Phường 5, TP. Tuy Hòa', device: 'Máy lạnh Daikin 1.5HP Inverter', cycleMonths: 3, lastDate: '2026-07-22', nextDate: '2026-10-22', tier: 'VIP' },
+      { id: 'crm-05', name: 'Thầy Hưng', phone: '0978111222', address: 'Trường THPT Duy Tân, P.9, TP. Tuy Hòa', device: 'Tủ sách khảo cứu & Đặc sản biếu tết', cycleMonths: 12, lastDate: '2026-01-10', nextDate: '2026-12-30', tier: 'STANDARD' }
+    ];
+
+    const DEFAULT_EXPENSES_DATA = [
+      { id: 'exp-01', date: '2026-10-05', desc: 'Đổ xăng xe máy đi cứu hộ máy bơm Phường Phú Lâm', cat: 'xang_xe', amount: 80000 },
+      { id: 'exp-02', date: '2026-10-12', desc: 'Mua thùng carton & màng PE bọc đặc sản gửi Tuy Hòa - Sông Cầu', cat: 'bao_bi', amount: 150000 },
+      { id: 'exp-03', date: '2026-10-18', desc: 'Cước 4G và điện thoại chăm sóc khách hàng quen', cat: 'dien_nuoc', amount: 120000 },
+      { id: 'exp-04', date: '2026-10-24', desc: 'Bảo dưỡng máy hàn điện tử và đồng hồ vạn năng', cat: 'cong_cu', amount: 200000 }
+    ];
+
+    let currentBizSubTab = 'overview';
+    let currentAccountingBook = 'S1';
+
+    function getStorageData(key, defaultData) {
+      try {
+        const stored = localStorage.getItem(key);
+        return stored ? JSON.parse(stored) : defaultData;
+      } catch (e) {
+        return defaultData;
+      }
+    }
+
+    function setStorageData(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify(data));
+      } catch (e) {
+        console.error('Lỗi lưu LocalStorage:', e);
+      }
+    }
+
+    // Switch between SubTabs
+    function switchBusinessSubTab(tabName) {
+      currentBizSubTab = tabName;
+      const tabs = ['overview', 'erp', 'crm', 'accounting'];
+      tabs.forEach(t => {
+        const pane = document.getElementById('bizPane' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('btnBizTab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (pane) {
+          if (t === tabName) {
+            pane.classList.remove('hidden');
+          } else {
+            pane.classList.add('hidden');
+          }
+        }
+        if (btn) {
+          if (t === tabName) {
+            btn.className = 'biz-subtab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm shadow-emerald-600/30';
+          } else {
+            btn.className = 'biz-subtab-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-950 text-slate-400 hover:text-white border border-slate-800';
+          }
+        }
+      });
+
+      if (tabName === 'erp') renderERPInventory();
+      if (tabName === 'crm') renderCRMCustomers();
+      if (tabName === 'accounting') renderAccountingBook(currentAccountingBook);
+      if (tabName === 'overview') updateBusinessOverviewStats();
+    }
+
+    // Update Overview Stats
+    function updateBusinessOverviewStats() {
+      const inventory = getStorageData('DATPHU_ERP_INVENTORY', DEFAULT_INVENTORY_DATA);
+      const expenses = getStorageData('DATPHU_ACCOUNTING_EXPENSES', DEFAULT_EXPENSES_DATA);
+
+      let totalCost = 0;
+      let totalEstRevenue = 0;
+      let totalFloorFee = 0;
+
+      inventory.forEach(item => {
+        totalCost += (item.cost * item.stock);
+        const itemRev = item.price * item.stock;
+        totalEstRevenue += itemRev;
+        totalFloorFee += (itemRev * item.feeRate);
+      });
+
+      const netProfit = totalEstRevenue - totalCost - totalFloorFee;
+
+      const revEl = document.getElementById('bizStatRevenue');
+      const cogsEl = document.getElementById('bizStatCOGS');
+      const feeEl = document.getElementById('bizStatFloorFee');
+      const netEl = document.getElementById('bizStatNetProfit');
+
+      if (revEl) revEl.textContent = totalEstRevenue.toLocaleString('vi-VN') + ' đ';
+      if (cogsEl) cogsEl.textContent = totalCost.toLocaleString('vi-VN') + ' đ';
+      if (feeEl) feeEl.textContent = Math.round(totalFloorFee).toLocaleString('vi-VN') + ' đ';
+      if (netEl) netEl.textContent = Math.round(netProfit).toLocaleString('vi-VN') + ' đ';
+    }
+
+    // ERP Inventory
+    function renderERPInventory() {
+      const inventory = getStorageData('DATPHU_ERP_INVENTORY', DEFAULT_INVENTORY_DATA);
+      const tbody = document.getElementById('bizInventoryTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = inventory.map(item => {
+        const floorFee = item.price * item.feeRate;
+        const netProfitPerItem = item.price - item.cost - floorFee;
+        const isLowStock = item.stock <= 2;
+
+        return `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5">
+              <div class="font-bold text-white font-sans text-xs">${item.name}</div>
+              <div class="text-[10px] text-slate-400 font-sans">Mã: ${item.id} • ĐVT: ${item.unit}</div>
+            </td>
+            <td class="p-2.5 text-center">
+              <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800/60 text-[10px] font-bold">
+                ${Math.round(item.feeRate * 100)}%
+              </span>
+            </td>
+            <td class="p-2.5 text-right text-sky-400 font-bold">${item.cost.toLocaleString('vi-VN')} đ</td>
+            <td class="p-2.5 text-right text-white font-bold">${item.price.toLocaleString('vi-VN')} đ</td>
+            <td class="p-2.5 text-right font-black ${netProfitPerItem >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+              +${Math.round(netProfitPerItem).toLocaleString('vi-VN')} đ
+            </td>
+            <td class="p-2.5 text-center">
+              <span class="px-2 py-0.5 rounded-md font-bold text-xs ${isLowStock ? 'bg-rose-950 text-rose-400 border border-rose-800 animate-pulse' : 'bg-slate-900 text-slate-200 border border-slate-700'}">
+                ${item.stock} ${item.unit}
+              </span>
+            </td>
+            <td class="p-2.5 text-center">
+              <div class="flex items-center justify-center gap-1">
+                <button onclick="adjustInventoryStock('${item.id}', 1)" title="Nhập thêm 1" class="w-6 h-6 rounded bg-slate-800 hover:bg-sky-600 text-white font-bold text-xs transition">+</button>
+                <button onclick="adjustInventoryStock('${item.id}', -1)" title="Xuất bán 1" class="w-6 h-6 rounded bg-slate-800 hover:bg-rose-600 text-white font-bold text-xs transition">-</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleAddStockModal(show) {
+      const el = document.getElementById('addStockFormContainer');
+      if (el) {
+        if (show) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      }
+    }
+
+    function handleAddNewInventoryItem(e) {
+      e.preventDefault();
+      const name = document.getElementById('invItemName').value.trim();
+      const cat = document.getElementById('invItemCat').value;
+      const cost = parseInt(document.getElementById('invItemCost').value) || 0;
+      const price = parseInt(document.getElementById('invItemPrice').value) || 0;
+      const stock = parseInt(document.getElementById('invItemQty').value) || 1;
+
+      let feeRate = 0.08;
+      let catName = 'Đặc sản (8%)';
+      if (cat === 'do_cu') { feeRate = 0.10; catName = 'Đồ cũ 6K (10%)'; }
+      if (cat === 'sach_cu') { feeRate = 0.12; catName = 'Sách cũ (12%)'; }
+      if (cat === 'vat_tu') { feeRate = 0.08; catName = 'Vật tư linh kiện (8%)'; }
+
+      const newItem = {
+        id: 'inv-' + Date.now().toString().slice(-4),
+        name,
+        cat,
+        catName,
+        feeRate,
+        cost,
+        price,
+        stock,
+        unit: 'cái'
+      };
+
+      const inventory = getStorageData('DATPHU_ERP_INVENTORY', DEFAULT_INVENTORY_DATA);
+      inventory.unshift(newItem);
+      setStorageData('DATPHU_ERP_INVENTORY', inventory);
+
+      toggleAddStockModal(false);
+      renderERPInventory();
+      updateBusinessOverviewStats();
+      showToast('Đã thêm sản phẩm ' + name + ' vào kho ERP thành công!', 'success');
+    }
+
+    function adjustInventoryStock(itemId, delta) {
+      const inventory = getStorageData('DATPHU_ERP_INVENTORY', DEFAULT_INVENTORY_DATA);
+      const item = inventory.find(i => i.id === itemId);
+      if (item) {
+        item.stock = Math.max(0, item.stock + delta);
+        setStorageData('DATPHU_ERP_INVENTORY', inventory);
+        renderERPInventory();
+        updateBusinessOverviewStats();
+        showToast('Đã cập nhật tồn kho: ' + item.name + ' (' + item.stock + ' ' + item.unit + ')', 'info');
+      }
+    }
+
+    // CRM Management
+    function renderCRMCustomers() {
+      const customers = getStorageData('DATPHU_CRM_CUSTOMERS', DEFAULT_CRM_DATA);
+      const tbody = document.getElementById('bizCRMTableBody');
+      if (!tbody) return;
+
+      const today = new Date('2026-10-27');
+
+      tbody.innerHTML = customers.map(c => {
+        const nextD = new Date(c.nextDate);
+        const isOverdue = nextD <= today;
+
+        return `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5">
+              <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                <span>${c.name}</span>
+                ${c.tier === 'VIP' ? '<span class="px-1.5 py-0.2 bg-amber-950 text-amber-400 border border-amber-700 rounded text-[9px] font-bold">VIP</span>' : ''}
+              </div>
+              <div class="text-[10px] text-slate-400 font-mono">📞 ${c.phone}</div>
+              <div class="text-[10px] text-slate-400 truncate max-w-xs">📍 ${c.address}</div>
+            </td>
+            <td class="p-2.5">
+              <div class="text-xs text-slate-200 font-medium">${c.device}</div>
+              <div class="text-[10px] text-sky-400">Chu kỳ bảo dưỡng: ${c.cycleMonths} tháng/lần</div>
+            </td>
+            <td class="p-2.5 text-center text-[11px] text-slate-400 font-mono">${c.lastDate}</td>
+            <td class="p-2.5 text-center text-[11px] font-mono font-bold ${isOverdue ? 'text-rose-400' : 'text-slate-300'}">${c.nextDate}</td>
+            <td class="p-2.5 text-center">
+              ${isOverdue 
+                ? '<span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-400 border border-rose-800 text-[10px] font-bold animate-pulse flex items-center justify-center gap-1"><i class="fa-solid fa-bell"></i> Đến kỳ!</span>'
+                : '<span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold flex items-center justify-center gap-1"><i class="fa-solid fa-check"></i> Chuẩn hạn</span>'
+              }
+            </td>
+            <td class="p-2.5 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="sendZaloCare('${c.phone}', '${c.name}', '${c.device}', ${isOverdue})" type="button" class="px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] flex items-center gap-1 transition">
+                  <i class="fa-solid fa-comment-sms"></i> Zalo Care
+                </button>
+                <a href="tel:${c.phone}" class="p-1.5 rounded-lg bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white transition" title="Gọi trực tiếp">
+                  <i class="fa-solid fa-phone text-xs"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleAddCustomerModal(show) {
+      const el = document.getElementById('addCustomerFormContainer');
+      if (el) {
+        if (show) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      }
+    }
+
+    function handleAddNewCustomer(e) {
+      e.preventDefault();
+      const name = document.getElementById('crmCustName').value.trim();
+      const phone = document.getElementById('crmCustPhone').value.trim();
+      const address = document.getElementById('crmCustAddress').value.trim();
+      const device = document.getElementById('crmCustDevice').value.trim();
+      const cycleMonths = parseInt(document.getElementById('crmCustCycle').value) || 6;
+      const tier = document.getElementById('crmCustTier').value;
+
+      const today = new Date('2026-10-27');
+      const nextDate = new Date(today);
+      nextDate.setMonth(nextDate.getMonth() + cycleMonths);
+      const nextDateStr = nextDate.toISOString().slice(0, 10);
+
+      const newCustomer = {
+        id: 'crm-' + Date.now().toString().slice(-4),
+        name,
+        phone,
+        address,
+        device,
+        cycleMonths,
+        lastDate: '2026-10-27',
+        nextDate: nextDateStr,
+        tier
+      };
+
+      const customers = getStorageData('DATPHU_CRM_CUSTOMERS', DEFAULT_CRM_DATA);
+      customers.unshift(newCustomer);
+      setStorageData('DATPHU_CRM_CUSTOMERS', customers);
+
+      toggleAddCustomerModal(false);
+      renderCRMCustomers();
+      showToast('Đã lưu thông tin khách quen: ' + name + ' vào CRM!', 'success');
+    }
+
+    function sendZaloCare(phone, name, device, isOverdue) {
+      const msg = isOverdue
+        ? `Dạ em chào anh/chị ${name}! Em bên kỹ thuật Đất Phú Tuy Hòa. Thiết bị "${device}" của nhà mình đã đến kỳ bảo dưỡng định kỳ để máy chạy mát và tiết kiệm điện. Anh/chị có tiện để bên em ghé kiểm tra sớm không ạ?`
+        : `Dạ em chào anh/chị ${name}! Em bên Đất Phú Tuy Hòa xin hỏi thăm thiết bị "${device}" nhà mình dùng có ổn định và ưng ý không ạ? Cần hỗ trợ gì anh/chị nhắn em ngay nhé!`;
+
+      navigator.clipboard.writeText(msg).then(() => {
+        showToast('Đã sao chép tin nhắn Zalo chăm sóc khách hàng!', 'info');
+      }).catch(() => {});
+
+      const zaloUrl = 'https://zalo.me/' + phone.replace(/[^0-9]/g, '');
+      window.open(zaloUrl, '_blank');
+    }
+
+    // Circular 88 Accounting System
+    function switchAccountingBook(bookKey) {
+      currentAccountingBook = bookKey;
+      const books = ['S1', 'S2', 'S3', 'S4'];
+      books.forEach(b => {
+        const btn = document.getElementById('btnBook' + b);
+        if (btn) {
+          if (b === bookKey) {
+            btn.className = 'acc-book-tab p-2.5 rounded-2xl bg-amber-600 text-slate-950 font-bold text-xs border border-amber-500 text-left transition shadow-sm';
+          } else {
+            btn.className = 'acc-book-tab p-2.5 rounded-2xl bg-slate-950 text-slate-400 font-bold text-xs border border-slate-800 hover:text-white text-left transition';
+          }
+        }
+      });
+
+      renderAccountingBook(bookKey);
+    }
+
+    function renderAccountingBook(bookKey) {
+      const container = document.getElementById('accountingTableContainer');
+      const titleEl = document.getElementById('accountingBookTitle');
+      const subEl = document.getElementById('accountingBookSub');
+      const addExpBtn = document.getElementById('btnAddExpenseBtn');
+      if (!container) return;
+
+      if (bookKey === 'S1') {
+        if (titleEl) titleEl.innerHTML = '<i class="fa-solid fa-file-invoice-dollar text-amber-400"></i> SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ (Mẫu S1-HKD)';
+        if (subEl) subEl.textContent = 'Mục đích: Theo dõi doanh thu tính thuế GTGT và thuế TNCN theo từng nhóm ngành nghề kinh doanh.';
+        if (addExpBtn) addExpBtn.classList.add('hidden');
+
+        container.innerHTML = `
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/80 text-[10px] text-slate-400 uppercase font-semibold">
+                <th class="p-2 text-center">Ngày ghi</th>
+                <th class="p-2">Chứng từ / Đơn</th>
+                <th class="p-2">Diễn Giải Hàng Hóa / Dịch Vụ</th>
+                <th class="p-2 text-right">Doanh Thu Hàng Hóa (Thuế 1.5%)</th>
+                <th class="p-2 text-right">Doanh Thu Dịch Vụ (Thuế 7%)</th>
+                <th class="p-2 text-right font-bold text-amber-400">Tổng Tiền</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
+              <tr>
+                <td class="p-2 text-center text-slate-400">2026-10-15</td>
+                <td class="p-2 text-sky-400 font-bold">HĐ-001/1C26TDP</td>
+                <td class="p-2 text-white font-sans">Bán 5kg Bò một nắng Krông Pa giao Phường 7 Tuy Hòa</td>
+                <td class="p-2 text-right text-emerald-400">3,100,000 đ</td>
+                <td class="p-2 text-right text-slate-500">0 đ</td>
+                <td class="p-2 text-right font-bold text-white">3,100,000 đ</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-center text-slate-400">2026-10-18</td>
+                <td class="p-2 text-sky-400 font-bold">HĐ-002/1C26TDP</td>
+                <td class="p-2 text-white font-sans">Công thợ sửa chữa & bảo dưỡng máy lạnh Daikin Inverter</td>
+                <td class="p-2 text-right text-slate-500">0 đ</td>
+                <td class="p-2 text-right text-amber-400">450,000 đ</td>
+                <td class="p-2 text-right font-bold text-white">450,000 đ</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-center text-slate-400">2026-10-22</td>
+                <td class="p-2 text-sky-400 font-bold">HĐ-003/1C26TDP</td>
+                <td class="p-2 text-white font-sans">Thanh lý máy bơm nước tăng áp Sena 150W kiểm định 6K</td>
+                <td class="p-2 text-right text-emerald-400">550,000 đ</td>
+                <td class="p-2 text-right text-slate-500">0 đ</td>
+                <td class="p-2 text-right font-bold text-white">550,000 đ</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-center text-slate-400">2026-10-25</td>
+                <td class="p-2 text-sky-400 font-bold">HĐ-004/1C26TDP</td>
+                <td class="p-2 text-white font-sans">Bán 10 xâu Bánh tráng Hòa Đa nướng mè thượng hạng</td>
+                <td class="p-2 text-right text-emerald-400">650,000 đ</td>
+                <td class="p-2 text-right text-slate-500">0 đ</td>
+                <td class="p-2 text-right font-bold text-white">650,000 đ</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="border-t-2 border-slate-700 font-bold text-xs bg-slate-900/90 text-white font-mono">
+                <td colspan="3" class="p-2.5 text-right font-sans">CỘNG TỔNG DOANH THU THÁNG 10/2026:</td>
+                <td class="p-2.5 text-right text-emerald-400">4,300,000 đ</td>
+                <td class="p-2.5 text-right text-amber-400">450,000 đ</td>
+                <td class="p-2.5 text-right text-amber-300 font-black">4,750,000 đ</td>
+              </tr>
+            </tfoot>
+          </table>
+        `;
+      } else if (bookKey === 'S2') {
+        if (titleEl) titleEl.innerHTML = '<i class="fa-solid fa-boxes-packing text-sky-400"></i> SỔ CHI TIẾT VẬT LIỆU, DỤNG CỤ, SẢN PHẨM, HÀNG HÓA (Mẫu S2-HKD)';
+        if (subEl) subEl.textContent = 'Mục đích: Theo dõi chi tiết số lượng và giá trị Nhập - Xuất - Tồn kho của từng mặt hàng kinh doanh.';
+        if (addExpBtn) addExpBtn.classList.add('hidden');
+
+        const inventory = getStorageData('DATPHU_ERP_INVENTORY', DEFAULT_INVENTORY_DATA);
+        container.innerHTML = `
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/80 text-[10px] text-slate-400 uppercase font-semibold">
+                <th class="p-2">Tên Mặt Hàng / Vật Liệu</th>
+                <th class="p-2 text-center">ĐVT</th>
+                <th class="p-2 text-right">Đơn Giá Vốn</th>
+                <th class="p-2 text-center">Nhập Trong Kỳ</th>
+                <th class="p-2 text-center">Xuất Trong Kỳ</th>
+                <th class="p-2 text-center">Tồn Cuối Kỳ</th>
+                <th class="p-2 text-right">Thành Tiền Tồn Kho</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
+              ${inventory.map(i => `
+                <tr>
+                  <td class="p-2 font-bold text-white font-sans">${i.name}</td>
+                  <td class="p-2 text-center text-slate-400">${i.unit}</td>
+                  <td class="p-2 text-right text-sky-400">${i.cost.toLocaleString('vi-VN')} đ</td>
+                  <td class="p-2 text-center text-emerald-400">+${i.stock + 5}</td>
+                  <td class="p-2 text-center text-amber-400">-5</td>
+                  <td class="p-2 text-center font-bold text-white">${i.stock}</td>
+                  <td class="p-2 text-right font-black text-emerald-400">${(i.cost * i.stock).toLocaleString('vi-VN')} đ</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } else if (bookKey === 'S3') {
+        if (titleEl) titleEl.innerHTML = '<i class="fa-solid fa-receipt text-rose-400"></i> SỔ CHI PHÍ SẢN XUẤT, KINH DOANH (Mẫu S3-HKD)';
+        if (subEl) subEl.textContent = 'Mục đích: Tập hợp chi phí thực tế phát sinh (xăng xe cứu hộ, điện thoại, bao bì, công cụ) để xác định kết quả kinh doanh.';
+        if (addExpBtn) addExpBtn.classList.remove('hidden');
+
+        const expenses = getStorageData('DATPHU_ACCOUNTING_EXPENSES', DEFAULT_EXPENSES_DATA);
+        let totalExp = expenses.reduce((sum, e) => sum + e.amount, 0);
+
+        container.innerHTML = `
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/80 text-[10px] text-slate-400 uppercase font-semibold">
+                <th class="p-2 text-center">Ngày Chi</th>
+                <th class="p-2">Nội Dung Chi Phí Thực Tế</th>
+                <th class="p-2 text-center">Khoản Mục</th>
+                <th class="p-2 text-right">Số Tiền Đã Chi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
+              ${expenses.map(e => `
+                <tr>
+                  <td class="p-2 text-center text-slate-400">${e.date}</td>
+                  <td class="p-2 text-white font-sans font-medium">${e.desc}</td>
+                  <td class="p-2 text-center">
+                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] uppercase font-bold">${e.cat}</span>
+                  </td>
+                  <td class="p-2 text-right font-bold text-rose-400">-${e.amount.toLocaleString('vi-VN')} đ</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr class="border-t-2 border-slate-700 font-bold text-xs bg-slate-900/90 text-white font-mono">
+                <td colspan="3" class="p-2.5 text-right font-sans">TỔNG CHI PHÍ SẢN XUẤT KINH DOANH:</td>
+                <td class="p-2.5 text-right text-rose-400 font-black">-${totalExp.toLocaleString('vi-VN')} đ</td>
+              </tr>
+            </tfoot>
+          </table>
+        `;
+      } else if (bookKey === 'S4') {
+        if (titleEl) titleEl.innerHTML = '<i class="fa-solid fa-landmark text-amber-400"></i> SỔ THEO DÕI NGHĨA VỤ THUẾ VỚI NGÂN SÁCH NHÀ NƯỚC (Mẫu S4-HKD)';
+        if (subEl) subEl.textContent = 'Mục đích: Theo dõi số thuế GTGT và thuế TNCN phải nộp, đã nộp và còn phải nộp vào Kho bạc Nhà nước.';
+        if (addExpBtn) addExpBtn.classList.add('hidden');
+
+        container.innerHTML = `
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/80 text-[10px] text-slate-400 uppercase font-semibold">
+                <th class="p-2">Sắc Thuế Phải Nộp</th>
+                <th class="p-2 text-center">Doanh Thu Tính Thuế</th>
+                <th class="p-2 text-center">Tỷ Lệ Thuế</th>
+                <th class="p-2 text-right">Số Phải Nộp</th>
+                <th class="p-2 text-right">Số Đã Nộp Kho Bạc</th>
+                <th class="p-2 text-center">Trạng Thái</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
+              <tr>
+                <td class="p-2 font-bold text-white font-sans">Thuế GTGT Hàng Hóa (Đặc sản, Sách, Đồ 6K)</td>
+                <td class="p-2 text-center text-slate-300">4,300,000 đ</td>
+                <td class="p-2 text-center text-amber-400 font-bold">1.0%</td>
+                <td class="p-2 text-right font-bold text-emerald-400">43,000 đ</td>
+                <td class="p-2 text-right text-slate-300">43,000 đ</td>
+                <td class="p-2 text-center"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">Đã nộp</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-white font-sans">Thuế TNCN Hàng Hóa (0.5%)</td>
+                <td class="p-2 text-center text-slate-300">4,300,000 đ</td>
+                <td class="p-2 text-center text-amber-400 font-bold">0.5%</td>
+                <td class="p-2 text-right font-bold text-emerald-400">21,500 đ</td>
+                <td class="p-2 text-right text-slate-300">21,500 đ</td>
+                <td class="p-2 text-center"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">Đã nộp</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-white font-sans">Thuế GTGT Dịch Vụ Thợ Kỹ Thuật (5.0%)</td>
+                <td class="p-2 text-center text-slate-300">450,000 đ</td>
+                <td class="p-2 text-center text-amber-400 font-bold">5.0%</td>
+                <td class="p-2 text-right font-bold text-emerald-400">22,500 đ</td>
+                <td class="p-2 text-right text-slate-300">22,500 đ</td>
+                <td class="p-2 text-center"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">Đã nộp</span></td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-white font-sans">Thuế TNCN Dịch Vụ Thợ Kỹ Thuật (2.0%)</td>
+                <td class="p-2 text-center text-slate-300">450,000 đ</td>
+                <td class="p-2 text-center text-amber-400 font-bold">2.0%</td>
+                <td class="p-2 text-right font-bold text-emerald-400">9,000 đ</td>
+                <td class="p-2 text-right text-slate-300">9,000 đ</td>
+                <td class="p-2 text-center"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">Đã nộp</span></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="border-t-2 border-slate-700 font-bold text-xs bg-slate-900/90 text-white font-mono">
+                <td colspan="3" class="p-2.5 text-right font-sans">TỔNG NGHĨA VỤ THUẾ NSNN ĐÃ HOÀN THÀNH:</td>
+                <td class="p-2.5 text-right text-emerald-400 font-black">96,000 đ</td>
+                <td class="p-2.5 text-right text-emerald-400 font-black">96,000 đ</td>
+                <td class="p-2.5 text-center text-emerald-400 font-sans text-[10px]">100% Hoàn Thành</td>
+              </tr>
+            </tfoot>
+          </table>
+        `;
+      }
+    }
+
+    function toggleAddExpenseModal(show) {
+      const el = document.getElementById('addExpenseFormContainer');
+      if (el) {
+        if (show) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      }
+    }
+
+    function handleAddNewExpense(e) {
+      e.preventDefault();
+      const desc = document.getElementById('expDesc').value.trim();
+      const cat = document.getElementById('expCategory').value;
+      const amount = parseInt(document.getElementById('expAmount').value) || 0;
+      const date = document.getElementById('expDate').value || '2026-10-27';
+
+      const newExpense = {
+        id: 'exp-' + Date.now().toString().slice(-4),
+        date,
+        desc,
+        cat,
+        amount
+      };
+
+      const expenses = getStorageData('DATPHU_ACCOUNTING_EXPENSES', DEFAULT_EXPENSES_DATA);
+      expenses.unshift(newExpense);
+      setStorageData('DATPHU_ACCOUNTING_EXPENSES', expenses);
+
+      toggleAddExpenseModal(false);
+      renderAccountingBook('S3');
+      updateBusinessOverviewStats();
+      showToast('Đã ghi nhận khoản chi: ' + desc + ' vào Sổ S3!', 'success');
+    }
+
+    // Modal In Ấn Chuẩn Thông Tư 88
+    function openAccountingPrintModal() {
+      const modal = document.getElementById('accountingPrintModal');
+      const tableContainer = document.getElementById('printDocTableContainer');
+      const titleEl = document.getElementById('printDocTitle');
+      const codeEl = document.getElementById('printDocFormCode');
+      if (!modal || !tableContainer) return;
+
+      if (currentAccountingBook === 'S1') {
+        titleEl.textContent = 'SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ';
+        codeEl.textContent = '(Mẫu số S1-HKD - Kèm theo Thông tư số 88/2021/TT-BTC)';
+      } else if (currentAccountingBook === 'S2') {
+        titleEl.textContent = 'SỔ CHI TIẾT VẬT LIỆU, DỤNG CỤ, SẢN PHẨM, HÀNG HÓA';
+        codeEl.textContent = '(Mẫu số S2-HKD - Kèm theo Thông tư số 88/2021/TT-BTC)';
+      } else if (currentAccountingBook === 'S3') {
+        titleEl.textContent = 'SỔ CHI PHÍ SẢN XUẤT, KINH DOANH';
+        codeEl.textContent = '(Mẫu số S3-HKD - Kèm theo Thông tư số 88/2021/TT-BTC)';
+      } else if (currentAccountingBook === 'S4') {
+        titleEl.textContent = 'SỔ THEO DÕI NGHĨA VỤ THUẾ VỚI NGÂN SÁCH NHÀ NƯỚC';
+        codeEl.textContent = '(Mẫu số S4-HKD - Kèm theo Thông tư số 88/2021/TT-BTC)';
+      }
+
+      // Clone table from container
+      const currentTable = document.getElementById('accountingTableContainer');
+      if (currentTable) {
+        tableContainer.innerHTML = currentTable.innerHTML
+          .replace(/text-white/g, 'text-slate-900')
+          .replace(/text-slate-400/g, 'text-slate-600')
+          .replace(/text-slate-300/g, 'text-slate-700')
+          .replace(/text-slate-200/g, 'text-slate-800')
+          .replace(/bg-slate-900\/80/g, 'bg-slate-100')
+          .replace(/bg-slate-900\/90/g, 'bg-slate-200')
+          .replace(/border-slate-800\/60/g, 'border-slate-300')
+          .replace(/border-slate-800/g, 'border-slate-300')
+          .replace(/border-slate-700/g, 'border-slate-400');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAccountingPrintModal() {
+      const modal = document.getElementById('accountingPrintModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function exportAccountingToCSV() {
+      const inventory = getStorageData('DATPHU_ERP_INVENTORY', DEFAULT_INVENTORY_DATA);
+      let csvContent = "data:text/csv;charset=utf-8,﻿";
+      csvContent += "Ma Hang,Ten Mat Hang,Nganh Hang,Gia Von (VND),Gia Ban (VND),Phi San %,Lai Rong (VND),Ton Kho\r\n";
+      
+      inventory.forEach(item => {
+        const floorFee = item.price * item.feeRate;
+        const netProfit = item.price - item.cost - floorFee;
+        csvContent += `"${item.id}","${item.name}","${item.catName}",${item.cost},${item.price},${item.feeRate * 100}%,${Math.round(netProfit)},${item.stock}\r\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "SO_KE_TOAN_DAT_PHU_TT88_" + new Date().toISOString().slice(0, 10) + ".csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Đã xuất file Excel/CSV sổ kế toán thành công!', 'success');
+    }
+
+    // Tự động khởi tạo Suite khi tải trang
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        updateBusinessOverviewStats();
+        renderERPInventory();
+        renderCRMCustomers();
+        renderAccountingBook('S1');
+      } catch (err) {
+        console.error('Lỗi khởi tạo Business Suite:', err);
+      }
+    });
+
+
+
+    // =========================================================================
+    // HỆ THỐNG BẢN TIN PHỐ BIỂN & CỘNG ĐỒNG ĐẤT PHÚ (COMMUNITY FEED)
+    // =========================================================================
+
+    const DEFAULT_COMMUNITY_POSTS = [
+      {
+        id: 'post-01',
+        topic: 'tho_6k',
+        topicName: '🛠️ Nhật Ký Thợ 6K',
+        author: 'Anh Hưng (Kỹ sư điện lạnh)',
+        roleBadge: 'Thợ Nòng Cốt 6K',
+        avatarBg: 'from-amber-400 to-orange-500',
+        district: 'Phường 5, TP. Tuy Hòa',
+        time: '25 phút trước',
+        content: 'Trưa nay vừa cứu hộ ca máy lạnh Inverter Daikin của tiệm chè đường Nguyễn Huệ. Máy chạy phà phà mà gió không mát do mạng nhện bám kín dàn tản nhiệt ngoài trời và tụ ngậm bị phù. Đã thay tụ chính hãng và xịt rửa thông thoáng. Mẹo nhỏ cho bà con Tuy Hòa mùa này gió biển nhiều bụi muối: cứ 3 tháng nên xịt nước dàn nóng 1 lần là máy bền 10 năm!',
+        image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=700&q=80',
+        shoppable: {
+          title: 'Gói Bảo Dưỡng & Vệ Sinh Máy Lạnh Inverter 6K',
+          price: 150000,
+          actionText: '⚡ Đặt Thợ Này Ngay',
+          actionType: 'book_worker',
+          workerName: 'Trần Quốc Hưng'
+        },
+        likes: 42,
+        isLiked: false,
+        comments: [
+          { author: 'Chị Mai (P.7 Tuy Hòa)', text: 'Cảm ơn anh Hưng, máy tiệm em lạnh buốt lại rồi ạ!', time: '15 phút trước' },
+          { author: 'Bác Ba Đức', text: 'Nhà tôi ở Phú Lâm, chiều mai anh ghé xem hộ cái máy giặt kêu to được không?', time: '5 phút trước' }
+        ]
+      },
+      {
+        id: 'post-02',
+        topic: 'dac_san',
+        topicName: '🥩 Đặc Sản Xứ Nẫu',
+        author: 'Chị Bảy (Hộ Bò Một Nắng Krông Pa)',
+        roleBadge: 'Chủ Hộ OCOP',
+        avatarBg: 'from-rose-500 to-amber-500',
+        district: 'Huyện Sơn Hòa, Phú Yên',
+        time: '1 giờ trước',
+        content: 'Mẻ bò một nắng Krông Pa - Sơn Hòa sáng nay phơi đúng cái nắng gắt của miền Trung, thịt dẻo thơm từng thớ, ớt sim rừng cay nồng. Chiều nay đóng gói hút chân không giao thẳng về Tuy Hòa cho các bác ăn lai rai hoặc làm quà biếu!',
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=80',
+        shoppable: {
+          title: 'Bò Một Nắng Krông Pa Thượng Hạng (Hút chân không 1kg kèm Muối Kiến Vàng)',
+          price: 620000,
+          actionText: '🛒 Mua Ngay (Giao Tuy Hòa 30 Phút)',
+          actionType: 'buy_item',
+          itemId: 'dacsan-01'
+        },
+        likes: 89,
+        isLiked: true,
+        comments: [
+          { author: 'Anh Tuấn (P.7)', text: 'Cho em 2kg giao về 182 Hùng Vương trước 5h chiều nha chị ơi.', time: '40 phút trước' },
+          { author: 'Cô Thảo (P.5)', text: 'Muối kiến vàng đợt này chấm bò bao ngon luôn!', time: '20 phút trước' }
+        ]
+      },
+      {
+        id: 'post-03',
+        topic: 'do_cu',
+        topicName: '📚 Ký Gửi & Sách Cũ',
+        author: 'Thầy Hưng (Cựu Giáo Viên)',
+        roleBadge: 'Người Ký Gửi Uy Tín',
+        avatarBg: 'from-sky-500 to-indigo-600',
+        district: 'Phường 7, TP. Tuy Hòa',
+        time: '3 giờ trước',
+        content: 'Dọn tủ sách cuối tuần, mình có bộ 3 cuốn khảo cứu về Địa chí Phú Yên và phong tục xứ Nẫu để lại cho bạn nào mê văn hóa quê mình. Sách in bìa cứng từ năm 1998 còn rất mới. Ngoài ra mình còn 1 chiếc bàn học gỗ còn chắc chắn muốn tặng lại cho em sinh viên nào trọ khu vực P.7 hoặc P.9 nha.',
+        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=700&q=80',
+        shoppable: {
+          title: 'Bộ Sách Văn Học Miền Trung & Phú Yên Khảo Cứu (3 Tập Bìa Cứng)',
+          price: 185000,
+          actionText: '📚 Xem Sách & Mua Ký Gửi',
+          actionType: 'buy_item',
+          itemId: 'sach-01'
+        },
+        likes: 67,
+        isLiked: false,
+        comments: [
+          { author: 'Minh Quang (Sinh viên ĐH Phú Yên)', text: 'Thầy ơi cho em xin chiếc bàn học được không ạ? Em ở trọ ngay hẻm Duy Tân.', time: '2 giờ trước' }
+        ]
+      },
+      {
+        id: 'post-04',
+        topic: 'tuong_tro',
+        topicName: '📢 Tương Trợ & Cứu Hộ Tiệm',
+        author: 'Quán Phở Anh Tuấn',
+        roleBadge: 'Chủ Tiệm Kinh Doanh',
+        avatarBg: 'from-emerald-500 to-teal-600',
+        district: '182 Hùng Vương, P.7, Tuy Hòa',
+        time: '5 giờ trước',
+        content: 'Cảm ơn đội thợ Đất Phú OneBase! Sáng nay nồi ninh nước dùng điện 100L bị nhảy aptomat liên tục lúc quán đang đông khách, bấm gọi cứu hộ 12 phút sau thợ đã có mặt đo điện trở và thay thanh nhiệt mới. Tiệm không bị gián đoạn bán hàng ngày đầu tuần!',
+        image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=700&q=80',
+        shoppable: {
+          title: 'Dịch Vụ Cứu Hộ Thiết Bị Bếp Ăn & Quán Cà Phê 24/7 (Phú Yên)',
+          price: 250000,
+          actionText: '⚡ Lưu Số Cứu Hộ Khẩn Cấp',
+          actionType: 'call_hotline'
+        },
+        likes: 104,
+        isLiked: true,
+        comments: [
+          { author: 'Bác Ba (Quán cơm Phú Lâm)', text: 'Lưu lại liền, tiệm ăn sợ nhất hỏng tủ đông với nồi điện lúc khách đông.', time: '4 giờ trước' }
+        ]
+      }
+    ];
+
+    let currentFeedFilter = 'all';
+
+    function toggleCreatePostModal(show) {
+      const modal = document.getElementById('createPostModal');
+      if (modal) {
+        if (show) modal.classList.remove('hidden');
+        else modal.classList.add('hidden');
+      }
+    }
+
+    function filterCommunityFeed(topic) {
+      currentFeedFilter = topic;
+      document.querySelectorAll('.feed-filter-btn').forEach(btn => {
+        btn.className = 'feed-filter-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition shrink-0 flex items-center gap-1.5';
+      });
+
+      const activeBtn = document.getElementById('feedFilter-' + topic);
+      if (activeBtn) {
+        activeBtn.className = 'feed-filter-btn px-3 py-1.5 rounded-xl bg-emerald-600 text-white shadow-sm shadow-emerald-600/30 transition shrink-0 flex items-center gap-1.5';
+      }
+
+      renderCommunityFeed();
+    }
+
+    function renderCommunityFeed() {
+      const container = document.getElementById('communityFeedContainer');
+      if (!container) return;
+
+      const posts = getStorageData('DATPHU_COMMUNITY_FEED', DEFAULT_COMMUNITY_POSTS);
+      const filtered = (currentFeedFilter === 'all')
+        ? posts
+        : posts.filter(p => p.topic === currentFeedFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-slate-950 p-8 rounded-3xl border border-slate-800 text-center space-y-2">
+            <div class="text-3xl">📰</div>
+            <div class="font-bold text-white text-sm">Chưa có bài đăng nào trong chủ đề này</div>
+            <p class="text-xs text-slate-400">Hãy là người đầu tiên chia sẻ câu chuyện của bạn lên Bản Tin Xóm Làng!</p>
+            <button onclick="toggleCreatePostModal(true)" class="mt-2 px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">
+              ✍️ Đăng Bài Ngay
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(post => {
+        return `
+          <article class="bg-slate-950 rounded-3xl border border-slate-800/80 p-4 sm:p-5 space-y-3.5 shadow-xl hover:border-slate-700 transition">
+            
+            <!-- Header Tác Giả -->
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr ${post.avatarBg || 'from-sky-500 to-indigo-600'} text-slate-950 font-black text-lg flex items-center justify-center shadow-md">
+                  ${post.author.charAt(0)}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="font-bold text-white text-xs sm:text-sm">${post.author}</h4>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[9px] font-bold">
+                      ${post.roleBadge || 'Thành Viên'}
+                    </span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                    <span>📍 ${post.district}</span>
+                    <span>•</span>
+                    <span class="font-mono">${post.time}</span>
+                  </div>
+                </div>
+              </div>
+
+              <span class="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-[10px] text-amber-400 font-bold shrink-0">
+                ${post.topicName}
+              </span>
+            </div>
+
+            <!-- Nội dung bài viết -->
+            <p class="text-xs sm:text-[13px] text-slate-200 leading-relaxed font-sans">
+              ${post.content}
+            </p>
+
+            <!-- Hình ảnh bài viết nếu có -->
+            ${post.image ? `
+              <div class="relative rounded-2xl overflow-hidden max-h-80 bg-slate-900 border border-slate-800">
+                <img src="${post.image}" alt="Hình ảnh bản tin" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+            ` : ''}
+
+            <!-- Thẻ Shoppable Card (Gắn trực tiếp sản phẩm / thợ) -->
+            ${post.shoppable ? `
+              <div class="bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40 p-3 rounded-2xl border border-emerald-800/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 shadow-inner">
+                <div class="space-y-0.5">
+                  <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                    <i class="fa-solid fa-cart-shopping"></i> Món hàng / Dịch vụ đính kèm bài viết:
+                  </div>
+                  <div class="font-bold text-white text-xs">${post.shoppable.title}</div>
+                  <div class="font-mono font-black text-emerald-400 text-xs sm:text-sm">
+                    ${typeof post.shoppable.price === 'number' ? post.shoppable.price.toLocaleString('vi-VN') + ' đ' : post.shoppable.price}
+                  </div>
+                </div>
+
+                <button onclick="handleShoppableAction('${post.shoppable.actionType}', '${post.shoppable.workerName || ''}', '${post.shoppable.itemId || ''}')" type="button" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-600/20 shrink-0">
+                  <span>${post.shoppable.actionText}</span>
+                  <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+              </div>
+            ` : ''}
+
+            <!-- Thanh Tương Tác: Like, Comment, Share -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+              <div class="flex items-center gap-4">
+                <button onclick="toggleLikePost('${post.id}')" type="button" class="flex items-center gap-1.5 font-bold transition ${post.isLiked ? 'text-rose-500' : 'hover:text-rose-400'}">
+                  <i class="fa-solid fa-heart ${post.isLiked ? 'scale-110' : ''}"></i>
+                  <span class="font-mono">${post.likes}</span>
+                </button>
+
+                <button onclick="toggleComments('${post.id}')" type="button" class="flex items-center gap-1.5 font-bold hover:text-sky-400 transition">
+                  <i class="fa-solid fa-comment"></i>
+                  <span class="font-mono">${post.comments ? post.comments.length : 0}</span>
+                </button>
+              </div>
+
+              <button onclick="sharePost('${post.id}')" type="button" class="flex items-center gap-1 font-bold hover:text-emerald-400 transition">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span>Chia sẻ Zalo</span>
+              </button>
+            </div>
+
+            <!-- Khu Vực Bình Luận Của Bà Con -->
+            <div id="commentsBox-${post.id}" class="space-y-2 pt-2 border-t border-slate-900">
+              ${(post.comments && post.comments.length > 0) ? post.comments.map(c => `
+                <div class="bg-slate-900/70 p-2.5 rounded-xl border border-slate-800/60 text-xs space-y-0.5">
+                  <div class="flex justify-between items-center text-[10px]">
+                    <span class="font-bold text-sky-400">${c.author}</span>
+                    <span class="text-slate-500 font-mono">${c.time || 'Vừa xong'}</span>
+                  </div>
+                  <p class="text-slate-300 font-sans">${c.text}</p>
+                </div>
+              `).join('') : ''}
+
+              <!-- Ô Gửi Bình Luận Nhanh -->
+              <form onsubmit="handleSendComment(event, '${post.id}')" class="flex items-center gap-1.5 pt-1">
+                <input id="commentInput-${post.id}" type="text" placeholder="Gửi lời hỏi thăm hoặc bình luận..." class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500" />
+                <button type="submit" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white font-bold text-xs transition">
+                  Gửi
+                </button>
+              </form>
+            </div>
+
+          </article>
+        `;
+      }).join('');
+    }
+
+    function toggleLikePost(postId) {
+      const posts = getStorageData('DATPHU_COMMUNITY_FEED', DEFAULT_COMMUNITY_POSTS);
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        post.isLiked = !post.isLiked;
+        post.likes += post.isLiked ? 1 : -1;
+        setStorageData('DATPHU_COMMUNITY_FEED', posts);
+        renderCommunityFeed();
+      }
+    }
+
+    function toggleComments(postId) {
+      const box = document.getElementById('commentsBox-' + postId);
+      if (box) {
+        box.classList.toggle('hidden');
+      }
+    }
+
+    function handleSendComment(e, postId) {
+      e.preventDefault();
+      const input = document.getElementById('commentInput-' + postId);
+      if (!input || !input.value.trim()) return;
+
+      const posts = getStorageData('DATPHU_COMMUNITY_FEED', DEFAULT_COMMUNITY_POSTS);
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        if (!post.comments) post.comments = [];
+        post.comments.push({
+          author: currentAuthUser.name || 'Người dùng Tuy Hòa',
+          text: input.value.trim(),
+          time: 'Vừa xong'
+        });
+        setStorageData('DATPHU_COMMUNITY_FEED', posts);
+        input.value = '';
+        renderCommunityFeed();
+        showToast('Đã gửi bình luận lên bài viết!', 'success');
+      }
+    }
+
+    function handleShoppableAction(type, workerName, itemId) {
+      if (type === 'book_worker') {
+        switchTab('dispatch');
+        if (workerName) {
+          selectWorkerForDispatch(workerName, 'Đặt thợ từ bài đăng trên Bản Tin Phố Biển');
+        }
+      } else if (type === 'buy_item') {
+        switchTab('explore');
+        if (itemId) {
+          const item = PRODUCTS.find(p => p.id === itemId);
+          if (item) {
+            addToCart(item);
+            showToast('Đã thêm ' + item.title + ' vào giỏ hàng!', 'success');
+          }
+        }
+      } else if (type === 'call_hotline') {
+        window.location.href = 'tel:0935123456';
+      }
+    }
+
+    function sharePost(postId) {
+      const url = window.location.origin + '?post=' + postId;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Đã sao chép link bài đăng để chia sẻ qua Zalo / Facebook!', 'info');
+      }).catch(() => {});
+    }
+
+    function handleCreateCommunityPost(e) {
+      e.preventDefault();
+      const author = document.getElementById('postAuthorName').value.trim();
+      const district = document.getElementById('postAuthorDistrict').value.trim();
+      const topic = document.getElementById('postTopic').value;
+      const content = document.getElementById('postContent').value.trim();
+      const imageUrl = document.getElementById('postImageUrl').value.trim();
+      const shopTitle = document.getElementById('postShopTitle').value.trim();
+      const shopPrice = document.getElementById('postShopPrice').value.trim();
+
+      let topicName = '🛠️ Nhật Ký Thợ 6K';
+      let roleBadge = 'Thợ Nòng Cốt 6K';
+      let avatarBg = 'from-amber-400 to-orange-500';
+
+      if (topic === 'dac_san') {
+        topicName = '🥩 Đặc Sản Xứ Nẫu';
+        roleBadge = 'Chủ Hộ OCOP';
+        avatarBg = 'from-rose-500 to-amber-500';
+      } else if (topic === 'do_cu') {
+        topicName = '📚 Ký Gửi & Sách Cũ';
+        roleBadge = 'Người Ký Gửi';
+        avatarBg = 'from-sky-500 to-indigo-600';
+      } else if (topic === 'tuong_tro') {
+        topicName = '📢 Tương Trợ Xóm Làng';
+        roleBadge = 'Bà Con Tuy Hòa';
+        avatarBg = 'from-emerald-500 to-teal-600';
+      }
+
+      let shoppable = null;
+      if (shopTitle) {
+        shoppable = {
+          title: shopTitle,
+          price: shopPrice || 'Liên hệ',
+          actionText: '⚡ Đặt Mua / Liên Hệ Ngay',
+          actionType: 'call_hotline'
+        };
+      }
+
+      const newPost = {
+        id: 'post-' + Date.now().toString().slice(-4),
+        topic,
+        topicName,
+        author,
+        roleBadge,
+        avatarBg,
+        district,
+        time: 'Vừa xong',
+        content,
+        image: imageUrl || (topic === 'dac_san' ? 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=80' : ''),
+        shoppable,
+        likes: 1,
+        isLiked: true,
+        comments: []
+      };
+
+      const posts = getStorageData('DATPHU_COMMUNITY_FEED', DEFAULT_COMMUNITY_POSTS);
+      posts.unshift(newPost);
+      setStorageData('DATPHU_COMMUNITY_FEED', posts);
+
+      toggleCreatePostModal(false);
+      renderCommunityFeed();
+      showToast('Đã đăng bài lên Bản Tin Phố Biển thành công!', 'success');
+    }
+
+</script>
+
+
+  <!-- ================= MODAL IN SỔ KẾ TOÁN CHUẨN THÔNG TƯ 88/2021/TT-BTC ================= -->
+  <div id="accountingPrintModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white text-slate-900 rounded-3xl max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+      
+      <!-- Nút đóng góc phải -->
+      <button onclick="closeAccountingPrintModal()" type="button" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition shadow print:hidden">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Thanh công cụ phía trên dành cho Thao tác In/Xuất -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200 print:hidden">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs">
+              Mẫu Biểu Chuẩn Bộ Tài Chính
+            </span>
+            <span class="text-xs text-slate-500 font-medium">Thông tư 88/2021/TT-BTC & TT 133/2016</span>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 mt-1">Bản In Sổ Kế Toán Hợp Pháp</h3>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" type="button" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition">
+            <i class="fa-solid fa-print"></i>
+            <span>In Bản Giấy / Lưu PDF</span>
+          </button>
+          <button onclick="exportAccountingToCSV()" type="button" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Xuất Excel/CSV</span>
+          </button>
+          <button onclick="closeAccountingPrintModal()" type="button" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+            Đóng
+          </button>
+        </div>
+      </div>
+
+      <!-- NỘI DUNG SỔ IN CHUẨN MỰC BỘ TÀI CHÍNH -->
+      <div id="accountingPrintableDocument" class="space-y-6 text-slate-900 font-serif">
+        
+        <!-- Header Quốc Hiệu & Doanh Nghiệp -->
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-4 text-xs font-sans">
+          <div>
+            <div class="font-bold text-sm uppercase">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</div>
+            <div>Hộ kinh doanh / Chi nhánh Tuy Hòa</div>
+            <div>Mã số thuế: <strong class="font-mono">4401020233</strong></div>
+            <div>Địa chỉ: Thôn Đông Phước, Hòa An, Phú Hòa, Tỉnh Phú Yên</div>
+            <div>Ký hiệu hóa đơn điện tử: <strong class="font-mono">1C26TDP</strong></div>
+          </div>
+          <div class="text-center sm:text-right">
+            <div class="font-bold uppercase text-[11px]">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+            <div class="font-semibold text-[11px]">Độc lập - Tự do - Hạnh phúc</div>
+            <div class="italic text-[10px] text-slate-500 mt-1">Phú Yên, ngày 27 tháng 10 năm 2026</div>
+          </div>
+        </div>
+
+        <!-- Tiêu đề Sổ -->
+        <div class="text-center space-y-1">
+          <h2 id="printDocTitle" class="text-xl sm:text-2xl font-black uppercase text-slate-950 tracking-wide font-sans">
+            SỔ CHI TIẾT DOANH THU BÁN HÀNG HÓA, DỊCH VỤ
+          </h2>
+          <div id="printDocFormCode" class="text-xs font-bold text-slate-600 font-sans">
+            (Mẫu số S1-HKD - Ban hành kèm theo Thông tư số 88/2021/TT-BTC)
+          </div>
+          <div id="printDocPeriod" class="text-xs italic text-slate-600">
+            Kỳ tính thuế: Tháng 10 năm 2026 • Đơn vị tiền tệ: Việt Nam Đồng (VNĐ)
+          </div>
+        </div>
+
+        <!-- Bảng Dữ Liệu Sổ -->
+        <div id="printDocTableContainer" class="overflow-x-auto text-xs font-sans">
+          <!-- Bảng được render theo mẫu sổ tương ứng -->
+        </div>
+
+        <!-- Tóm tắt số liệu & Thuế nghĩa vụ -->
+        <div id="printDocTaxSummary" class="border border-slate-300 rounded-xl p-3 bg-slate-50 space-y-1.5 text-xs font-sans">
+          <div class="font-bold text-slate-900 flex justify-between items-center">
+            <span>Tổng nghĩa vụ thuế phải nộp vào Ngân sách Nhà nước (GTGT + TNCN):</span>
+            <span id="printDocTaxAmount" class="text-sm font-black text-emerald-700 font-mono">345,000 VNĐ</span>
+          </div>
+          <div class="text-[11px] text-slate-600 flex justify-between items-center">
+            <span>Tài khoản Kho bạc Nhà nước nộp thuế:</span>
+            <span class="font-mono">Kho bạc Nhà nước tỉnh Phú Yên (Tiểu mục 1701 & 1001)</span>
+          </div>
+        </div>
+
+        <!-- Chữ Ký Pháp Lý 3 Bên -->
+        <div class="grid grid-cols-3 gap-4 pt-6 text-center text-xs font-sans">
+          <div class="space-y-12">
+            <div>
+              <div class="font-bold uppercase">Người Ghi Sổ</div>
+              <div class="italic text-[10px] text-slate-500">(Ký, ghi rõ họ tên)</div>
+            </div>
+            <div class="font-bold">Phạm Thanh Hân</div>
+          </div>
+          <div class="space-y-12">
+            <div>
+              <div class="font-bold uppercase">Người Phụ Trách Kế Toán</div>
+              <div class="italic text-[10px] text-slate-500">(Ký, ghi rõ họ tên)</div>
+            </div>
+            <div class="font-bold">Đất Phú AI Accounting Core</div>
+          </div>
+          <div class="space-y-12">
+            <div>
+              <div class="font-bold uppercase">Người Đại Diện Theo Pháp Luật</div>
+              <div class="italic text-[10px] text-slate-500">(Ký tên, đóng dấu)</div>
+            </div>
+            <div>
+              <div class="font-bold">Phạm Thanh Hân</div>
+              <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">Giám Đốc Đất Phú Co., Ltd</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>

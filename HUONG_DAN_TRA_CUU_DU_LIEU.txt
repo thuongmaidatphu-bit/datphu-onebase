@@ -1,0 +1,39 @@
+================================================================================
+HỆ THỐNG DỮ LIỆU TOÀN DIỆN CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ
+LƯU TRỮ TẠI: E:\DU_LIEU_CONG_TY_DAT_PHU\
+NGÀY XUẤT BẢN: 27/10/2026
+================================================================================
+
+1. CẤU TRÚC THƯ MỤC:
+   ├── 1_HO_SO_DOANH_NGHIEP_VA_PHAP_LY:
+   │   ├── datphu_ho_so_doanh_nghiep.md (MST: 4401020233, Người đại diện: Phạm Thanh Hân)
+   │   ├── datphu_co_cau_to_chuc_tai_chinh_ke_toan.md (Bộ máy tài chính, kế toán thuế 10 năm)
+   │   └── thong_tin_phap_ly_va_hd_dien_tu.txt (Hóa đơn điện tử 1C26TDP, Vietcombank 0751000025858)
+   │
+   ├── 2_CHIEN_LUOC_KINH_TE_VA_THUONG_HIEU:
+   │   ├── BAN_KE_HOACH_NEN_KINH_TE_KIEU_MOI_DAT_PHU.md (Kế hoạch kinh tế số Đất Phú)
+   │   ├── datphu_brand_guidelines_cam_nang_thuong_hieu.md (Quy chuẩn logo Đầu Đại Bàng Đỏ-Xanh)
+   │   └── quy_chuan_bieu_phi_san_8_15_phan_tram.md (Biểu phí minh bạch 8% - 15%)
+   │
+   ├── 3_CO_SO_DU_LIEU_DATABASE_JSON_CSV:
+   │   ├── inventory_erp_kho_hang.json & .csv (Dữ liệu tồn kho, giá vốn, lãi ròng)
+   │   ├── crm_danh_ba_khach_quen_tuy_hoa.json & .csv (Khách thân thiết, chu kỳ bảo dưỡng)
+   │   └── so_ke_toan_tt88_s1_s4.json (Sổ kế toán chuẩn Thông tư 88/2021/TT-BTC)
+   │
+   ├── 4_HINH_ANH_LOGO_VA_CHUNG_TU:
+   │   ├── logo_chinh_thuc_datphu.jpg (Logo gốc độ phân giải cao)
+   │   └── [Toàn bộ ảnh chụp sổ sách, chứng từ kế toán 10 năm qua của công ty]
+   │
+   └── 5_HE_THONG_WEB_APP_OFFLINE:
+       ├── index.html (Ứng dụng chạy trực tiếp trên trình duyệt, không cần mạng)
+       ├── datphu_booking_app.html
+       └── assets/ (Logo và tài nguyên đồ họa)
+
+2. CÁCH MỞ VÀ SỬ DỤNG:
+   - Mở ứng dụng ngay: Double click vào file "5_HE_THONG_WEB_APP_OFFLINE\index.html".
+   - Tra cứu dữ liệu Excel: Mở các file .csv trong thư mục 3 bằng Microsoft Excel.
+   - Đọc cẩm nang thương hiệu & chiến lược: Mở các file .md bằng Notepad hoặc trình duyệt.
+
+================================================================================
+BẢN QUYỀN THUỘC CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ - PHÚ YÊN
+================================================================================
