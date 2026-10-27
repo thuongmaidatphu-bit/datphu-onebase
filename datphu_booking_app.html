@@ -56,6 +56,41 @@
       box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
   </style>
+  <!-- Leaflet Map CSS & JS (Bản đồ OpenStreetMap không phụ thuộc API key) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    /* Tùy biến popup Leaflet Dark Theme */
+    .leaflet-popup-content-wrapper {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+      border-radius: 16px !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7) !important;
+      padding: 0 !important;
+    }
+    .leaflet-popup-tip {
+      background: #0f172a !important;
+    }
+    .leaflet-container {
+      font-family: inherit !important;
+      border-radius: 1.5rem !important;
+    }
+    .user-pulse-marker {
+      width: 18px;
+      height: 18px;
+      background: #0284c7;
+      border: 3px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #38bdf8;
+      animation: pulseUser 1.8s infinite;
+    }
+    @keyframes pulseUser {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+      70% { box-shadow: 0 0 0 16px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+  </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-1 sm:p-4 font-sans selection:bg-amber-500 selection:text-slate-950">
 
@@ -73,11 +108,24 @@
         <span class="text-slate-600">•</span>
         <span class="text-slate-300 font-semibold">Bản địa Tuy Hòa (MST: 4401020233)</span>
       </div>
-      <div class="flex items-center gap-1 mt-1 sm:mt-0">
-        <button onclick="switchRole('buyer')" id="roleBtnBuyer" class="px-2.5 py-0.5 rounded-lg bg-sky-600 text-white font-bold text-[11px] transition">Người Mua</button>
-        <button onclick="switchRole('seller')" id="roleBtnSeller" class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[11px] transition">Người Bán / Ký Gửi</button>
-        <button onclick="switchRole('worker')" id="roleBtnWorker" class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[11px] transition">Thợ Kỹ Thuật 6K</button>
-        <button onclick="switchRole('ai')" id="roleBtnAI" class="px-2.5 py-0.5 rounded-lg bg-indigo-950/90 border border-indigo-700/80 text-indigo-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1 shadow-sm">
+      <div class="flex items-center gap-1 mt-1 sm:mt-0 overflow-x-auto no-scrollbar py-0.5">
+        <button onclick="switchRole('admin')" id="roleBtnAdmin" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1.5 shrink-0" title="Chủ Nền Tảng - Ban Giám Đốc Đất Phú">
+          <i class="fa-solid fa-crown text-amber-400"></i>
+          <span>Chủ Nền Tảng</span>
+        </button>
+        <button onclick="switchRole('seller')" id="roleBtnSeller" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1.5 shrink-0" title="Người Bán Ký Gửi & Hộ OCOP">
+          <i class="fa-solid fa-store text-emerald-400"></i>
+          <span>Người Bán Ký Gửi</span>
+        </button>
+        <button onclick="switchRole('worker')" id="roleBtnWorker" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1.5 shrink-0" title="Thợ Kỹ Thuật Nòng Cốt 6K">
+          <i class="fa-solid fa-screwdriver-wrench text-sky-400"></i>
+          <span>Thợ Kỹ Thuật 6K</span>
+        </button>
+        <button onclick="switchRole('buyer')" id="roleBtnBuyer" class="px-2.5 py-1 rounded-xl bg-sky-600 text-white text-[11px] font-bold transition flex items-center gap-1.5 shrink-0" title="Khách Mua Bản Địa & Du Khách">
+          <i class="fa-solid fa-compass text-sky-300"></i>
+          <span>Khách Mua / Du Khách</span>
+        </button>
+        <button onclick="switchRole('ai')" id="roleBtnAI" class="px-2.5 py-1 rounded-xl bg-indigo-950/90 border border-indigo-700/80 text-indigo-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1 shrink-0 shadow-sm">
           <i class="fa-solid fa-microchip text-indigo-400"></i>
           <span>13 Công Cụ AI</span>
         </button>
@@ -131,6 +179,28 @@
       </div>
 
       <!-- Search Input -->
+      
+      <!-- Nút Mở Bản Đồ Quanh Đây & Chỉ Đường GPS -->
+      <div class="flex items-center justify-between gap-2 bg-gradient-to-r from-sky-950/70 via-slate-900 to-emerald-950/60 p-2 sm:p-2.5 rounded-2xl border border-sky-800/60 shadow-lg">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold border border-sky-500/40 shrink-0">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </span>
+          <div>
+            <div class="font-bold text-white text-xs flex items-center gap-1.5">
+              <span>Bản Đồ Cửa Hàng & Trạm 6K Quanh Đây</span>
+              <span class="px-1.5 py-0.2 bg-emerald-950 text-emerald-400 border border-emerald-700 rounded text-[9px] font-mono font-bold">GPS Tuy Hòa</span>
+            </div>
+            <p class="text-[10px] text-slate-400">Tìm tiệm đặc sản, đồ cũ kiểm định & trạm thợ gần nhất kèm chỉ đường xe máy</p>
+          </div>
+        </div>
+
+        <button onclick="openNearbyStoresMapModal()" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-500 hover:to-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-md shadow-sky-600/30 shrink-0 transform hover:scale-105">
+          <i class="fa-solid fa-diamond-turn-right"></i>
+          <span>Mở Bản Đồ</span>
+        </button>
+      </div>
+
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
         <input id="searchInput" oninput="handleSearch(event)" type="text" placeholder="Tìm sách cũ quý, đồ thanh lý test 6K, bò một nắng Sông Hinh, nước mắm Gành Đỏ..." class="w-full text-xs pl-9 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-sky-500 transition shadow-inner" />
@@ -169,23 +239,43 @@
         </div>
       </div>
 
-      <!-- Categories Pills 3D High-Tech -->
-      <div class="flex gap-2.5 overflow-x-auto pb-1 text-xs custom-scroll pt-1">
-        <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-4 py-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black shrink-0 flex items-center gap-2 shadow-lg shadow-sky-500/25 border border-sky-400/40 transition transform hover:scale-[1.03]">
+      <!-- Categories Pills 3D High-Tech (Mở Rộng 7 Ngành Hàng Đất Phú) -->
+      <div class="flex gap-2 overflow-x-auto pb-1 text-xs custom-scroll pt-1">
+        <button onclick="filterCategory('all')" id="cat-all" class="cat-pill px-3.5 py-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black shrink-0 flex items-center gap-1.5 shadow-lg shadow-sky-500/25 border border-sky-400/40 transition transform hover:scale-[1.03]">
           <i class="fa-solid fa-layer-group text-sm"></i>
           <span>Tất cả</span>
-          <span id="badgeCountAll" class="text-[10px] bg-black/25 px-2 py-0.5 rounded-full font-mono">10</span>
+          <span id="badgeCountAll" class="text-[10px] bg-black/25 px-2 py-0.5 rounded-full font-mono">22</span>
         </button>
 
-        <button onclick="filterCategory('sach_cu')" id="cat-sach_cu" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-amber-500/50">
-          <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-book"></i>
+        <!-- 1. Mẹ & Bé Năm Tiền -->
+        <button onclick="filterCategory('me_va_be')" id="cat-me_va_be" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-pink-500/50">
+          <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-baby-carriage"></i>
           </span>
-          <span class="font-bold">Sách Cũ & Tư Liệu</span>
-          <span id="badgeCountSach" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-amber-400">3</span>
+          <span class="font-bold">Mẹ & Bé (Chuỗi Năm Tiền)</span>
+          <span id="badgeCountMebe" class="text-[10px] bg-pink-950 px-2 py-0.5 rounded-full font-mono text-pink-400 border border-pink-800">4</span>
         </button>
 
-        <button onclick="filterCategory('do_cu')" id="cat-do_cu" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-emerald-500/50">
+        <!-- 2. Đặc Sản Xứ Nẫu OCOP -->
+        <button onclick="filterCategory('dac_san')" id="cat-dac_san" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-orange-500/50">
+          <span class="w-6 h-6 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-bowl-food"></i>
+          </span>
+          <span class="font-bold">Đặc Sản Xứ Nẫu OCOP</span>
+          <span id="badgeCountDacsan" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-orange-400">4</span>
+        </button>
+
+        <!-- 3. Hải Sản & Ngư Cụ -->
+        <button onclick="filterCategory('hai_san_ngu_cu')" id="cat-hai_san_ngu_cu" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-cyan-500/50">
+          <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-fish"></i>
+          </span>
+          <span class="font-bold">Hải Sản & Ngư Cụ</span>
+          <span id="badgeCountHaisan" class="text-[10px] bg-cyan-950 px-2 py-0.5 rounded-full font-mono text-cyan-400 border border-cyan-800">4</span>
+        </button>
+
+        <!-- 4. Đồ Thanh Lý 6K -->
+        <button onclick="filterCategory('do_cu')" id="cat-do_cu" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-emerald-500/50">
           <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
             <i class="fa-solid fa-wrench"></i>
           </span>
@@ -193,20 +283,31 @@
           <span id="badgeCountDocu" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-emerald-400">3</span>
         </button>
 
-        <button onclick="filterCategory('dac_san')" id="cat-dac_san" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-orange-500/50">
-          <span class="w-6 h-6 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-bowl-food"></i>
+        <!-- 5. Sách Cũ & Tư Liệu -->
+        <button onclick="filterCategory('sach_cu')" id="cat-sach_cu" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-amber-500/50">
+          <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-book"></i>
           </span>
-          <span class="font-bold">Đặc Sản Xứ Nẫu</span>
-          <span id="badgeCountDacsan" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-orange-400">4</span>
+          <span class="font-bold">Sách Cũ & Tư Liệu</span>
+          <span id="badgeCountSach" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-amber-400">3</span>
         </button>
 
-        <button onclick="filterCategory('xe_du_lich')" id="cat-xe_du_lich" class="cat-pill px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-2 transition transform hover:scale-[1.03] hover:border-yellow-500/50">
-          <span class="w-6 h-6 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-taxi"></i>
+        <!-- 6. Dụng Cụ Nghề & Cơ Khí -->
+        <button onclick="filterCategory('dung_cu_nghe')" id="cat-dung_cu_nghe" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-amber-500/50">
+          <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-toolbox"></i>
           </span>
-          <span class="font-bold">Taxi & Xe Máy Tour</span>
-          <span id="badgeCountXe" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-yellow-400">3</span>
+          <span class="font-bold">Dụng Cụ Nghề & Cơ Khí</span>
+          <span id="badgeCountDungcu" class="text-[10px] bg-amber-950 px-2 py-0.5 rounded-full font-mono text-amber-400 border border-amber-800">2</span>
+        </button>
+
+        <!-- 7. Thuê Xe & Trải Nghiệm 6K -->
+        <button onclick="filterCategory('dich_vu_xe')" id="cat-dich_vu_xe" class="cat-pill px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white shrink-0 flex items-center gap-1.5 transition transform hover:scale-[1.03] hover:border-purple-500/50">
+          <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-motorcycle"></i>
+          </span>
+          <span class="font-bold">Thuê Xe & Du Lịch 6K</span>
+          <span id="badgeCountDulich" class="text-[10px] bg-purple-950 px-2 py-0.5 rounded-full font-mono text-purple-400 border border-purple-800">2</span>
         </button>
 
         <button onclick="toggleOnly6K()" id="btnOnly6K" class="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-emerald-700/60 text-emerald-400 hover:bg-emerald-950/60 font-bold shrink-0 flex items-center gap-1.5 transition">
@@ -696,6 +797,446 @@
       </section>
 
       <!-- ================= SECTION 5: KÝ GỬI & BÁN HÀNG ================= -->
+      
+      <!-- ================= SECTION ADMIN PLATFORM: TRUNG TÂM ĐIỀU HÀNH CHỦ NỀN TẢNG ================= -->
+      <section id="sectionAdminPlatform" class="hidden space-y-4">
+        
+        <!-- Header Chủ Nền Tảng -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-950 border border-amber-800/80 p-5 shadow-2xl">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-2xl font-black shadow-inner">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-base sm:text-lg font-black text-white">TRUNG TÂM ĐIỀU HÀNH CHỦ NỀN TẢNG</h2>
+                  <span class="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-black text-[9px] uppercase tracking-wider">Super Admin</span>
+                </div>
+                <p class="text-xs text-slate-400">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ • MST: <strong class="text-amber-400 font-mono">4401020233</strong> • Đại diện: Phạm Thanh Hân</p>
+                <p class="text-[10px] text-sky-400 font-mono mt-0.5">🏦 Vietcombank: <strong>0751000025858</strong> (CN Phú Yên) • HĐĐT: <strong>1C26TDP</strong></p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="refreshPlatformStats()" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-rotate"></i> Làm mới
+              </button>
+              <button onclick="openAccountingPrintModal()" type="button" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition shadow">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Sổ Thuế TT 88
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Chỉ Số Dòng Tiền & Vận Hành Sàn Toàn Diện -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-1">
+            <span class="text-[10px] text-slate-400 block font-sans">Tổng Giá Trị Giao Dịch (GMV)</span>
+            <div id="admStatGMV" class="text-base sm:text-lg font-black text-white">48,250,000 đ</div>
+            <span class="text-[9px] text-emerald-400 font-sans flex items-center gap-1">
+              <i class="fa-solid fa-arrow-trend-up"></i> +18.5% tuần này
+            </span>
+          </div>
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-emerald-900/60 space-y-1">
+            <span class="text-[10px] text-emerald-400 block font-sans">Phí Sàn Thực Thu (8% - 15%)</span>
+            <div id="admStatFees" class="text-base sm:text-lg font-black text-emerald-400">4,680,000 đ</div>
+            <span class="text-[9px] text-slate-400 font-sans">Duy trì hạ tầng AI & Ký số</span>
+          </div>
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-sky-900/60 space-y-1">
+            <span class="text-[10px] text-sky-400 block font-sans">Thợ 6K Đang Trực Chiến</span>
+            <div class="text-base sm:text-lg font-black text-sky-400">12 / 15 Thợ</div>
+            <span class="text-[9px] text-slate-400 font-sans">Bán kính phủ: TP. Tuy Hòa</span>
+          </div>
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-amber-900/60 space-y-1">
+            <span class="text-[10px] text-amber-400 block font-sans">Hóa Đơn Điện Tử Đã Ký</span>
+            <div class="text-base sm:text-lg font-black text-amber-400">142 HĐ (1C26TDP)</div>
+            <span class="text-[9px] text-emerald-400 font-sans">Thuế NSNN: 100% hoàn thành</span>
+          </div>
+        </div>
+
+        <!-- BẢNG MA TRẬN PHÂN QUYỀN TRỰC QUAN (RBAC MATRIX) -->
+        <div class="bg-slate-950 rounded-3xl border border-slate-800 p-4 sm:p-5 space-y-3">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
+            <div>
+              <h3 class="font-black text-sm text-white flex items-center gap-2">
+                <i class="fa-solid fa-table-cells text-amber-400"></i>
+                <span>Ma Trận Phân Quyền Bảo Mật Đất Phú (RBAC Security Matrix)</span>
+              </h3>
+              <p class="text-[10px] text-slate-400">Kiểm soát quyền truy cập chặt chẽ giữa 4 vai trò, bảo vệ bí mật kinh doanh của từng hộ và thợ</p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-slate-900 text-slate-300 border border-slate-700 text-[10px] font-mono">
+              Chính sách RLS Active
+            </span>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-800">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-900/90 text-slate-300 text-[10px] uppercase font-bold border-b border-slate-800">
+                  <th class="p-2.5">Phân Hệ / Tính Năng</th>
+                  <th class="p-2.5 text-center text-amber-400">👑 1. Chủ Nền Tảng</th>
+                  <th class="p-2.5 text-center text-emerald-400">🏪 2. Người Bán Ký Gửi</th>
+                  <th class="p-2.5 text-center text-sky-400">⚡ 3. Thợ Kỹ Thuật 6K</th>
+                  <th class="p-2.5 text-center text-slate-300">🧭 4. Khách Mua / Du Khách</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/70 font-sans text-[11px]">
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-2.5 font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-store text-slate-400"></i>
+                    <span>Chợ Phiên Mua Sắm & Đặt Món</span>
+                  </td>
+                  <td class="p-2.5 text-center text-emerald-400 font-bold">✅ Toàn quyền</td>
+                  <td class="p-2.5 text-center text-emerald-400">✅ Mua / Bán</td>
+                  <td class="p-2.5 text-center text-emerald-400">✅ Có quyền</td>
+                  <td class="p-2.5 text-center text-emerald-400 font-black">✅ Trải nghiệm chính</td>
+                </tr>
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-2.5 font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-newspaper text-slate-400"></i>
+                    <span>Bản Tin Phố Biển (Đăng / Tương tác)</span>
+                  </td>
+                  <td class="p-2.5 text-center text-emerald-400 font-bold">✅ Quản trị & Duyệt</td>
+                  <td class="p-2.5 text-center text-emerald-400">✅ Đăng tin hàng OCOP</td>
+                  <td class="p-2.5 text-center text-emerald-400">✅ Đăng nhật ký thợ</td>
+                  <td class="p-2.5 text-center text-slate-300">✅ Đọc & Bình luận</td>
+                </tr>
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-2.5 font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-boxes-stacked text-slate-400"></i>
+                    <span>ERP Kho Hàng & Giá Vốn (Lãi Ròng)</span>
+                  </td>
+                  <td class="p-2.5 text-center text-emerald-400 font-bold">✅ Tổng hợp toàn sàn</td>
+                  <td class="p-2.5 text-center text-emerald-400 font-black">✅ Chỉ xem kho của mình</td>
+                  <td class="p-2.5 text-center text-rose-500 font-bold">❌ Bị chặn</td>
+                  <td class="p-2.5 text-center text-rose-500 font-bold">❌ Bị chặn</td>
+                </tr>
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-2.5 font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-truck-fast text-slate-400"></i>
+                    <span>Cứu Hộ 6K & Thu Nhập Công Thợ</span>
+                  </td>
+                  <td class="p-2.5 text-center text-emerald-400 font-bold">✅ Giám sát lộ trình K1-K6</td>
+                  <td class="p-2.5 text-center text-rose-500 font-bold">❌ Bị chặn</td>
+                  <td class="p-2.5 text-center text-emerald-400 font-black">✅ Nhận 80% công thợ</td>
+                  <td class="p-2.5 text-center text-slate-300">✅ Bấm gọi cứu hộ 15p</td>
+                </tr>
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-2.5 font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-invoice text-slate-400"></i>
+                    <span>Sổ Kế Toán TT 88 & Hóa Đơn 1C26TDP</span>
+                  </td>
+                  <td class="p-2.5 text-center text-emerald-400 font-bold">✅ Ký số & Báo cáo thuế</td>
+                  <td class="p-2.5 text-center text-emerald-400">✅ Sổ S1-S4 của hộ mình</td>
+                  <td class="p-2.5 text-center text-slate-400">Phiếu thu nhập cá nhân</td>
+                  <td class="p-2.5 text-center text-slate-400">Nhận HĐĐT / Biên lai</td>
+                </tr>
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-2.5 font-bold text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-percent text-slate-400"></i>
+                    <span>Cài Đặt Biểu Phí Sàn (8% - 15%)</span>
+                  </td>
+                  <td class="p-2.5 text-center text-emerald-400 font-black">✅ Toàn quyền điều chỉnh</td>
+                  <td class="p-2.5 text-center text-slate-400">Chỉ xem tỷ lệ áp dụng</td>
+                  <td class="p-2.5 text-center text-slate-400">Chỉ xem tỷ lệ chia sẻ 20%</td>
+                  <td class="p-2.5 text-center text-rose-500 font-bold">❌ Bị chặn</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2 Khối Quản Lý Nhanh: Duyệt Thợ 6K & Quản Trị Gian Hàng Ký Gửi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          
+          <!-- Cột 1: Danh sách thợ kỹ thuật trực chiến -->
+          <div class="bg-slate-950 p-4 rounded-3xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold text-white border-b border-slate-800 pb-2">
+              <span class="flex items-center gap-1.5 text-sky-400">
+                <i class="fa-solid fa-user-check"></i> Đội Thợ Kỹ Thuật 6K Nòng Cốt
+              </span>
+              <span class="text-[10px] text-emerald-400">Tuy Hòa: 12 sẵn sàng</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center p-2 rounded-xl bg-slate-900 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">H</span>
+                  <div>
+                    <div class="font-bold text-white">Trần Quốc Hưng (P.5 Tuy Hòa)</div>
+                    <div class="text-[10px] text-slate-400">Điện lạnh dân dụng • ⭐ 4.98 (348 ca)</div>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-bold">Đang Trực</span>
+              </div>
+              <div class="flex justify-between items-center p-2 rounded-xl bg-slate-900 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">N</span>
+                  <div>
+                    <div class="font-bold text-white">Lê Văn Nam (P. Phú Lâm)</div>
+                    <div class="text-[10px] text-slate-400">Máy bơm & Điện cơ • ⭐ 4.95 (215 ca)</div>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-bold">Đang Trực</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cột 2: Danh sách gian hàng ký gửi & Biểu phí -->
+          <div class="bg-slate-950 p-4 rounded-3xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold text-white border-b border-slate-800 pb-2">
+              <span class="flex items-center gap-1.5 text-emerald-400">
+                <i class="fa-solid fa-shop"></i> Gian Hàng Ký Gửi & Tỷ Lệ Sàn
+              </span>
+              <span class="text-[10px] text-amber-400">Biểu phí 8% - 15%</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center p-2 rounded-xl bg-slate-900 border border-slate-800">
+                <div>
+                  <div class="font-bold text-white">Hộ Bò Một Nắng Krông Pa</div>
+                  <div class="text-[10px] text-slate-400">Đặc sản OCOP • 15 đơn/tuần</div>
+                </div>
+                <span class="font-mono font-bold text-amber-400 text-[11px] bg-amber-950 px-2 py-0.5 rounded border border-amber-800">Phí sàn: 8%</span>
+              </div>
+              <div class="flex justify-between items-center p-2 rounded-xl bg-slate-900 border border-slate-800">
+                <div>
+                  <div class="font-bold text-white">Tiệm Đồ Cũ Kiểm Định 6K (Chú Ba)</div>
+                  <div class="text-[10px] text-slate-400">Máy bơm, quạt cơ • Bảo hành 30 ngày</div>
+                </div>
+                <span class="font-mono font-bold text-amber-400 text-[11px] bg-amber-950 px-2 py-0.5 rounded border border-amber-800">Phí sàn: 10%</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      
+        
+        <!-- ================= KHỐI ĐIỀU HÀNH LIÊN KẾT ĐƠN VỊ VẬN CHUYỂN LOGISTICS ================= -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-sky-950/70 p-4 sm:p-5 rounded-3xl border border-sky-800/70 space-y-3.5 shadow-xl">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2.5">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-700 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                  <i class="fa-solid fa-network-wired"></i> Mạng Lưới Vận Tải Đa Phương Thức
+                </span>
+                <span class="text-[10px] text-emerald-400 font-mono">5 Đối Tác Logistics Active</span>
+              </div>
+              <h3 class="text-sm sm:text-base font-black text-white mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-truck-moving text-sky-400"></i>
+                <span>Cổng Liên Kết Vận Chuyển: Nội Tỉnh 30 Phút & Toàn Quốc</span>
+              </h3>
+              <p class="text-xs text-slate-400">Tích hợp tự động đẩy vận đơn sang Viettel Post, GHTK, Chành xe Thuận Thảo và Đội thợ 6K</p>
+            </div>
+
+            <button onclick="openTrackingModal('VTP-PY-440102')" type="button" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow">
+              <i class="fa-solid fa-magnifying-glass-location"></i> Tra Cứu Vận Đơn Mẫu
+            </button>
+          </div>
+
+          <!-- 5 Thẻ Đối Tác Logistics Trực Chiến -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
+            
+            <!-- Đối tác 1: Đất Phú 6K Express -->
+            <div class="bg-slate-950 p-3 rounded-2xl border border-emerald-800/60 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white flex items-center gap-1.5">
+                  <span class="text-base">🚀</span>
+                  <span>Đất Phú 6K Express</span>
+                </span>
+                <span class="px-2 py-0.2 bg-emerald-950 text-emerald-400 text-[9px] rounded font-bold">15p - 30p</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Thợ kỹ thuật & Shipper Tuy Hòa • Giao đồ ăn, sữa tã hỏa tốc nội thành.</p>
+              <div class="text-[10px] text-emerald-400 font-mono flex justify-between pt-1 border-t border-slate-800">
+                <span>Cước: 15.000 đ</span>
+                <span>Trực chiến: 15 xe</span>
+              </div>
+            </div>
+
+            <!-- Đối tác 2: Chành Xe Thuận Thảo & Cúc Tư -->
+            <div class="bg-slate-950 p-3 rounded-2xl border border-amber-800/60 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white flex items-center gap-1.5">
+                  <span class="text-base">🚌</span>
+                  <span>Chành Xe & Xe Khách PY</span>
+                </span>
+                <span class="px-2 py-0.2 bg-amber-950 text-amber-400 text-[9px] rounded font-bold">Trong ngày</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Thuận Thảo, Cúc Tư, Xe buýt • Giao hàng cồng kềnh, máy bơm, thùng cá ngừ.</p>
+              <div class="text-[10px] text-amber-400 font-mono flex justify-between pt-1 border-t border-slate-800">
+                <span>Cước: 25.000 đ</span>
+                <span>12 chuyến/ngày</span>
+              </div>
+            </div>
+
+            <!-- Đối tác 3: Viettel Post Phú Yên -->
+            <div class="bg-slate-950 p-3 rounded-2xl border border-rose-800/60 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white flex items-center gap-1.5">
+                  <span class="text-base">📮</span>
+                  <span>Viettel Post Phú Yên</span>
+                </span>
+                <span class="px-2 py-0.2 bg-rose-950 text-rose-400 text-[9px] rounded font-bold">Toàn quốc</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Kho bưu cục Đại lộ Hùng Vương, Tuy Hòa • Xe lạnh, thu hộ COD an toàn.</p>
+              <div class="text-[10px] text-rose-400 font-mono flex justify-between pt-1 border-t border-slate-800">
+                <span>Cước: 32.000 đ</span>
+                <span>API Realtime</span>
+              </div>
+            </div>
+
+            <!-- Đối tác 4: Giao Hàng Tiết Kiệm (GHTK) -->
+            <div class="bg-slate-950 p-3 rounded-2xl border border-emerald-800/60 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white flex items-center gap-1.5">
+                  <span class="text-base">📦</span>
+                  <span>GHTK Tuy Hòa</span>
+                </span>
+                <span class="px-2 py-0.2 bg-emerald-950 text-emerald-400 text-[9px] rounded font-bold">1 - 2 ngày</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Kho trung chuyển Phú Lâm • Tối ưu gói hàng nhẹ, sách cũ, thời trang mẹ bé.</p>
+              <div class="text-[10px] text-emerald-400 font-mono flex justify-between pt-1 border-t border-slate-800">
+                <span>Cước: 28.000 đ</span>
+                <span>Webhook Active</span>
+              </div>
+            </div>
+
+            <!-- Đối tác 5: VNPost Bưu Điện Phú Yên -->
+            <div class="bg-slate-950 p-3 rounded-2xl border border-sky-800/60 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white flex items-center gap-1.5">
+                  <span class="text-base">📬</span>
+                  <span>VNPost Bưu Điện PY</span>
+                </span>
+                <span class="px-2 py-0.2 bg-sky-950 text-sky-400 text-[9px] rounded font-bold">100% Xã/Thôn</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Bưu điện tỉnh Tuy Hòa • Chuyển phát bưu phẩm, tài liệu văn hóa bảo đảm.</p>
+              <div class="text-[10px] text-sky-400 font-mono flex justify-between pt-1 border-t border-slate-800">
+                <span>Cước: 26.000 đ</span>
+                <span>Phủ 9 huyện thị</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ================= TRUNG TÂM BẢO VỆ DỮ LIỆU ĐA TẦNG & SAO LƯU 1 CHẠM ================= -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/80 rounded-3xl border border-indigo-800/70 p-4 sm:p-5 space-y-4 shadow-2xl">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-950 text-indigo-400 border border-indigo-700 font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  Bảo Vệ Dữ Liệu 4 Tầng (Zero Data Loss)
+                </span>
+                <span class="text-[10px] text-amber-400 font-mono">Bảo Hiểm Dữ Liệu Doanh Nghiệp</span>
+              </div>
+              <h3 class="text-base font-black text-white mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-shield-virus text-indigo-400"></i>
+                <span>Trung Tâm Sao Lưu & Khôi Phục Dữ Liệu 1 Chạm</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Bảo vệ 100% thông tin đơn hàng, kho ERP người bán, hồ sơ thợ 6K và sổ sách kế toán thuế. Chống mất dữ liệu ngay cả khi hỏng máy, mất mạng hoặc xóa trình duyệt.
+              </p>
+            </div>
+
+            <!-- Nút Tải Sao Lưu Ngay -->
+            <button onclick="downloadFullSystemBackup()" type="button" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition transform hover:scale-105 shrink-0">
+              <i class="fa-solid fa-cloud-arrow-down text-amber-300"></i>
+              <span>TẢI BẢN SAO LƯU TOÀN SÀN</span>
+            </button>
+          </div>
+
+          <!-- 4 Thẻ Trạng Thái Bảo Vệ Đa Tầng -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+            <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px] text-slate-400">
+                <span>Tầng 1: Trình Duyệt</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></span>
+              </div>
+              <div class="font-bold text-white text-xs">Local-First Cache</div>
+              <p class="text-[9px] text-emerald-400">100% Offline an toàn</p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px] text-slate-400">
+                <span>Tầng 2: Đám Mây</span>
+                <span class="w-2 h-2 rounded-full bg-sky-400 shadow-sm shadow-sky-400"></span>
+              </div>
+              <div class="font-bold text-white text-xs">Supabase Cloud</div>
+              <p class="text-[9px] text-sky-400">PostgreSQL Realtime</p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px] text-slate-400">
+                <span>Tầng 3: Ổ Cứng E:</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></span>
+              </div>
+              <div class="font-bold text-white text-xs">E:\Đất Phú chợ phiên</div>
+              <p class="text-[9px] text-slate-400">File JSON/CSV dự phòng</p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px] text-slate-400">
+                <span>Tầng 4: GitHub</span>
+                <span class="w-2 h-2 rounded-full bg-amber-400 shadow-sm shadow-amber-400"></span>
+              </div>
+              <div class="font-bold text-white text-xs">GitHub Repository</div>
+              <p class="text-[9px] text-amber-400">Lưu trữ vĩnh viễn</p>
+            </div>
+          </div>
+
+          <!-- Các Thao Tác Sao Lưu & Khôi Phục -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+            
+            <!-- Hành Động 1: Tải File Backup JSON -->
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2">
+              <div>
+                <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                  <i class="fa-solid fa-file-shield text-sky-400"></i>
+                  <span>Xuất File Sao Lưu (.JSON)</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">Đóng gói toàn bộ đơn hàng, thợ 6K, kho ERP & khách CRM thành 1 file duy nhất tải về máy tính.</p>
+              </div>
+              <button onclick="downloadFullSystemBackup()" type="button" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white font-bold text-xs transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-download"></i> Tải File Backup Ngay
+              </button>
+            </div>
+
+            <!-- Hành Động 2: Khôi Phục Từ File -->
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2">
+              <div>
+                <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                  <i class="fa-solid fa-upload text-emerald-400"></i>
+                  <span>Khôi Phục Dữ Liệu (Restore)</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">Khi chuyển sang máy tính mới hoặc cài lại Windows, chọn file backup đã lưu để phục hồi lại 100%.</p>
+              </div>
+              <input type="file" id="backupRestoreFileInput" accept=".json" onchange="handleRestoreSystemBackup(event)" class="hidden" />
+              <button onclick="document.getElementById('backupRestoreFileInput').click()" type="button" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white font-bold text-xs transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-clock-rotate-left"></i> Chọn File Khôi Phục
+              </button>
+            </div>
+
+            <!-- Hành Động 3: Đồng Bộ Supabase Cloud -->
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2">
+              <div>
+                <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                  <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i>
+                  <span>Đồng Bộ Ngay Lên Đám Mây</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">Kiểm tra kết nối và ép đồng bộ toàn bộ đơn hàng mới nhất lên máy chủ Supabase Cloud.</p>
+              </div>
+              <button onclick="forceSyncToSupabaseCloud()" type="button" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-slate-950 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-rotate"></i> Đồng Bộ Đám Mây Ngay
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
       <section id="sectionSeller" class="hidden space-y-4">
         <div class="bg-gradient-to-r from-emerald-950/60 to-slate-900 border border-emerald-800/60 rounded-3xl p-4 space-y-1">
           <h2 class="font-bold text-sm text-white">Đăng Ký Ký Gửi & Bán Hàng Lên Đất Phú Chợ Phiên</h2>
@@ -1362,6 +1903,158 @@
               <div class="text-[9px] text-slate-400 font-sans">Đầy đủ HĐĐT</div>
             </div>
           </div>
+        </div>
+
+        
+        <!-- ================= VÍ AN SINH XÃ HỘI & SỨC KHỎE (BHYT • BHXH TỰ NGUYỆN) ================= -->
+        <div class="bg-gradient-to-r from-emerald-950/70 via-slate-950 to-teal-950/70 p-4 sm:p-5 rounded-3xl border border-emerald-800/80 space-y-4 shadow-2xl">
+          
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-700 font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-heart-pulse"></i> Lưới An Sinh Bản Địa
+                </span>
+                <span class="text-[10px] text-amber-400 font-mono">Bảo Vệ Người Lao Động & Hộ Cá Thể</span>
+              </div>
+              <h3 class="text-base font-black text-white mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-notes-medical text-emerald-400"></i>
+                <span>Ví An Sinh Xã Hội: Thẻ BHYT & Sổ Lương Hưu BHXH</span>
+              </h3>
+              <p class="text-xs text-slate-400">
+                Chính sách bảo vệ sức khỏe và tích lũy hưu trí cho thợ 6K, chủ tiệm thanh lý và người bán đặc sản tại Phú Yên
+              </p>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span class="px-2.5 py-1 rounded-xl bg-slate-900 border border-emerald-800/80 text-emerald-400 font-bold text-xs flex items-center gap-1">
+                <i class="fa-solid fa-circle-check"></i> Đang Bảo Vệ 100%
+              </span>
+            </div>
+          </div>
+
+          <!-- 2 Thẻ An Sinh Chính: Thẻ BHYT & Sổ BHXH -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            <!-- Thẻ 1: BẢO HIỂM Y TẾ (BHYT) HỘ GIA ĐÌNH -->
+            <div class="bg-slate-950/90 p-4 rounded-2xl border border-slate-800 space-y-3 relative overflow-hidden">
+              <div class="absolute -right-4 -bottom-4 text-emerald-500/10 text-7xl font-black pointer-events-none">
+                <i class="fa-solid fa-hospital-user"></i>
+              </div>
+
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Thẻ BHYT Hộ Gia Đình</span>
+                  <div class="font-mono font-black text-white text-base mt-0.5">GD 4 54 0120233445</div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold">
+                  Quyền lợi 80%
+                </span>
+              </div>
+
+              <div class="text-[11px] text-slate-300 space-y-1">
+                <div class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-hospital text-emerald-400 text-xs"></i>
+                  <span>Nơi ĐKKCB: <strong>Bệnh viện Đa khoa tỉnh Phú Yên</strong></span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-calendar-check text-sky-400 text-xs"></i>
+                  <span>Hạn sử dụng: <strong class="text-white font-mono">31/12/2026</strong> (Còn 65 ngày)</span>
+                </div>
+                <div class="text-[10px] text-slate-400 pt-0.5">
+                  • Chính sách giảm trừ: Người thứ 2 giảm 30%, người thứ 3 giảm 40%, người thứ 4 giảm 50%.
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1">
+                <button onclick="handleRenewBHYT()" type="button" class="flex-1 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm">
+                  🏥 Gia Hạn Thẻ BHYT (1 Chạm)
+                </button>
+                <button onclick="lookupBHXHVietnam()" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition" title="Tra cứu Cổng BHXH Việt Nam">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Thẻ 2: BẢO HIỂM XÃ HỘI (BHXH) TỰ NGUYỆN -->
+            <div class="bg-slate-950/90 p-4 rounded-2xl border border-slate-800 space-y-3 relative overflow-hidden">
+              <div class="absolute -right-4 -bottom-4 text-sky-500/10 text-7xl font-black pointer-events-none">
+                <i class="fa-solid fa-piggy-bank"></i>
+              </div>
+
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Sổ BHXH Tự Nguyện (Hưu Trí)</span>
+                  <div class="font-mono font-black text-white text-base mt-0.5">5401020233</div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800 text-[10px] font-bold">
+                  Nhà nước hỗ trợ 10%
+                </span>
+              </div>
+
+              <div class="text-[11px] text-slate-300 space-y-1">
+                <div class="flex justify-between items-center">
+                  <span>Thời gian đã tích lũy:</span>
+                  <span class="font-mono font-black text-sky-400">38 tháng / 240 tháng</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-sky-500 h-full rounded-full" style="width: 15.8%;"></div>
+                </div>
+                <div class="flex justify-between items-center text-[10px] text-slate-400 pt-0.5">
+                  <span>Lương hưu dự kiến khi về già:</span>
+                  <span class="text-amber-400 font-mono font-bold">~ 3,250,000 đ/tháng + BHYT trọn đời</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1">
+                <button onclick="handlePayBHXHMonthly()" type="button" class="flex-1 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition shadow-sm">
+                  👴 Đóng Tích Lũy Hưu Trí Tháng 11
+                </button>
+                <button onclick="lookupBHXHVietnam()" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition" title="Tra cứu Sổ Hưu Trí">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Cơ Chế Tích Lũy Vi Mô 10.000 đ/ngày (Micro-Savings Tự Động) -->
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-emerald-900/60 space-y-2.5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
+                  <i class="fa-solid fa-coins"></i>
+                </span>
+                <div>
+                  <div class="font-bold text-white text-xs flex items-center gap-2">
+                    <span>Tính Năng: "Tích Lũy Vi Mô 10.000 đ/ca Thợ"</span>
+                    <span id="microSavingStatusBadge" class="px-2 py-0.2 bg-emerald-950 text-emerald-400 border border-emerald-700 rounded text-[9px] font-bold">Đang Bật</span>
+                  </div>
+                  <p class="text-[10px] text-slate-400">Mỗi ca cứu hộ hoặc đơn hàng thành công, tự động trích 10k vào Ví An Sinh để đến hạn tự đóng BHYT/BHXH.</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 self-end sm:self-auto">
+                <div class="text-right">
+                  <div class="text-[9px] text-slate-400">Số dư Quỹ An Sinh tháng này:</div>
+                  <div id="welfareAccumulatedBal" class="text-sm font-black text-emerald-400 font-mono">310,000 đ</div>
+                </div>
+                <button onclick="toggleMicroSavingsMode()" type="button" id="toggleMicroSavingsBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition">
+                  Tắt/Bật
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thông Báo Bảo Hiểm Tai Nạn Nghề Nghiệp 24/7 Dành Cho Thợ 6K -->
+          <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs">
+            <div class="flex items-center gap-2 text-slate-300 text-[11px]">
+              <i class="fa-solid fa-shield-heart text-rose-400 text-sm"></i>
+              <span><strong>Bảo hiểm Tai Nạn Nghề Nghiệp 24/7 (Gói 100 Triệu):</strong> Đã kích hoạt miễn phí cho Thợ Nòng Cốt 6K hoàn thành trên 30 ca/tháng.</span>
+            </div>
+            <span class="text-[10px] text-amber-400 font-bold font-mono shrink-0">Bảo trợ: Đất Phú Co., Ltd</span>
+          </div>
+
         </div>
 
         <!-- Thông Tin Pháp Nhân & Tra Cứu HĐĐT -->
@@ -2098,6 +2791,12 @@
             <span>Chứng Chỉ Nghề & Đăng Ký Pháp Lý:</span>
           </div>
           <div id="workerModalCertsList" class="text-[11px] text-slate-300 space-y-1">
+            <p class="text-emerald-400 font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-halved"></i> Đã tham gia BHYT Hộ Gia Đình & Bảo hiểm Tai nạn nghề nghiệp 24/7 (100tr).
+            </p>
+            <p class="text-sky-400 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-piggy-bank"></i> Đang tích lũy Sổ BHXH tự nguyện hưởng lương hưu qua sàn Đất Phú.
+            </p>
             <p>• Bằng nghề Kỹ thuật Điện - Lạnh Dân Dụng (Bậc 4/7).</p>
             <p>• Đã ký cam kết bảo mật & Quy chuẩn đạo đức nghề nghiệp Kín Kẽ 6K.</p>
             <p>• Bảo hiểm trách nhiệm dân sự nghề nghiệp có giá trị.</p>
@@ -2166,6 +2865,231 @@
 
     // Danh Sách Sản Phẩm Chợ Phiên Đất Phú (Sách cũ, Đồ cũ, Đặc sản)
     let PRODUCTS = [
+
+      // ================= 4. MẸ & BÉ (CHUỖI SIÊU THỊ NĂM TIỀN) =================
+      {
+        id: 'mebe-01',
+        title: 'Thùng Sữa Bột Meiji Nhập Khẩu Số 0-1 (Lon 800g x 8 Lon) - Siêu Thị Năm Tiền',
+        category: 'me_va_be',
+        categoryName: 'Mẹ & Bé (Năm Tiền)',
+        price: 3450000,
+        oldPrice: 3800000,
+        district: '182 Hùng Vương, P.7, TP. Tuy Hòa',
+        distanceKm: 0.8,
+        is6K: true,
+        tag: 'Giao Hỏa Tốc 30 Phút',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80',
+        icon: '🍼',
+        reviews: [
+          { author: 'Chị Mai (P.7 Tuy Hòa)', rating: 5, date: 'Hôm nay', text: 'Đặt lúc 9h sáng mà 9h25 chú giao hàng Năm Tiền đã mang tới tận nhà, sữa Date mới tinh thơm phức!' }
+        ]
+      },
+      {
+        id: 'mebe-02',
+        title: 'Tã Quần Moony Natural Nội Địa Nhật Size M (46 Miếng x 3 Bịch) - Chuỗi Năm Tiền',
+        category: 'me_va_be',
+        categoryName: 'Mẹ & Bé (Năm Tiền)',
+        price: 1050000,
+        oldPrice: 1250000,
+        district: '45 Trần Hưng Đạo, P.4, Tuy Hòa',
+        distanceKm: 1.1,
+        is6K: true,
+        tag: 'Chính Hãng Siêu Thị Năm Tiền',
+        isFavorite: true,
+        image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80',
+        icon: '👶',
+        reviews: [
+          { author: 'Chị Thảo (Phú Lâm)', rating: 5, date: 'Hôm qua', text: 'Bỉm mềm mịn, bé mặc không bị hăm, mua theo combo 3 bịch rẻ hơn ngoài tiệm nhiều!' }
+        ]
+      },
+      {
+        id: 'mebe-03',
+        title: 'Xe Đẩy Cho Bé Gấp Gọn Aprica Nhật Bãi Thanh Lý (Kiểm Định Khử Khuẩn 6K)',
+        category: 'me_va_be',
+        categoryName: 'Mẹ & Bé (Năm Tiền)',
+        price: 650000,
+        oldPrice: 2800000,
+        district: 'Kho Ký Gửi Phú Lâm, Tuy Hòa',
+        distanceKm: 1.5,
+        is6K: true,
+        tag: 'Đã Khử Khuẩn & Kiểm Định 6K',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=400&q=80',
+        icon: '🚼',
+        reviews: [
+          { author: 'Anh Tuấn (Tuy Hòa)', rating: 5, date: '3 ngày trước', text: 'Xe đẩy còn rất mới và êm bánh, thợ kiểm tra kỹ càng, tiết kiệm được hơn 2 triệu!' }
+        ]
+      },
+      {
+        id: 'mebe-04',
+        title: 'Máy Hút Sữa Điện Đôi Medela Freestyle Thanh Lý (Đã Test Bo Mạch & Động Cơ 6K)',
+        category: 'me_va_be',
+        categoryName: 'Mẹ & Bé (Năm Tiền)',
+        price: 1450000,
+        oldPrice: 5200000,
+        district: 'Phường 5, TP. Tuy Hòa',
+        distanceKm: 1.3,
+        is6K: true,
+        tag: 'Bảo Hành 30 Ngày 6K',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=400&q=80',
+        icon: '🍼',
+        reviews: [
+          { author: 'Chị Lan (Tuy Hòa)', rating: 5, date: '5 ngày trước', text: 'Lực hút êm và mạnh như máy mới, có phiếu bảo hành 30 ngày của thợ Đất Phú an tâm hẳn.' }
+        ]
+      },
+
+      // ================= 5. HẢI SẢN TƯƠI & NGƯ CỤ ĐÁNH BẮT PHÚ YÊN =================
+      {
+        id: 'haisan-01',
+        title: 'Cá Ngừ Đại Dương Cắt Khúc Sashimi Phú Yên (Hút Chân Không 1kg Chuẩn Cấp Đông)',
+        category: 'hai_san_ngu_cu',
+        categoryName: 'Hải Sản & Ngư Cụ',
+        price: 260000,
+        oldPrice: 320000,
+        district: 'Cảng Cá Đông Tác, P. Phú Đông',
+        distanceKm: 2.1,
+        is6K: true,
+        tag: 'Đặc Sản Cá Ngừ Tuy Hòa',
+        isFavorite: true,
+        image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=400&q=80',
+        icon: '🐟',
+        reviews: [
+          { author: 'Bác Ba (Tuy Hòa)', rating: 5, date: 'Hôm nay', text: 'Thịt cá đỏ au tươi rói, chấm mù tạt với xì dầu ăn ngọt lịm!' }
+        ]
+      },
+      {
+        id: 'haisan-02',
+        title: 'Tôm Hùm Bông Sống Vịnh Xuân Đài Sông Cầu (Loại 1 - Con 1kg - 1.2kg)',
+        category: 'hai_san_ngu_cu',
+        categoryName: 'Hải Sản & Ngư Cụ',
+        price: 1150000,
+        oldPrice: 1450000,
+        district: 'TX. Sông Cầu, Tỉnh Phú Yên',
+        distanceKm: 4.5,
+        is6K: true,
+        tag: 'Tôm Hùm Sông Cầu Chính Gốc',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=400&q=80',
+        icon: '🦞',
+        reviews: [
+          { author: 'Chị Hằng (Du khách)', rating: 5, date: '2 ngày trước', text: 'Tôm giao về Tuy Hòa còn bơi trong thùng sục khí, thịt chắc nịch gạch son béo ngậy.' }
+        ]
+      },
+      {
+        id: 'ngucu-01',
+        title: 'Bộ Đèn LED Câu Mực Đêm Chuyên Dụng 150W Chống Nước IP68 Cho Tàu Cá Tuy Hòa',
+        category: 'hai_san_ngu_cu',
+        categoryName: 'Hải Sản & Ngư Cụ',
+        price: 480000,
+        oldPrice: 650000,
+        district: 'Phường 6, TP. Tuy Hòa',
+        distanceKm: 1.8,
+        is6K: true,
+        tag: 'Ngư Cụ Biển Kiểm Định 6K',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80',
+        icon: '💡',
+        reviews: [
+          { author: 'Anh Năm (Chủ tàu cá)', rating: 5, date: '4 ngày trước', text: 'Đèn sáng gom gom màu xanh hút mực cực nhạy, dây chống mặn gió biển rất bền.' }
+        ]
+      },
+      {
+        id: 'ngucu-02',
+        title: 'Máy Sục Khí Hồ Nuôi Tôm 2.2kW Dây Đồng 100% (Kiểm Định Thợ 6K Bảo Hành 30 Ngày)',
+        category: 'hai_san_ngu_cu',
+        categoryName: 'Hải Sản & Ngư Cụ',
+        price: 1850000,
+        oldPrice: 2400000,
+        district: 'Huyện Tuy An, Tỉnh Phú Yên',
+        distanceKm: 4.8,
+        is6K: true,
+        tag: 'Bảo Trì Thợ 6K Tận Nơi',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80',
+        icon: '🌀',
+        reviews: [
+          { author: 'Chú Tám (Chủ hồ tôm)', rating: 5, date: 'Tuần trước', text: 'Máy chạy êm ru, tạo bọt oxy mịn, thợ xuống tận hồ lắp đặt kiểm tra rất trách nhiệm.' }
+        ]
+      },
+
+      // ================= 6. DỤNG CỤ NGHỀ & CƠ KHÍ =================
+      {
+        id: 'dungcu-01',
+        title: 'Bộ Máy Khoan Pin Đa Năng Makita 18V Không Chổi Than (2 Pin + Sạc Nhanh) - Ký Gửi Thợ 6K',
+        category: 'dung_cu_nghe',
+        categoryName: 'Dụng Cụ Nghề',
+        price: 850000,
+        oldPrice: 1450000,
+        district: 'Phường 7, TP. Tuy Hòa',
+        distanceKm: 0.9,
+        is6K: true,
+        tag: 'Kiểm Định Thợ 6K',
+        isFavorite: true,
+        image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+        icon: '🔧',
+        reviews: [
+          { author: 'Anh Hưng (Thợ điện)', rating: 5, date: 'Hôm qua', text: 'Khoan lực búa khỏe, bắt vít tôn ngọt xớt, pin trâu dùng cả ngày chưa hết.' }
+        ]
+      },
+      {
+        id: 'dungcu-02',
+        title: 'Thang Nhôm Rút Đơn 3.8m Hợp Kim Nhôm Dày Chịu Tải 150kg (Kiểm Định An Toàn 6K)',
+        category: 'dung_cu_nghe',
+        categoryName: 'Dụng Cụ Nghề',
+        price: 790000,
+        oldPrice: 1200000,
+        district: 'Phường Phú Lâm, Tuy Hòa',
+        distanceKm: 1.6,
+        is6K: true,
+        tag: 'Bảo Vệ Leo Trèo An Toàn',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=400&q=80',
+        icon: '🪜',
+        reviews: [
+          { author: 'Anh Tuấn (Thợ máy lạnh)', rating: 5, date: '2 ngày trước', text: 'Rút nhẹ nhàng, khóa nấc chắc chắn không rung lắc, chở xe máy rất gọn gàng.' }
+        ]
+      },
+
+      // ================= 7. THUÊ XE & DU LỊCH BẢN ĐỊA =================
+      {
+        id: 'dulich-01',
+        title: 'Cho Thuê Xe Máy Honda AirBlade / Vision Đời Mới Phượt Tuy Hòa (Đã Kiểm Định Phanh & Lốp 6K)',
+        category: 'dich_vu_xe',
+        categoryName: 'Thuê Xe & Du Lịch',
+        price: 120000,
+        oldPrice: 160000,
+        district: 'Khu vực Ga Tuy Hòa, TP. Tuy Hòa',
+        distanceKm: 0.5,
+        is6K: true,
+        tag: 'Giao Xe Tận Ga & Sân Bay',
+        isFavorite: true,
+        image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80',
+        icon: '🛵',
+        reviews: [
+          { author: 'Thu Trang (Hà Nội)', rating: 5, date: 'Hôm nay', text: 'Giao xe tận ga lúc 5h sáng, xe mới cứng chạy êm ru, có sẵn 2 mũ bảo hiểm sạch sẽ và áo mưa!' }
+        ]
+      },
+      {
+        id: 'dulich-02',
+        title: 'Tour Trải Nghiệm Thuyền Thúng Câu Mực Đêm & Lặn Ngắm San Hô Hòn Yến (Ngư Dân Bản Địa)',
+        category: 'dich_vu_xe',
+        categoryName: 'Thuê Xe & Du Lịch',
+        price: 350000,
+        oldPrice: 500000,
+        district: 'Hòn Yến, Huyện Tuy An',
+        distanceKm: 4.2,
+        is6K: true,
+        tag: 'Trải Nghiệm Xứ Nẫu Đích Thực',
+        isFavorite: false,
+        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+        icon: '🌊',
+        reviews: [
+          { author: 'Minh Hoàng (TP.HCM)', rating: 5, date: 'Tuần trước', text: 'Bác lái thúng thân thiện cực kỳ, hướng dẫn câu được cả rổ mực nang tươi rói nướng ngay trên bờ biển!' }
+        ]
+      },
+
       // 1. SÁCH CŨ & TƯ LIỆU
       {
         id: 'sach-01',
@@ -3367,32 +4291,50 @@
     }
 
     function switchRole(role) {
-      ['roleBtnBuyer', 'roleBtnSeller', 'roleBtnWorker', 'roleBtnAI'].forEach(id => {
+      ['roleBtnAdmin', 'roleBtnSeller', 'roleBtnWorker', 'roleBtnBuyer', 'roleBtnAI'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.className = 'px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[11px] transition';
+        if (el) el.className = 'px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1.5 shrink-0';
       });
 
-      const allSections = ['sectionExplore', 'sectionDispatch', 'sectionCommunity', 'sectionFavorites', 'sectionMyOrders', 'sectionSeller', 'sectionProfile', 'sectionAITools'];
+      const allSections = ['sectionAdminPlatform', 'sectionExplore', 'sectionDispatch', 'sectionCommunity', 'sectionFavorites', 'sectionMyOrders', 'sectionSeller', 'sectionProfile', 'sectionAITools'];
       allSections.forEach(s => {
         const el = document.getElementById(s);
         if (el) el.classList.add('hidden');
       });
 
-      if (role === 'buyer') {
-        document.getElementById('roleBtnBuyer').className = 'px-2.5 py-0.5 rounded-lg bg-sky-600 text-white font-bold text-[11px] transition';
-        switchTab('explore');
+      if (role === 'admin') {
+        const btn = document.getElementById('roleBtnAdmin');
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl bg-amber-600 text-slate-950 font-black text-[11px] transition flex items-center gap-1.5 shrink-0 shadow-md shadow-amber-500/25';
+        const sec = document.getElementById('sectionAdminPlatform');
+        if (sec) sec.classList.remove('hidden');
+        showToast('Đang ở vai trò: CHỦ NỀN TẢNG (Toàn quyền quản trị)', 'info');
       } else if (role === 'seller') {
-        document.getElementById('roleBtnSeller').className = 'px-2.5 py-0.5 rounded-lg bg-emerald-600 text-white font-bold text-[11px] transition';
-        document.getElementById('sectionSeller').classList.remove('hidden');
+        const btn = document.getElementById('roleBtnSeller');
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl bg-emerald-600 text-white font-bold text-[11px] transition flex items-center gap-1.5 shrink-0 shadow-md shadow-emerald-500/25';
+        const sec = document.getElementById('sectionSeller');
+        if (sec) sec.classList.remove('hidden');
+        showToast('Đang ở vai trò: NGƯỜI BÁN KÝ GỬI (ERP Mini, CRM & Sổ Thuế TT88)', 'info');
       } else if (role === 'worker') {
-        document.getElementById('roleBtnWorker').className = 'px-2.5 py-0.5 rounded-lg bg-amber-600 text-white font-bold text-[11px] transition';
+        const btn = document.getElementById('roleBtnWorker');
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl bg-sky-600 text-white font-bold text-[11px] transition flex items-center gap-1.5 shrink-0 shadow-md shadow-sky-500/25';
         switchTab('dispatch');
+        showToast('Đang ở vai trò: THỢ KỸ THUẬT 6K (Radar Cứu Hộ & Thu Nhập 80/20)', 'info');
+      } else if (role === 'buyer') {
+        const btn = document.getElementById('roleBtnBuyer');
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl bg-sky-600 text-white font-bold text-[11px] transition flex items-center gap-1.5 shrink-0 shadow-md shadow-sky-500/25';
+        switchTab('explore');
+        showToast('Đang ở vai trò: KHÁCH MUA BẢN ĐỊA & DU KHÁCH', 'info');
       } else if (role === 'ai') {
-        const btnAI = document.getElementById('roleBtnAI');
-        if (btnAI) btnAI.className = 'px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white font-bold text-[11px] transition shadow-md shadow-indigo-600/40';
-        document.getElementById('sectionAITools').classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const btn = document.getElementById('roleBtnAI');
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl bg-indigo-600 text-white font-bold text-[11px] transition flex items-center gap-1.5 shrink-0 shadow-md shadow-indigo-500/25';
+        const sec = document.getElementById('sectionAITools');
+        if (sec) sec.classList.remove('hidden');
+        showToast('Đang mở: BỘ 13 CÔNG CỤ AI ĐỘC LẬP', 'info');
       }
+    }
+
+    function refreshPlatformStats() {
+      showToast('Đã đồng bộ dữ liệu giao dịch và thợ 6K mới nhất!', 'success');
     }
 
     // ================= KÍCH HOẠT 13 CÔNG CỤ AI LIVE =================
@@ -5132,6 +6074,450 @@
       showToast('Đã đăng bài lên Bản Tin Phố Biển thành công!', 'success');
     }
 
+
+
+    // =========================================================================
+    // DỮ LIỆU CỬA HÀNG & BẢN ĐỒ CHỈ ĐƯỜNG ĐIỀU HƯỚNG TUY HÒA (LEAFLET GPS)
+    // =========================================================================
+
+    const USER_GPS_LOCATION = {
+      lat: 13.0805,
+      lng: 109.3020,
+      address: '21/146 Ngô Gia Tự, P. Phú Yên, TP. Tuy Hòa'
+    };
+
+    const NEARBY_STORES_DATABASE = [
+      {
+        id: 'store-chiba',
+        name: 'Hộ Đặc Sản Xứ Nẫu Chị Ba',
+        cat: 'dac_san',
+        catName: 'Đặc Sản OCOP',
+        icon: '🥩',
+        lat: 13.0882,
+        lng: 109.3090,
+        address: '45 Trần Hưng Đạo, P. 4, TP. Tuy Hòa',
+        phone: '0905889911',
+        rating: 4.98,
+        openHours: '06:30 - 21:30',
+        bestSeller: 'Bò một nắng Krông Pa & Muối kiến vàng',
+        shopModalId: 'shop-chiba',
+        routeGuide: 'Xuất phát từ Ngô Gia Tự ➔ Đi thẳng đại lộ Hùng Vương ➔ Rẽ phải Trần Hưng Đạo 400m.'
+      },
+      {
+        id: 'store-sach',
+        name: 'Tiệm Sách Cũ & Tư Liệu Tuy Hòa',
+        cat: 'sach_cu',
+        catName: 'Sách & Tư Liệu',
+        icon: '📚',
+        lat: 13.0925,
+        lng: 109.3142,
+        address: '88 Lê Thánh Tôn, P. 1, TP. Tuy Hòa',
+        phone: '0935123789',
+        rating: 4.96,
+        openHours: '07:30 - 21:00',
+        bestSeller: 'Bộ 3 cuốn Khảo cứu Phú Yên xưa',
+        shopModalId: 'shop-sach-tuyhoa',
+        routeGuide: 'Từ Ngô Gia Tự ➔ Qua đường Lê Lợi ➔ Vào Lê Thánh Tôn gần công viên Diên Hồng.'
+      },
+      {
+        id: 'store-dienmay',
+        name: 'Kho Điện Máy Thanh Lý 6K Phú Lâm',
+        cat: 'do_cu',
+        catName: 'Đồ Cũ Kiểm Định 6K',
+        icon: '🌀',
+        lat: 13.0760,
+        lng: 109.2980,
+        address: 'Đường Nguyễn Văn Linh, P. Phú Lâm, Tuy Hòa',
+        phone: '0914333555',
+        rating: 4.95,
+        openHours: '07:00 - 19:30',
+        bestSeller: 'Máy bơm Sena 150W & Quạt công nghiệp test 6K',
+        shopModalId: 'shop-dienmay-phulam',
+        routeGuide: 'Đi theo đường Ngô Gia Tự rẽ qua cầu Đà Rằng cũ về hướng Nam Phú Lâm (700m).'
+      },
+      {
+        id: 'store-tramtho-hung',
+        name: 'Trạm Cứu Hộ Điện Lạnh 6K (Anh Hưng)',
+        cat: 'tram_tho',
+        catName: 'Trạm Cứu Hộ 6K',
+        icon: '⚡',
+        lat: 13.0950,
+        lng: 109.3075,
+        address: '182 Hùng Vương, P. 7, TP. Tuy Hòa',
+        phone: '0914223344',
+        rating: 4.98,
+        openHours: 'Trực 24/7 (15p có mặt)',
+        bestSeller: 'Cứu hộ máy lạnh, tủ đông tiệm ăn Tuy Hòa',
+        workerModalId: 'DP-W02',
+        routeGuide: 'Trực diện trục đường chính Hùng Vương, ngay trung tâm Phường 7 Tuy Hòa.'
+      },
+      {
+        id: 'store-banhtrang-hoada',
+        name: 'Xưởng Bánh Tráng Hòa Đa Truyền Thống',
+        cat: 'dac_san',
+        catName: 'Đặc Sản OCOP',
+        icon: '🍘',
+        lat: 13.0720,
+        lng: 109.2780,
+        address: 'Thôn Đông Phước, Hòa An, H. Phú Hòa, Phú Yên',
+        phone: '0935123456',
+        rating: 4.92,
+        openHours: '06:00 - 18:30',
+        bestSeller: 'Bánh tráng nướng mè thượng hạng',
+        shopModalId: 'shop-chiba',
+        routeGuide: 'Từ Ngô Gia Tự đi theo Quốc Lộ 25 về hướng Tây Phú Hòa khoảng 2.8 km.'
+      },
+      {
+        id: 'store-tramtho-nam',
+        name: 'Trạm Cứu Hộ Bơm Nước & Điện Cơ (Anh Nam)',
+        cat: 'tram_tho',
+        catName: 'Trạm Cứu Hộ 6K',
+        icon: '🔧',
+        lat: 13.0785,
+        lng: 109.3060,
+        address: 'Số 12 Ngô Gia Tự, P. Phú Yên, TP. Tuy Hòa',
+        phone: '0983112244',
+        rating: 4.95,
+        openHours: 'Trực 24/7 (15p có mặt)',
+        bestSeller: 'Cứu hộ máy bơm giếng khoan & động cơ',
+        workerModalId: 'DP-W01',
+        routeGuide: 'Nằm ngay trên trục đường Ngô Gia Tự, cách vị trí bạn chỉ 300m.'
+      }
+    ];
+
+    let leafletMapInstance = null;
+    let leafletMarkersGroup = null;
+    let leafletRoutePolyline = null;
+    let currentSelectedNavStore = null;
+    let currentMapRadiusKm = 5.0;
+
+    // Tính khoảng cách Haversine giữa 2 tọa độ (km)
+    function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Bán kính trái đất km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 10) / 10;
+    }
+
+    function openNearbyStoresMapModal() {
+      const modal = document.getElementById('nearbyStoresMapModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      // Khởi tạo Leaflet Map nếu chưa có
+      setTimeout(() => {
+        initLeafletMapIfNeeded();
+      }, 150);
+    }
+
+    function closeNearbyStoresMapModal() {
+      const modal = document.getElementById('nearbyStoresMapModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function initLeafletMapIfNeeded() {
+      if (typeof L === 'undefined') {
+        console.warn('Leaflet thư viện chưa tải xong, đang đợi...');
+        setTimeout(initLeafletMapIfNeeded, 300);
+        return;
+      }
+
+      if (!leafletMapInstance) {
+        leafletMapInstance = L.map('nearbyLeafletMap', {
+          zoomControl: true,
+          attributionControl: false
+        }).setView([USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng], 14);
+
+        // Sử dụng OpenStreetMap tile layer chuẩn
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(leafletMapInstance);
+
+        leafletMarkersGroup = L.layerGroup().addTo(leafletMapInstance);
+      } else {
+        leafletMapInstance.invalidateSize();
+      }
+
+      renderStoresOnMap(currentMapRadiusKm);
+    }
+
+    function renderStoresOnMap(radiusKm) {
+      if (!leafletMarkersGroup || !leafletMapInstance) return;
+      leafletMarkersGroup.clearLayers();
+
+      if (leafletRoutePolyline) {
+        leafletMapInstance.removeLayer(leafletRoutePolyline);
+        leafletRoutePolyline = null;
+      }
+
+      // Marker vị trí người dùng
+      const userIcon = L.divIcon({
+        className: 'user-pulse-marker',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+      });
+
+      L.marker([USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng], { icon: userIcon })
+        .addTo(leafletMarkersGroup)
+        .bindPopup(`
+          <div class="p-3 text-xs space-y-1">
+            <div class="font-bold text-sky-400 flex items-center gap-1">
+              <span>📍 Vị Trí Của Bạn (GPS Tuy Hòa)</span>
+            </div>
+            <div class="text-slate-300 font-sans">${USER_GPS_LOCATION.address}</div>
+            <div class="text-[10px] text-emerald-400">Đang quét bán kính: ${radiusKm} km</div>
+          </div>
+        `);
+
+      // Vẽ vòng tròn bán kính radar
+      L.circle([USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng], {
+        color: '#0284c7',
+        fillColor: '#38bdf8',
+        fillOpacity: 0.08,
+        radius: radiusKm * 1000,
+        weight: 1.5,
+        dashArray: '4, 6'
+      }).addTo(leafletMarkersGroup);
+
+      // Tính khoảng cách cho từng cửa hàng và lọc
+      const enrichedStores = NEARBY_STORES_DATABASE.map(s => {
+        const dist = calculateHaversineDistance(USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng, s.lat, s.lng);
+        return { ...s, distanceKm: dist };
+      }).sort((a, b) => a.distanceKm - b.distanceKm);
+
+      const filteredStores = enrichedStores.filter(s => s.distanceKm <= radiusKm);
+
+      filteredStores.forEach(store => {
+        const storeMarker = L.marker([store.lat, store.lng])
+          .addTo(leafletMarkersGroup);
+
+        const estTimeMin = Math.max(2, Math.round(store.distanceKm * 3.5));
+
+        const popupHTML = `
+          <div class="p-3.5 text-xs space-y-2 max-w-xs font-sans">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">${store.icon}</span>
+              <div>
+                <div class="font-bold text-white text-xs leading-tight">${store.name}</div>
+                <div class="text-[10px] text-amber-400 font-semibold">${store.catName} • ⭐ ${store.rating}</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300">📍 ${store.address}</div>
+            <div class="flex justify-between items-center text-[10px] text-slate-400 bg-slate-900 p-1.5 rounded-lg border border-slate-800">
+              <span class="text-emerald-400 font-bold font-mono">Cách: ${store.distanceKm} km</span>
+              <span>Xe máy: ~${estTimeMin} phút</span>
+            </div>
+            <div class="text-[10px] text-slate-400">🔥 Bán chạy: <strong class="text-slate-200">${store.bestSeller}</strong></div>
+            <div class="flex items-center gap-1.5 pt-1">
+              <button onclick="navigateStoreToRoute('${store.id}')" type="button" class="flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] text-center transition flex items-center justify-center gap-1">
+                <i class="fa-solid fa-diamond-turn-right text-xs"></i> Chỉ đường
+              </button>
+              <button onclick="openStoreDirectly('${store.shopModalId || ''}', '${store.workerModalId || ''}')" type="button" class="py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] transition">
+                Vào tiệm
+              </button>
+            </div>
+          </div>
+        `;
+
+        storeMarker.bindPopup(popupHTML);
+      });
+
+      renderNearbyStoreCards(filteredStores);
+    }
+
+    function renderNearbyStoreCards(stores) {
+      const container = document.getElementById('nearbyStoresListContainer');
+      const badge = document.getElementById('nearbyStoresCountBadge');
+      if (badge) badge.textContent = stores.length + ' điểm phục vụ quanh đây';
+      if (!container) return;
+
+      if (stores.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-slate-950 p-4 rounded-2xl border border-slate-800 text-center text-xs text-slate-400">
+            Không có cửa hàng nào trong bán kính ${currentMapRadiusKm} km. Vui lòng mở rộng bán kính lên 5km hoặc 10km!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = stores.map(s => {
+        const estMin = Math.max(2, Math.round(s.distanceKm * 3.5));
+        return `
+          <div onclick="navigateStoreToRoute('${s.id}')" class="bg-slate-950 hover:bg-slate-900 p-3 rounded-2xl border border-slate-800 hover:border-sky-500 transition cursor-pointer space-y-1.5 shadow-sm group">
+            <div class="flex justify-between items-start gap-1.5">
+              <div class="flex items-center gap-2">
+                <span class="text-xl group-hover:scale-110 transition">${s.icon}</span>
+                <div>
+                  <h5 class="font-bold text-white text-xs leading-tight line-clamp-1">${s.name}</h5>
+                  <span class="text-[10px] text-amber-400 font-semibold">${s.catName}</span>
+                </div>
+              </div>
+              <span class="font-mono font-black text-emerald-400 text-xs shrink-0">${s.distanceKm} km</span>
+            </div>
+
+            <p class="text-[10px] text-slate-400 line-clamp-1">📍 ${s.address}</p>
+
+            <div class="flex justify-between items-center text-[10px] pt-1 border-t border-slate-800/80">
+              <span class="text-slate-500">⏱️ Xe máy ~${estMin} phút</span>
+              <span class="text-sky-400 font-bold group-hover:underline flex items-center gap-0.5">
+                <span>Chỉ đường</span>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterMapByRadius(radiusKm) {
+      currentMapRadiusKm = radiusKm;
+      document.querySelectorAll('.map-radius-btn').forEach(btn => {
+        btn.className = 'map-radius-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition';
+      });
+
+      const activeBtn = document.getElementById('radiusBtn-' + Math.round(radiusKm));
+      if (activeBtn) {
+        activeBtn.className = 'map-radius-btn px-2.5 py-1 rounded-lg bg-sky-600 text-white shadow transition';
+      }
+
+      renderStoresOnMap(radiusKm);
+    }
+
+    function recenterMapToUser() {
+      if (leafletMapInstance) {
+        leafletMapInstance.setView([USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng], 15);
+      }
+    }
+
+    function navigateStoreToRoute(storeId) {
+      const store = NEARBY_STORES_DATABASE.find(s => s.id === storeId);
+      if (!store || !leafletMapInstance) return;
+
+      currentSelectedNavStore = store;
+      const distance = calculateHaversineDistance(USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng, store.lat, store.lng);
+      const estMin = Math.max(2, Math.round(distance * 3.5));
+
+      // Xóa đường cũ nếu có
+      if (leafletRoutePolyline) {
+        leafletMapInstance.removeLayer(leafletRoutePolyline);
+      }
+
+      // Tạo polyline chỉ đường mô phỏng đường phố Tuy Hòa (qua ngã tư trung tâm)
+      const midLat = (USER_GPS_LOCATION.lat + store.lat) / 2;
+      const midLng = (USER_GPS_LOCATION.lng + store.lng) / 2 + 0.001; // uốn lượn theo đại lộ Hùng Vương
+
+      const routePoints = [
+        [USER_GPS_LOCATION.lat, USER_GPS_LOCATION.lng],
+        [USER_GPS_LOCATION.lat + 0.003, USER_GPS_LOCATION.lng + 0.002],
+        [midLat, midLng],
+        [store.lat, store.lng]
+      ];
+
+      leafletRoutePolyline = L.polyline(routePoints, {
+        color: '#10b981',
+        weight: 5,
+        opacity: 0.9,
+        dashArray: '8, 8',
+        lineCap: 'round'
+      }).addTo(leafletMapInstance);
+
+      leafletMapInstance.fitBounds(leafletRoutePolyline.getBounds(), { padding: [50, 50] });
+
+      // Hiển thị Card Lộ trình
+      const routeCard = document.getElementById('navigationRouteCard');
+      const destNameEl = document.getElementById('navDestName');
+      const destAddressEl = document.getElementById('navDestAddress');
+      const distEl = document.getElementById('navDistanceText');
+      const timeEl = document.getElementById('navTimeText');
+      const stepsEl = document.getElementById('navTurnByTurnSteps');
+
+      if (routeCard) {
+        routeCard.classList.remove('hidden');
+        if (destNameEl) destNameEl.textContent = store.name;
+        if (destAddressEl) destAddressEl.textContent = '📍 ' + store.address;
+        if (distEl) distEl.textContent = distance + ' km';
+        if (timeEl) timeEl.textContent = '~ ' + estMin + ' phút xe máy';
+        if (stepsEl) {
+          stepsEl.innerHTML = `
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-motorcycle text-sky-400"></i>
+              <span>${store.routeGuide}</span>
+            </div>
+          `;
+        }
+      }
+
+      showToast('Đang chỉ đường đến: ' + store.name + ' (' + distance + ' km)', 'info');
+    }
+
+    function openExternalGoogleMapsDirections() {
+      if (!currentSelectedNavStore) return;
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${USER_GPS_LOCATION.lat},${USER_GPS_LOCATION.lng}&destination=${currentSelectedNavStore.lat},${currentSelectedNavStore.lng}&travelmode=motorcycle`;
+      window.open(url, '_blank');
+    }
+
+    function openStoreDirectly(shopId, workerId) {
+      closeNearbyStoresMapModal();
+      if (shopId && typeof openSellerShopModal === 'function') {
+        openSellerShopModal(shopId);
+      } else if (workerId && typeof openWorkerPortfolioModal === 'function') {
+        openWorkerPortfolioModal(workerId);
+      }
+    }
+
+
+
+    // =========================================================================
+    // HỆ THỐNG LIÊN KẾT ĐƠN VỊ VẬN CHUYỂN LOGISTICS ĐẤT PHÚ
+    // =========================================================================
+
+    let currentSelectedShippingFee = 15000;
+    let currentSelectedCarrierName = 'Đất Phú Hỏa Tốc (30p)';
+
+    function handleShippingCarrierChange() {
+      const select = document.getElementById('cartShippingCarrierSelect');
+      if (!select) return;
+
+      const opt = select.options[select.selectedIndex];
+      currentSelectedShippingFee = parseInt(opt.getAttribute('data-fee')) || 15000;
+      currentSelectedCarrierName = opt.text.split('•')[0].trim();
+
+      const badge = document.getElementById('shippingCarrierBadge');
+      const feeText = document.getElementById('cartShippingFeeText');
+      if (badge) badge.textContent = currentSelectedCarrierName;
+      if (feeText) feeText.textContent = currentSelectedShippingFee.toLocaleString('vi-VN') + ' đ';
+
+      // Cập nhật lại tổng tiền giỏ hàng đã gồm phí ship
+      updateCartTotalWithShipping();
+    }
+
+    function updateCartTotalWithShipping() {
+      const rawTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const grandTotal = rawTotal > 0 ? (rawTotal + currentSelectedShippingFee) : 0;
+      const totalEl = document.getElementById('cartTotalPrice');
+      if (totalEl) totalEl.textContent = grandTotal.toLocaleString('vi-VN') + ' đ';
+    }
+
+    function openTrackingModal(trackingCode) {
+      const modal = document.getElementById('logisticsTrackingModal');
+      const codeEl = document.getElementById('trackCodeDisplay');
+      if (!modal) return;
+
+      if (codeEl && trackingCode) {
+        codeEl.textContent = trackingCode;
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeTrackingModal() {
+      const modal = document.getElementById('logisticsTrackingModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
 </script>
 
 
@@ -5250,6 +6636,191 @@
 
       </div>
 
+    </div>
+  </div>
+
+
+
+  <!-- ================= MODAL BẢN ĐỒ CỬA HÀNG QUANH ĐÂY & CHỈ ĐƯỜNG ĐIỀU HƯỚNG ================= -->
+  <div id="nearbyStoresMapModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-4xl w-full p-4 sm:p-6 space-y-4 shadow-2xl relative max-h-[95vh] overflow-y-auto flex flex-col">
+      
+      <!-- Nút đóng -->
+      <button onclick="closeNearbyStoresMapModal()" type="button" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition shadow z-20">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Header Modal -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-800 pr-10">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/40 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              GPS Định Vị Trực Tiếp
+            </span>
+            <span class="text-xs text-amber-400 font-mono">Tuy Hòa • Phú Yên</span>
+          </div>
+          <h3 class="text-base sm:text-lg font-black text-white mt-1 flex items-center gap-2">
+            <i class="fa-solid fa-map-location-dot text-sky-400"></i>
+            <span>Bản Đồ Cửa Hàng & Trạm Kỹ Thuật 6K Quanh Đây</span>
+          </h3>
+          <p class="text-xs text-slate-400">
+            Vị trí của bạn: <strong class="text-slate-200">21/146 Ngô Gia Tự, P. Phú Yên, TP. Tuy Hòa</strong> (Bán kính tùy chỉnh)
+          </p>
+        </div>
+
+        <!-- Bán kính lọc -->
+        <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-bold shrink-0">
+          <button onclick="filterMapByRadius(1.0)" id="radiusBtn-1" class="map-radius-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">1 km</button>
+          <button onclick="filterMapByRadius(2.0)" id="radiusBtn-2" class="map-radius-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">2 km</button>
+          <button onclick="filterMapByRadius(5.0)" id="radiusBtn-5" class="map-radius-btn px-2.5 py-1 rounded-lg bg-sky-600 text-white shadow transition">5 km</button>
+          <button onclick="filterMapByRadius(10.0)" id="radiusBtn-10" class="map-radius-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">10 km</button>
+        </div>
+      </div>
+
+      <!-- Khung Bản Đồ Leaflet Interactive -->
+      <div class="relative w-full h-72 sm:h-96 rounded-2xl overflow-hidden border border-slate-700/80 shadow-inner bg-slate-950">
+        <div id="nearbyLeafletMap" class="w-full h-full z-10"></div>
+        
+        <!-- Nút Reset Vị Trí Về Bạn -->
+        <button onclick="recenterMapToUser()" type="button" class="absolute bottom-3 right-3 z-20 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 border border-slate-700 shadow-lg backdrop-blur-sm transition">
+          <i class="fa-solid fa-crosshairs text-sky-400"></i>
+          <span>Về vị trí của tôi</span>
+        </button>
+      </div>
+
+      <!-- Thẻ Hướng Dẫn Lộ Trình & Điều Hướng (Navigation Route Box) -->
+      <div id="navigationRouteCard" class="hidden bg-gradient-to-r from-sky-950/90 via-slate-900 to-emerald-950/80 p-3.5 rounded-2xl border border-sky-700/80 space-y-2.5 shadow-xl transition-all">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
+          <div class="space-y-0.5">
+            <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-diamond-turn-right text-emerald-400"></i>
+              <span>Lộ Trình Chỉ Đường Đang Chọn:</span>
+            </div>
+            <h4 id="navDestName" class="font-black text-white text-sm">Hộ Đặc Sản Xứ Nẫu Chị Ba</h4>
+            <p id="navDestAddress" class="text-xs text-slate-300">📍 45 Trần Hưng Đạo, P.4, TP. Tuy Hòa</p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="text-right">
+              <div id="navDistanceText" class="font-mono font-black text-emerald-400 text-sm">1.2 km</div>
+              <div id="navTimeText" class="text-[10px] text-slate-400">~ 4 phút xe máy</div>
+            </div>
+            <button onclick="openExternalGoogleMapsDirections()" type="button" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition">
+              <i class="fa-solid fa-turn-up text-amber-300"></i>
+              <span>Google Maps Giọng Nói</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="navTurnByTurnSteps" class="text-xs text-slate-300 font-sans space-y-1 bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-motorcycle text-sky-400"></i>
+            <span>Xuất phát từ 21/146 Ngô Gia Tự ➔ Rẽ phải ra Đại lộ Hùng Vương (800m) ➔ Rẽ trái vào Trần Hưng Đạo (400m) là đến tiệm bên tay phải.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danh Sách Các Cửa Hàng & Trạm Gần Nhất (Nearby Cards Stream) -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-300">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-list-ul text-sky-400"></i>
+            <span>Danh Sách Cửa Hàng Gần Bạn Nhất (Sắp xếp theo cự ly)</span>
+          </span>
+          <span id="nearbyStoresCountBadge" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-300">6 điểm phục vụ</span>
+        </div>
+
+        <div id="nearbyStoresListContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-56 overflow-y-auto custom-scroll pr-1">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- ================= MODAL TRA CỨU HÀNH TRÌNH VẬN ĐƠN LOGISTICS ================= -->
+  <div id="logisticsTrackingModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-2xl relative">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🚚</span>
+          <div>
+            <h3 class="font-black text-sm text-white">Theo Dõi Hành Trình Vận Đơn</h3>
+            <span id="trackCarrierName" class="text-[10px] text-sky-400 font-mono">Viettel Post Phú Yên</span>
+          </div>
+        </div>
+        <button onclick="closeTrackingModal()" type="button" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Mã vận đơn & Trạng thái -->
+      <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
+        <div>
+          <span class="text-[10px] text-slate-400 block">Mã Vận Đơn:</span>
+          <span id="trackCodeDisplay" class="font-mono font-black text-white text-sm">VTP-PY-440102</span>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold animate-pulse">
+          Đang Vận Chuyển
+        </span>
+      </div>
+
+      <!-- Tiến Trình 4 Bước Giao Hàng -->
+      <div class="space-y-4 py-2 font-sans text-xs">
+        
+        <div class="flex items-start gap-3 relative">
+          <div class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-xs shrink-0 z-10 shadow">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div class="space-y-0.5">
+            <div class="font-bold text-white text-xs">Đã Đóng Gói & Xuất Kho Tuy Hòa</div>
+            <p class="text-[10px] text-slate-400">Kiện hàng đã được dán tem kiểm định 6K tại kho 21/146 Ngô Gia Tự.</p>
+            <div class="text-[9px] text-slate-500 font-mono">08:30 • 27/10/2026</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 relative">
+          <div class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-xs shrink-0 z-10 shadow">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div class="space-y-0.5">
+            <div class="font-bold text-white text-xs">Bưu Tá Viettel Post / Shipper 6K Đã Nhận Hàng</div>
+            <p class="text-[10px] text-slate-400">Bưu tá: Nguyễn Văn Bình (SĐT: 0914.889.911) đang nhận bàn giao kiện hàng.</p>
+            <div class="text-[9px] text-slate-500 font-mono">09:15 • 27/10/2026</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 relative">
+          <div class="w-6 h-6 rounded-full bg-sky-500 text-slate-950 flex items-center justify-center font-bold text-xs shrink-0 z-10 shadow animate-pulse">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <div class="space-y-0.5">
+            <div class="font-bold text-sky-400 text-xs">Đang Trên Tuyến Giao Đến Địa Chỉ Của Bạn</div>
+            <p class="text-[10px] text-slate-300">Dự kiến giao trước 11:30 sáng nay tại Phường 7, TP. Tuy Hòa.</p>
+            <div class="text-[9px] text-sky-400 font-mono">Đang cập nhật thời gian thực...</div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 relative opacity-50">
+          <div class="w-6 h-6 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center font-bold text-xs shrink-0 z-10">
+            <i class="fa-solid fa-box-open"></i>
+          </div>
+          <div class="space-y-0.5">
+            <div class="font-bold text-slate-400 text-xs">Khách Nhận Hàng & Ký Nghiệm Thu K6</div>
+            <p class="text-[10px] text-slate-500">Đồng kiểm tra hàng, quét VietQR hoặc thanh toán tiền mặt COD.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="closeTrackingModal()" type="button" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition">
+          Đóng Cửa Sổ
+        </button>
+      </div>
     </div>
   </div>
 
