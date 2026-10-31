@@ -169,15 +169,30 @@
                 </div>
 
                 <!-- Các nút tiện ích góc phải Header -->
-                <div class="flex items-center gap-2">
-                    <button onclick="openQrModal()" class="bg-[#e8ecf7] hover:bg-blue-100 dp-text-blue text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <button onclick="openScenarioModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition" title="Chạy tự động 6 tình huống giả định các nhóm khách hàng khác nhau">
+                        <span>🎬</span> <span>6 Tình Huống Giả Định</span>
+                    </button>
+                    <button onclick="toggleIsolatedShopMode()" id="btnIsolateToggle" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-extrabold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition" title="Chuyển sang giao diện Chatbox độc lập chỉ riêng cửa hàng này">
+                        <span>🔒</span> <span class="hidden lg:inline" id="isolateBtnLabel">Xem Chế Độ 1 Tiệm Riêng</span>
+                    </button>
+                    <button onclick="openQrModal()" class="bg-[#e8ecf7] hover:bg-blue-100 dp-text-blue text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                         <span>📱</span> <span class="hidden sm:inline">Mã QR Tiệm</span>
                     </button>
-                    <button onclick="triggerHumanHandoff()" class="dp-bg-red text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
+                    <button onclick="triggerHumanHandoff()" class="dp-bg-red text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
                         <span>📞</span> <span class="hidden sm:inline">Gặp Chủ Tiệm</span>
                     </button>
                 </div>
             </header>
+
+            <!-- Thanh Phân Luồng Nhóm Khách Hàng Thông Minh (Multi-Segment Triage Bar) -->
+            <div class="bg-gradient-to-r from-[#1B2A6B]/5 via-white to-[#D32027]/5 border-b border-slate-200 px-3 py-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap smooth-scroll">
+                <span class="text-[11px] font-extrabold dp-text-blue shrink-0 flex items-center gap-1">
+                    🎯 Bạn thuộc nhóm:
+                </span>
+                <div id="segmentSelectorBar" class="flex items-center gap-1.5">
+                </div>
+            </div>
 
             <!-- Vùng Luồng Tin Nhắn -->
             <div id="zaloMessageStream" class="flex-1 zalo-chat-bg p-4 overflow-y-auto smooth-scroll flex flex-col gap-3">
@@ -255,11 +270,41 @@
                     </div>
                 </div>
 
+                <!-- HỘP CÔ LẬP DỮ LIỆU ĐA CỬA HÀNG (MULTI-TENANT ISOLATION) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border-2 border-[#1B2A6B] space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <span class="text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">🛡️ BẢO MẬT CÔ LẬP ĐA CỬA HÀNG (ROW LEVEL SECURITY)</span>
+                            <h3 class="font-extrabold dp-text-blue text-base mt-1">🔗 Đường Link Chatbox Độc Lập Của Riêng Tiệm Này</h3>
+                            <p class="text-xs text-slate-600">Khi gửi link này cho khách hoặc Chủ tiệm: Hệ thống <b>tự động ẩn tất cả các cửa hàng khác</b>. Không tiệm nào thấy được SĐT khách hay doanh thu của tiệm nào!</p>
+                        </div>
+                        <button onclick="toggleIsolatedShopMode()" class="dp-bg-red text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow">
+                            🔒 Bật Thử Giao Diện Độc Lập Của Tiệm Này
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <div class="font-bold dp-text-blue mb-1">1. Link Chatbox Gửi Cho Khách Mua Hàng (Đã ẩn tiệm khác & ẩn tab quản trị):</div>
+                            <div class="flex items-center gap-2">
+                                <input id="isolatedCustomerUrl" type="text" readonly class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800">
+                                <button onclick="copyInputById('isolatedCustomerUrl')" class="dp-bg-blue text-white font-bold px-3 py-1.5 rounded-lg shrink-0">Copy</button>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <div class="font-bold dp-text-red mb-1">2. Link Quản Trị Riêng Cho Chủ Tiệm (Chỉ xem đơn của đúng tiệm mình):</div>
+                            <div class="flex items-center gap-2">
+                                <input id="isolatedOwnerUrl" type="text" readonly class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800">
+                                <button onclick="copyInputById('isolatedOwnerUrl')" class="dp-bg-red text-white font-bold px-3 py-1.5 rounded-lg shrink-0">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Danh sách Đơn Hàng & SĐT Khách AI Vừa Chốt -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-3">
-                        <h3 class="font-extrabold dp-text-blue text-base">📞 Danh Sách Khách Đặt Hàng Do AI Thu Thập</h3>
-                        <span class="text-xs bg-red-50 dp-text-red font-bold px-3 py-1 rounded-full border border-red-200">Tự động bắt SĐT 24/7</span>
+                        <h3 class="font-extrabold dp-text-blue text-base">📞 Danh Sách Khách Đặt Hàng Của Riêng Tiệm: <span id="ordersTableShopName" class="dp-text-red"></span></h3>
+                        <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-200">🔒 Đã cô lập dữ liệu 100%</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs border-collapse">
@@ -311,6 +356,27 @@
                                     ✅ BƯỚC 3: Lưu & Kích Hoạt Ngay
                                 </button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- BƯỚC 4: DẠY AI CÂU HỎI THƯỜNG GẶP (FAQ) & KẾT NỐI GOOGLE GEMINI AI -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="font-extrabold dp-text-blue">🧠 Dạy AI Trả Lời Chính Xác Câu Hỏi Riêng Của Tiệm (Kho Tri Thức FAQ + Gemini LLM)</div>
+                            <span class="text-[11px] text-emerald-700 font-bold">Chống bịa thông tin 100%</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                            <input id="addFaqKeywords" type="text" placeholder="Từ khóa khách hỏi (VD: bảo quản, mượn bát đĩa, đổi size...)" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5">
+                            <input id="addFaqAnswer" type="text" placeholder="Câu trả lời chính xác của tiệm..." class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 md:col-span-2">
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                            <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+                                <span class="font-bold text-slate-600 shrink-0">🔑 Gemini API Key (Tùy chọn):</span>
+                                <input id="geminiApiKeyInput" type="password" placeholder="Dán mã AIzaSy... để bật Gemini 1.5 Flash" class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1 font-mono text-[11px]">
+                            </div>
+                            <button onclick="saveFaqAndGemini()" class="dp-bg-blue text-white font-bold px-4 py-1.5 rounded-lg shadow">
+                                💾 Lưu Câu Hỏi Mẫu & API Key
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -410,6 +476,22 @@
                             <div class="text-[11px] text-slate-500">🛡️ Đã gửi Phiếu bảo hành điện tử 6 tháng về Zalo chị Phượng!</div>
                         </div>
                         <img src="https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=500000&addInfo=REQ882910%20OTP6821&accountName=CONG%20TY%20TNHH%20THUONG%20MAI%20DAT%20PHU" class="w-32 h-32 rounded-xl border border-slate-200 shrink-0" alt="QR 500K">
+                    </div>
+                </div>
+
+                <!-- BẢNG DỮ LIỆU THỢ 6K TRỰC TIẾP TỪ SUPABASE CLOUD -->
+                <div class="bg-white rounded-2xl p-5 border-t-4 border-[#1B2A6B] shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-black uppercase text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">● SUPABASE CLOUD LIVE DATA (ckyydvyzucvcdunvedmg)</span>
+                            <h3 class="text-sm font-black dp-text-blue mt-1">Đội Ngũ Thợ Nòng Cốt 6K Đang Trực Ca Trên Supabase</h3>
+                        </div>
+                        <button onclick="loadLiveSupabase6kData()" class="dp-bg-blue text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                            🔄 Tải Lại Từ Supabase
+                        </button>
+                    </div>
+                    <div id="liveSupabaseWorkersGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <div class="text-slate-400">Đang tải dữ liệu trực tiếp từ Supabase Cloud...</div>
                     </div>
                 </div>
             </div>
@@ -543,6 +625,102 @@
         </div>
     </div>
 
+    <!-- =================================================================== -->
+    <!-- MODAL: BỘ MÔ PHỎNG 6 TÌNH HUỐNG GIẢ ĐỊNH ĐA NHÓM KHÁCH HÀNG         -->
+    <!-- =================================================================== -->
+    <div id="scenarioModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl border-t-8 border-[#D32027] max-h-[90vh] overflow-y-auto smooth-scroll space-y-4">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase dp-bg-blue text-white px-2.5 py-0.5 rounded-full">Mô phỏng thực chiến</span>
+                    <h3 class="font-extrabold dp-text-blue text-lg mt-1">🎬 6 Tình Huống Giả Định: 1 Chatbox Tiếp Nhận Nhiều Nhóm Khách</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Bấm vào bất kỳ tình huống nào bên dưới để xem AI tự động nhận diện nhóm khách, trả lời đúng câu hỏi và chốt VietQR trực tiếp trên khung chat!</p>
+                </div>
+                <button onclick="closeScenarioModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 font-bold text-slate-600">✕</button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <!-- Tình huống 1 -->
+                <div onclick="runSimulatedScenario(0)" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 hover:bg-red-50/30 cursor-pointer transition flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold dp-text-red">TÌNH HUỐNG 1</span>
+                            <span class="text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full">🏠 Nhóm Chủ Nhà</span>
+                        </div>
+                        <div class="font-bold dp-text-blue text-sm mt-1">Sự cố Nước giếng tràn ngược lúc 10h đêm</div>
+                        <p class="text-slate-600 mt-1">Khách hỏi nguyên nhân nước giếng tràn qua đồng hồ nước máy & đặt Gói 1 Tự động hóa nước (1.650.000đ).</p>
+                    </div>
+                    <div class="dp-bg-red text-white font-bold text-center py-1.5 rounded-xl">▶ Chạy mô phỏng Tình huống 1</div>
+                </div>
+
+                <!-- Tình huống 2 -->
+                <div onclick="runSimulatedScenario(1)" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 hover:bg-red-50/30 cursor-pointer transition flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold dp-text-red">TÌNH HUỐNG 2</span>
+                            <span class="text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full">🏢 Nhóm Doanh Nghiệp/Kế Toán</span>
+                        </div>
+                        <div class="font-bold dp-text-blue text-sm mt-1">Kế toán hỏi thủ tục Chữ ký số + Hóa đơn TT78</div>
+                        <p class="text-slate-600 mt-1">Cùng vào 1 Chatbox Đất Phú nhưng hỏi giấy tờ pháp lý & chốt Gói 3 FastCA + 500 Hóa đơn (1.490.000đ).</p>
+                    </div>
+                    <div class="dp-bg-red text-white font-bold text-center py-1.5 rounded-xl">▶ Chạy mô phỏng Tình huống 2</div>
+                </div>
+
+                <!-- Tình huống 3 -->
+                <div onclick="runSimulatedScenario(2)" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 hover:bg-red-50/30 cursor-pointer transition flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold dp-text-red">TÌNH HUỐNG 3</span>
+                            <span class="text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full">🏪 Nhóm Chủ Quán</span>
+                        </div>
+                        <div class="font-bold dp-text-blue text-sm mt-1">Chủ tiệm hỏi thuê Bot AI 199K & bảo mật dữ liệu</div>
+                        <p class="text-slate-600 mt-1">Chủ quán hỏi giá thuê 199K/tháng, gói mua đứt 3.9Tr và yêu cầu tạo Chatbox riêng độc lập.</p>
+                    </div>
+                    <div class="dp-bg-red text-white font-bold text-center py-1.5 rounded-xl">▶ Chạy mô phỏng Tình huống 3</div>
+                </div>
+
+                <!-- Tình huống 4 -->
+                <div onclick="runSimulatedScenario(3)" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 hover:bg-red-50/30 cursor-pointer transition flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold dp-text-red">TÌNH HUỐNG 4</span>
+                            <span class="text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full">👷 Nhóm Thợ 6K / CTV</span>
+                        </div>
+                        <div class="font-bold dp-text-blue text-sm mt-1">Thợ điện nước xin gia nhập Đội Thợ 6K hưởng 95%</div>
+                        <p class="text-slate-600 mt-1">Thợ hỏi cơ chế chia 95%/5% qua OTP 4 số & hoa hồng CTV 25–30% rồi để lại SĐT ứng tuyển.</p>
+                    </div>
+                    <div class="dp-bg-red text-white font-bold text-center py-1.5 rounded-xl">▶ Chạy mô phỏng Tình huống 4</div>
+                </div>
+
+                <!-- Tình huống 5 -->
+                <div onclick="runSimulatedScenario(4)" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 hover:bg-red-50/30 cursor-pointer transition flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold dp-text-red">TÌNH HUỐNG 5</span>
+                            <span class="text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full">📦 Nhóm Khách Sỉ / Đại Lý</span>
+                        </div>
+                        <div class="font-bold dp-text-blue text-sm mt-1">Khách TP.HCM hỏi mua sỉ 10kg Bò Một Nắng Chị Ba</div>
+                        <p class="text-slate-600 mt-1">AI chuyển sang chế độ Khách Sỉ, báo chiết khấu đại lý 15–25% & gom đơn vận chuyển giảm 35% phí ship.</p>
+                    </div>
+                    <div class="dp-bg-red text-white font-bold text-center py-1.5 rounded-xl">▶ Chạy mô phỏng Tình huống 5</div>
+                </div>
+
+                <!-- Tình huống 6 -->
+                <div onclick="runSimulatedScenario(5)" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 hover:bg-red-50/30 cursor-pointer transition flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold dp-text-red">TÌNH HUỐNG 6</span>
+                            <span class="text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full">🪷 Nhóm Đặt Tiệc Gia Đình</span>
+                        </div>
+                        <div class="font-bold dp-text-blue text-sm mt-1">Gia chủ đặt 2 Mâm Cỗ Chay 8 Món & mượn bát đĩa</div>
+                        <p class="text-slate-600 mt-1">AI liệt kê thực đơn 8 món chay, xác nhận cho mượn bát đĩa sành sứ miễn phí & xuất mã VietQR chốt cọc.</p>
+                    </div>
+                    <div class="dp-bg-red text-white font-bold text-center py-1.5 rounded-xl">▶ Chạy mô phỏng Tình huống 6</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // =====================================================================
         // DỮ LIỆU CÁC CỬA HÀNG TRÊN ĐẤT PHÚ ZALO AI (MÀU ĐỎ #D32027 & XANH #1B2A6B)
@@ -564,6 +742,46 @@
                     { id: 2, name: "Gói 2: Nâng Cấp An Toàn Điện Nước Phòng Tắm", price: 1150000, promo: "Dây cấp Inox 304 + Aptomat chống giật RCBO", desc: "Thi công gọn trong 90 phút, có chụp ảnh Geostamp nghiệm thu 6K." },
                     { id: 3, name: "Gói 3: Chữ Ký Số FastCA + 500 Hóa Đơn Điện Tử", price: 1490000, promo: "Kích hoạt từ xa trong 20 phút • Chuẩn TT 78", desc: "Hỗ trợ trọn gói thủ tục thuế ban đầu cho doanh nghiệp & hộ kinh doanh." },
                     { id: 4, name: "Gói 4: Thuê Trợ Lý AI Bán Hàng Đa Kênh", price: 199000, promo: "Chỉ 6.000đ/ngày • Tự động xuất VietQR", desc: "Trực chat 24/7 trên Zalo, Facebook, Web; tiền về thẳng STK chủ tiệm." }
+                ],
+                faqs: [
+                    { keywords: ["tràn ngược", "nước giếng", "đồng hồ nước", "cháy bơm"], answer: "💡 <b>[Nhóm Chủ Nhà] Nguyên nhân & Giải pháp Nước Giếng Tràn Ngược:</b> Khi dùng chung bồn nước giếng và nước máy mà không có cặp van 1 chiều lá lật bằng đồng, nước giếng sẽ đẩy ngược ra đồng hồ nước máy làm quay số tiền oan và dễ cháy máy bơm.<br/>👉 Giải pháp triệt để là lắp <b>Gói 1: Tự Động Hóa Nước Máy - Nước Giếng (1.650.000đ)</b> kèm Rơ-le phao 12V chống giật an toàn tuyệt đối ạ!" },
+                    { keywords: ["giấy tờ", "thủ tục", "hồ sơ", "fastca", "kế toán", "thuế"], answer: "📄 <b>[Nhóm Doanh Nghiệp/HTX] Thủ tục đăng ký Chữ Ký Số FastCA + 500 Hóa Đơn Điện Tử (1.490.000đ):</b> Anh/Chị chỉ cần chụp ảnh <b>Giấy phép kinh doanh + CCCD người đại diện</b> gửi vào Zalo này, kỹ thuật Đất Phú sẽ kích hoạt từ xa trong 20 phút, chuẩn Thông tư 78!" },
+                    { keywords: ["thuê bot", "199k", "mua đứt", "3.900", "chủ quán", "cửa hàng riêng"], answer: "🤖 <b>[Nhóm Chủ Quán/Cửa Hàng] Chính sách Trợ Lý AI Bán Hàng Đa Kênh:</b><br/>• <b>Gói Thuê:</b> 199.000đ/tháng (chỉ 6.000đ/ngày) hoặc 1.990.000đ/năm (Tặng 2 tháng).<br/>• <b>Gói Mua Đứt Trọn Đời:</b> 3.900.000đ/lần duy nhất.<br/>• Mỗi tiệm có <b>Link & Mã QR độc lập 100%</b>, tiền VietQR chảy thẳng về STK Chủ tiệm!" },
+                    { keywords: ["đăng ký thợ", "làm thợ", "cộng tác viên", "ctv", "hoa hồng", "95%"], answer: "👷 <b>[Nhóm Thợ 6K & Cộng Tác Viên] Chính sách Hợp tác Đất Phú:</b><br/>• <b>Thợ Kỹ Thuật 6K:</b> Nhận đơn sửa chữa quanh bán kính 3km, <b>hưởng trọn 95% giá trị công việc</b> ngay khi khách đọc mã OTP 4 số (Đất Phú chỉ thu 5% phí nền tảng).<br/>• <b>CTV Bán Chatbox AI:</b> Hưởng ngay <b>25% – 30% hoa hồng</b> trên mỗi cửa hàng kích hoạt thành công!" }
+                ],
+                segments: [
+                    {
+                        id: "ho-gia-dinh",
+                        badge: "🏠 Chủ Nhà / Gia Đình",
+                        intro: "👨‍👩‍👧‍👦 <b>Chế độ tư vấn: HỘ GIA ĐÌNH & CHỦ NHÀ</b><br/>Em đã chuyển sang bộ câu hỏi & bảng giá <b>Kỹ Thuật Điện Nước 6K Tận Nhà</b>. Gia đình mình đang gặp sự cố nước giếng tràn ngược, cần chống giật phòng tắm hay gọi thợ 6K có mặt trong 15 phút ạ?",
+                        pills: ["Nước giếng tràn ngược?", "Chống giật phòng tắm?", "Gọi thợ 6K bao lâu tới?", "Đặt Gói số 1: 0935889900"],
+                        productIds: [1, 2],
+                        triggerWords: ["nước giếng", "tràn", "phòng tắm", "chống giật", "sửa điện", "ống nước", "máy bơm"]
+                    },
+                    {
+                        id: "chu-quan",
+                        badge: "🏪 Chủ Quán / Cửa Hàng",
+                        intro: "🏪 <b>Chế độ tư vấn: CHỦ QUÁN & HỘ KINH DOANH</b><br/>Em đã chuyển sang giải pháp <b>Trợ Lý AI Bán Hàng Đa Kênh (199K/tháng)</b>. Anh/Chị muốn tạo Chatbox riêng độc lập cho tiệm, tự động xuất mã VietQR hay đưa hàng lên Sàn Chợ Phiên Đất Phú ạ?",
+                        pills: ["Thuê Bot 199K gồm gì?", "Mỗi tiệm có link riêng?", "Gói mua đứt 3.9 Triệu?", "Đăng ký thuê Bot: 0935889900"],
+                        productIds: [4],
+                        triggerWords: ["thuê bot", "199k", "chủ quán", "cửa hàng", "chatbox", "mua đứt", "trợ lý ai"]
+                    },
+                    {
+                        id: "doanh-nghiep",
+                        badge: "🏢 Doanh Nghiệp / Kế Toán",
+                        intro: "🏢 <b>Chế độ tư vấn: DOANH NGHIỆP / HTX / KẾ TOÁN</b><br/>Em đã chuyển sang bộ giải pháp <b>Pháp Lý Thuế, Chữ Ký Số FastCA & Hóa Đơn Điện Tử TT78</b>. Anh/Chị cần cấp mới hay gia hạn Chữ ký số + Hóa đơn điện tử trong 20 phút ạ?",
+                        pills: ["Thủ tục cần giấy tờ gì?", "Chữ ký số + 500 Hóa đơn?", "Có xuất VAT không?", "Đăng ký Gói 3: 0935889900"],
+                        productIds: [3, 4],
+                        triggerWords: ["chữ ký số", "hóa đơn", "fastca", "kế toán", "thuế", "doanh nghiệp", "giấy tờ", "thủ tục"]
+                    },
+                    {
+                        id: "tho-ctv",
+                        badge: "👷 Thợ 6K / Cộng Tác Viên",
+                        intro: "👷 <b>Chế độ tư vấn: ĐỐI TÁC THỢ 6K & CỘNG TÁC VIÊN</b><br/>Chào mừng Anh/Em kỹ thuật và CTV! Tại Đất Phú, Thợ 6K nhận <b>95% tiền công</b> ngay khi nhập OTP, còn CTV bán phần mềm nhận <b>25%–30% hoa hồng</b>. Anh/Chị muốn đăng ký mảng nào ạ?",
+                        pills: ["Thợ 6K hưởng 95% thế nào?", "Hoa hồng CTV bán AI?", "Cách nhận việc quanh 3km?", "Ứng tuyển Thợ/CTV: 0935889900"],
+                        productIds: [1, 4],
+                        triggerWords: ["đăng ký thợ", "làm thợ", "cộng tác viên", "ctv", "hoa hồng", "95%", "ứng tuyển"]
+                    }
                 ]
             },
             "dacsan-chiba": {
@@ -576,11 +794,14 @@
                 bankAcc: "0914882341",
                 bankHolder: "NGUYEN THI BA",
                 greeting: "Dạ Út Nẫu chào Anh/Chị nghen! 🥰 Hôm nay nhà Chị Ba vừa ra mẻ Bò một nắng Krông Pa thơm phức và Nước mắm Gành Đỏ nguyên chất. Anh/Chị lấy gói 500g hay 1kg để em báo giá ưu đãi ạ?",
-                quickPills: ["Bò 1 nắng giá sao?", "Nước mắm Gành Đỏ?", "Ship nội thành Tuy Hòa?", "Lấy 1kg bò SĐT 0914882341"],
+                quickPills: ["Bò 1 nắng giá sao?", "Nước mắm Gành Đỏ?", "Bảo quản bao lâu?", "Lấy 1kg bò SĐT 0914882341"],
                 products: [
                     { id: 1, name: "Bò Một Nắng Krông Pa (Gói 500g)", price: 280000, promo: "Tặng 1 hũ muối kiến vàng rừng", desc: "Bò cỏ tơ phơi đúng 1 nắng giòn ngọt, hút chân không sạch sẽ." },
                     { id: 2, name: "Combo Quà Biếu Bò Một Nắng 1Kg", price: 550000, promo: "Freeship + Tặng 2 hũ muối kiến vàng", desc: "Hộp quà sang trọng mang đậm hương vị Phú Yên." },
                     { id: 3, name: "Nước Mắm Nhỉ Gành Đỏ (Cặp 2 chai)", price: 160000, promo: "Cá cơm than ủ chượp 12 tháng", desc: "Độ đạm tự nhiên 40 độ, không chất bảo quản." }
+                ],
+                faqs: [
+                    { keywords: ["bảo quản", "để được bao lâu", "tủ lạnh", "nướng"], answer: "🥩 <b>Cách bảo quản & chế biến Bò Một Nắng Krông Pa:</b> Bò đã hút chân không kỹ, để ngăn đá tủ lạnh bảo quản được <b>6 tháng</b>. Khi ăn chỉ cần rã đông 10 phút rồi nướng than hoa hoặc cho vào nồi chiên không dầu 180 độ trong 8 phút (lật 2 mặt), chấm kèm Muối Kiến Vàng là ngon nhức nách luôn nghen!" }
                 ]
             },
             "sieuthi-namtien": {
@@ -593,10 +814,13 @@
                 bankAcc: "0989112567",
                 bankHolder: "SIEU THI NAM TIEN",
                 greeting: "Dạ Hệ thống 10 Siêu thị Mẹ & Bé Năm Tiền chào Ba Mẹ ạ! 🍼 Ba mẹ cần tìm sữa Meiji, Pediasure hay tã Moony cho bé để cửa hàng gần nhất giao tận nhà trong 15 phút ạ?",
-                quickPills: ["Sữa Meiji nội địa?", "Tã Moony giảm giá?", "Đặt 1 lon Meiji: 0988776655"],
+                quickPills: ["Sữa Meiji nội địa?", "Tã Moony giảm giá?", "Đổi size tã được không?", "Đặt 1 lon Meiji: 0988776655"],
                 products: [
                     { id: 1, name: "Sữa Meiji Nội Địa Nhật Số 0 (800g)", price: 525000, promo: "Tặng bình tập uống khi mua 2 lon", desc: "Mát bụng, dễ tiêu hóa, chuẩn nội địa Nhật Bản." },
                     { id: 2, name: "Tã Quần/Dán Moony Natural Cao Cấp", price: 365000, promo: "Mua 3 bịch giảm ngay 30.000đ", desc: "Bề mặt bông Organic mềm mịn chống hăm cho bé." }
+                ],
+                faqs: [
+                    { keywords: ["đổi size", "đổi trả", "chật", "tăng cân"], answer: "🔄 <b>Chính sách Đổi Size Tã miễn phí tại 10 chi nhánh Năm Tiền:</b> Ba mẹ mua nguyên bịch chưa khui nếu bé tăng cân mặc chật sẽ được <b>đổi sang size lớn hơn miễn phí 100% trong vòng 30 ngày</b> tại bất kỳ chi nhánh nào của Năm Tiền ạ!" }
                 ]
             },
             "bepchay-tamduc": {
@@ -613,24 +837,172 @@
                 products: [
                     { id: 1, name: "Mâm Cỗ Cúng Giỗ Chay 8 Món Truyền Thống", price: 850000, promo: "Miễn phí mượn bát đĩa sành sứ & dọn dẹp", desc: "Nấu mới 100% từ nấm tươi, hạt sen, rau củ sạch không hàn the." },
                     { id: 2, name: "Set 10 Phần Cơm Chay Thanh Tịnh", price: 300000, promo: "Hộp bã mía sinh học an toàn", desc: "Thực đơn đổi món mỗi ngày, giao nóng tận nơi." }
+                ],
+                faqs: [
+                    { keywords: ["gồm gì", "8 món", "thực đơn", "những món nào"], answer: "🪷 <b>Thực đơn Mâm Cỗ Chay 8 Món Truyền Thống (850.000đ/mâm):</b><br/>1. Gỏi ngó sen nấm tuyết<br/>2. Chả giò sen vàng giòn rụm<br/>3. Súp nấm bào ngư hạt sen<br/>4. Đậu hũ non sốt nấm đông cô<br/>5. Лаgout (Ragu) rau củ bánh mì<br/>6. Xôi hạt sen lá dứa<br/>7. Lẩu nấm thanh tịnh kèm bún tươi<br/>8. Chè hạt sen long nhãn tráng miệng!" },
+                    { keywords: ["bát đĩa", "chén dĩa", "bàn ghế", "mượn"], answer: "🍽️ <b>Dịch vụ Trọn Gói Tận Nhà:</b> Khi đặt từ 2 mâm cỗ chay trở lên, Bếp Chay Tâm Đức <b>cho mượn miễn phí 100% bát đĩa sành sứ cao cấp, bếp cồn và hỗ trợ bày biện tận nơi</b> tại TP. Tuy Hòa ạ!" }
                 ]
             }
         };
 
         let activeShopId = "datphu-kythuat";
+        let activeSegmentId = "all";
         let selectedProduct = null;
+        let isIsolatedShopMode = false;
 
         let ordersList = [
-            { time: "Vừa xong", phone: "0914.882.341", item: "Combo Bò Một Nắng 1Kg (DP8821)", amount: 550000, shop: "Đặc Sản Xứ Nẫu Chị Ba" },
-            { time: "15 phút trước", phone: "0935.889.900", item: "Gói 1: Tự Động Hóa Nước (DP7710)", amount: 1650000, shop: "Đất Phú: Kỹ Thuật 6K & Giải Pháp Số" },
-            { time: "1 giờ trước", phone: "0989.112.567", item: "Sữa Meiji Nội Địa Nhật (DP6502)", amount: 525000, shop: "Siêu Thị Sữa Tã Năm Tiền" },
-            { time: "2 giờ trước", phone: "0905.112.233", item: "Mâm Cỗ Chay 8 Món (DP5109)", amount: 850000, shop: "Bếp Chay Thanh Tịnh Tâm Đức" }
+            { shopId: "dacsan-chiba", segment: "🎁 Quà Biếu", time: "Vừa xong", phone: "0914.882.341", item: "Combo Bò Một Nắng 1Kg (DP8821)", amount: 550000, shop: "Đặc Sản Xứ Nẫu Chị Ba" },
+            { shopId: "datphu-kythuat", segment: "🏠 Chủ Nhà", time: "15 phút trước", phone: "0935.889.900", item: "Gói 1: Tự Động Hóa Nước (DP7710)", amount: 1650000, shop: "Đất Phú: Kỹ Thuật 6K & Giải Pháp Số" },
+            { shopId: "sieuthi-namtien", segment: "🛍️ Khách Lẻ", time: "1 giờ trước", phone: "0989.112.567", item: "Sữa Meiji Nội Địa Nhật (DP6502)", amount: 525000, shop: "Siêu Thị Sữa Tã Năm Tiền" },
+            { shopId: "bepchay-tamduc", segment: "🪷 Đặt Tiệc/Cỗ", time: "2 giờ trước", phone: "0905.112.233", item: "Mâm Cỗ Chay 8 Món (DP5109)", amount: 850000, shop: "Bếp Chay Thanh Tịnh Tâm Đức" }
         ];
 
+        function getShopSegments(s) {
+            if (Array.isArray(s.segments) && s.segments.length > 0) return s.segments;
+            const firstProd = s.products[0]?.name || "Sản phẩm";
+            return [
+                {
+                    id: "khach-le",
+                    badge: "🛍️ Khách Mua Lẻ Gia Đình",
+                    intro: `🛍️ <b>Chế độ tư vấn: KHÁCH MUA LẺ GIA ĐÌNH (${s.name})</b><br/>Em đã lọc sẵn bảng giá lẻ ưu đãi và hướng dẫn sử dụng chi tiết. Anh/Chị cần giao nhanh nội thành Tuy Hòa trong 15 phút ạ?`,
+                    pills: s.quickPills,
+                    productIds: s.products.map(p => p.id),
+                    triggerWords: ["lẻ", "1 gói", "1 lon", "ăn thử", "bảo quản", "đổi size"]
+                },
+                {
+                    id: "qua-bieu-tiec",
+                    badge: "🎁 Quà Biếu / Đặt Tiệc",
+                    intro: `🎁 <b>Chế độ tư vấn: COMBO QUÀ BIẾU & ĐẶT TIỆC TRỌN GÓI (${s.name})</b><br/>Shop hỗ trợ đóng hộp quà sang trọng, hút chân không gửi máy bay/xe khách đi Sài Gòn - Hà Nội hoặc phục vụ trọn gói tận nơi ạ!`,
+                    pills: ["Combo quà biếu sang trọng?", "Gửi đi Sài Gòn/Hà Nội?", `Đặt Combo ${firstProd}: 0914882341`],
+                    productIds: s.products.map(p => p.id),
+                    triggerWords: ["quà biếu", "combo", "mâm cỗ", "đặt tiệc", "sài gòn", "hà nội", "biếu"]
+                },
+                {
+                    id: "khach-si-ctv",
+                    badge: "📦 Khách Sỉ / Đại Lý / CTV",
+                    intro: `📦 <b>Chế độ tư vấn: KHÁCH SỈ / ĐẠI LÝ / CTV (${s.name})</b><br/>Đơn sỉ từ 5–10 sản phẩm được hưởng <b>chiết khấu đại lý 15% – 25%</b>, hỗ trợ đầy đủ hóa đơn điện tử và gom chuyến vận chuyển giảm 35% cước phí!`,
+                    pills: ["Giá sỉ từ 5-10 phần?", "Chính sách Cộng tác viên?", "Đăng ký lấy sỉ: 0914882341"],
+                    productIds: s.products.map(p => p.id),
+                    triggerWords: ["giá sỉ", "mua sỉ", "đại lý", "buôn", "chiết khấu", "số lượng lớn"]
+                }
+            ];
+        }
+
+        function renderSegmentBar() {
+            const s = shops[activeShopId];
+            const segs = getShopSegments(s);
+            const bar = document.getElementById('segmentSelectorBar');
+            if (!bar) return;
+
+            const allBtn = `
+                <button onclick="selectCustomerSegment('all')" class="text-[11px] font-bold px-2.5 py-1 rounded-full transition shrink-0 border ${activeSegmentId === 'all' ? 'dp-bg-blue text-white border-[#1B2A6B] shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}">
+                    🌐 Tất cả nhu cầu
+                </button>
+            `;
+            const segBtns = segs.map(seg => {
+                const isAct = activeSegmentId === seg.id;
+                return `
+                    <button onclick="selectCustomerSegment('${seg.id}')" class="text-[11px] font-bold px-2.5 py-1 rounded-full transition shrink-0 border ${isAct ? 'dp-bg-red text-white border-[#D32027] shadow-sm' : 'bg-white dp-text-blue border-[#1B2A6B]/30 hover:bg-[#e8ecf7]'}">
+                        ${seg.badge}
+                    </button>
+                `;
+            }).join('');
+
+            bar.innerHTML = allBtn + segBtns;
+        }
+
+        function selectCustomerSegment(segId, silent = false) {
+            activeSegmentId = segId;
+            const s = shops[activeShopId];
+            const segs = getShopSegments(s);
+            renderSegmentBar();
+
+            const seg = segs.find(x => x.id === segId);
+            const pills = document.getElementById('quickQuestionPills');
+            const activePills = seg ? seg.pills : s.quickPills;
+
+            if (pills) {
+                pills.innerHTML = activePills.map(q => `
+                    <button onclick="quickAsk('${q.replace(/'/g, "\\'")}')" class="bg-[#e8ecf7] hover:bg-blue-200 dp-text-blue text-xs font-semibold px-3 py-1.5 rounded-full transition shrink-0">
+                        ${q}
+                    </button>
+                `).join('');
+            }
+
+            if (seg && !silent) {
+                const segProducts = s.products.filter(p => !seg.productIds || seg.productIds.includes(p.id));
+                if (segProducts.length > 0) selectedProduct = segProducts[0];
+
+                const cardsHtml = segProducts.map(p => {
+                    const realIdx = s.products.findIndex(item => item.id === p.id);
+                    return `
+                        <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex items-center justify-between gap-2 mt-1.5">
+                            <div class="min-w-0">
+                                <div class="font-bold dp-text-blue text-xs">${p.name}</div>
+                                <div class="dp-text-red font-extrabold text-xs">${p.price.toLocaleString('vi-VN')}đ • <span class="text-slate-600 font-normal">${p.promo}</span></div>
+                            </div>
+                            <button onclick="clickBuyProduct(${realIdx})" class="dp-bg-red text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shrink-0">
+                                Chọn
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+
+                addBotBubble(`
+                    ${seg.intro}
+                    <div class="mt-2">${cardsHtml}</div>
+                    <div class="text-[11px] text-slate-500 mt-2">💡 <i>Thanh câu hỏi gợi ý bên dưới đã tự động đổi theo đúng nhu cầu <b>${seg.badge}</b> của Anh/Chị!</i></div>
+                `);
+            }
+        }
+
         function initZaloApp() {
+            const params = new URLSearchParams(window.location.search);
+            const urlShop = params.get('shop');
+            const urlRole = params.get('role');
+            if (urlShop && shops[urlShop]) {
+                activeShopId = urlShop;
+                isIsolatedShopMode = true;
+            }
             renderShopList();
             selectShop(activeShopId);
-            renderOrdersTable();
+            applyIsolationUi(urlRole);
+        }
+
+        function applyIsolationUi(urlRole) {
+            const sb = document.getElementById('sidebarList');
+            const btnLabel = document.getElementById('isolateBtnLabel');
+            const navMerchant = document.getElementById('nav-merchant');
+            const navProvas = document.getElementById('nav-provas');
+
+            if (isIsolatedShopMode) {
+                if (sb) sb.classList.add('hidden', 'md:hidden');
+                if (btnLabel) btnLabel.innerText = 'Đang Ở Chế Độ 1 Tiệm (Bấm Mở Toàn Sàn)';
+                if (urlRole === 'customer') {
+                    if (navMerchant) navMerchant.classList.add('hidden');
+                    if (navProvas) navProvas.classList.add('hidden');
+                }
+            } else {
+                if (sb) {
+                    sb.classList.remove('md:hidden');
+                    sb.classList.add('md:flex');
+                }
+                if (btnLabel) btnLabel.innerText = 'Xem Chế Độ 1 Tiệm Riêng';
+                if (navMerchant) navMerchant.classList.remove('hidden');
+                if (navProvas) navProvas.classList.remove('hidden');
+            }
+        }
+
+        function toggleIsolatedShopMode() {
+            isIsolatedShopMode = !isIsolatedShopMode;
+            applyIsolationUi();
+        }
+
+        function copyInputById(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            navigator.clipboard.writeText(el.value);
+            alert('✅ Đã copy đường link độc lập của cửa hàng! Khi gửi link này, khách chỉ nhìn thấy duy nhất cửa hàng này.');
         }
 
         function renderShopList() {
@@ -659,10 +1031,12 @@
 
         function selectShop(shopId) {
             activeShopId = shopId;
+            activeSegmentId = 'all';
             const s = shops[shopId];
             selectedProduct = s.products[0];
 
             renderShopList();
+            renderSegmentBar();
 
             const av = document.getElementById('chatAvatar');
             av.innerText = s.avatar;
@@ -676,15 +1050,37 @@
                 </button>
             `).join('');
 
+            const segs = getShopSegments(s);
+            const triageButtonsHtml = segs.map(seg => `
+                <button onclick="selectCustomerSegment('${seg.id}')" class="text-left p-2.5 rounded-xl border border-[#1B2A6B]/20 bg-[#f8fafc] hover:bg-[#e8ecf7] transition flex items-center justify-between gap-2">
+                    <span class="font-extrabold dp-text-blue text-xs">${seg.badge}</span>
+                    <span class="text-[10px] dp-bg-red text-white font-bold px-2 py-0.5 rounded-full">Chọn →</span>
+                </button>
+            `).join('');
+
             const stream = document.getElementById('zaloMessageStream');
             stream.innerHTML = '';
-            addBotBubble(s.greeting);
+            addBotBubble(`
+                <div>${s.greeting}</div>
+                <div class="mt-3 pt-2.5 border-t border-slate-200">
+                    <div class="text-xs font-extrabold dp-text-red mb-1.5">🎯 Để em tư vấn sát nhu cầu nhất, Anh/Chị thuộc nhóm khách hàng nào ạ?</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">${triageButtonsHtml}</div>
+                </div>
+            `);
             setTimeout(() => showMenuInChat(), 250);
 
             renderCatalogView();
             document.getElementById('merchantBannerTitle').innerText = s.name;
             document.getElementById('editBankCode').value = s.bankCode;
             document.getElementById('editBankAcc').value = s.bankAcc;
+
+            const baseUrl = window.location.origin + window.location.pathname;
+            const custUrlEl = document.getElementById('isolatedCustomerUrl');
+            const ownUrlEl = document.getElementById('isolatedOwnerUrl');
+            if (custUrlEl) custUrlEl.value = `${baseUrl}?shop=${s.id}&role=customer`;
+            if (ownUrlEl) ownUrlEl.value = `${baseUrl}?shop=${s.id}&role=owner`;
+
+            renderOrdersTable();
         }
 
         function addUserBubble(text) {
@@ -752,6 +1148,49 @@
             sendZaloMessage();
         }
 
+        function findBestProductMatch(s, lower) {
+            const STOP_WORDS = new Set(['gói', 'hóa', 'cho', 'của', 'các', 'món', 'giá', 'sao', 'bao', 'nhiêu', 'với', 'này', 'kia', 'một', 'hai', 'con', 'cái', 'bộ', 'set', 'lấy', 'đặt', 'mua', 'sđt']);
+            let bestMatch = null;
+            let bestScore = 0;
+
+            s.products.forEach(p => {
+                const pName = p.name.toLowerCase();
+                const pText = (p.name + ' ' + p.desc + ' ' + p.promo).toLowerCase();
+                let score = 0;
+
+                if (lower.includes('gói 1') || lower.includes('gói số 1')) { if (p.id === 1) score += 30; }
+                if (lower.includes('gói 2') || lower.includes('gói số 2')) { if (p.id === 2) score += 30; }
+                if (lower.includes('gói 3') || lower.includes('gói số 3')) { if (p.id === 3) score += 30; }
+                if (lower.includes('gói 4') || lower.includes('gói số 4')) { if (p.id === 4) score += 30; }
+
+                if (lower.includes('chữ ký số') && pName.includes('chữ ký số')) score += 25;
+                if (lower.includes('hóa đơn') && pName.includes('hóa đơn')) score += 25;
+                if ((lower.includes('nước giếng') || lower.includes('tràn')) && pName.includes('nước giếng')) score += 25;
+                if ((lower.includes('phòng tắm') || lower.includes('chống giật')) && pName.includes('phòng tắm')) score += 25;
+                if ((lower.includes('trợ lý ai') || lower.includes('bot') || lower.includes('199k')) && pName.includes('trợ lý ai')) score += 25;
+                if ((lower.includes('bò 1 nắng') || lower.includes('bò một nắng')) && pName.includes('bò một nắng')) score += 15;
+                if (lower.includes('1kg') && pName.includes('1kg')) score += 20;
+                if (lower.includes('500g') && pName.includes('500g')) score += 20;
+                if (lower.includes('nước mắm') && pName.includes('nước mắm')) score += 25;
+                if (lower.includes('meiji') && pName.includes('meiji')) score += 25;
+                if (lower.includes('moony') && pName.includes('moony')) score += 25;
+                if (lower.includes('mâm cỗ') && pName.includes('mâm cỗ')) score += 25;
+                if (lower.includes('cơm chay') && pName.includes('cơm chay')) score += 25;
+
+                const queryWords = lower.replace(/[?.,!+:]/g, ' ').split(/\s+/).filter(w => w.length >= 3 && !STOP_WORDS.has(w));
+                queryWords.forEach(w => {
+                    if (pName.includes(w)) score += 4;
+                    else if (pText.includes(w)) score += 1;
+                });
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = p;
+                }
+            });
+            return bestScore >= 4 ? bestMatch : null;
+        }
+
         function sendZaloMessage() {
             const inp = document.getElementById('zaloChatInput');
             const text = inp.value.trim();
@@ -762,16 +1201,28 @@
 
             const s = shops[activeShopId];
             const lower = text.toLowerCase();
+            const segs = getShopSegments(s);
 
-            // 1. Kiểm tra nếu khách nhắn Số Điện Thoại -> Xuất ngay thẻ VietQR chuẩn Đỏ - Xanh Đất Phú
+            // 0. Tự động nhận diện Nhóm Khách Hàng qua từ khóa câu hỏi (Auto-Segment Intent Detection)
+            const detectedSeg = segs.find(seg => Array.isArray(seg.triggerWords) && seg.triggerWords.some(tw => lower.includes(tw)));
+            if (detectedSeg && activeSegmentId !== detectedSeg.id) {
+                selectCustomerSegment(detectedSeg.id, true);
+            }
+            const currentSegObj = segs.find(seg => seg.id === activeSegmentId);
+            const activeSegBadge = currentSegObj ? currentSegObj.badge : "🌐 Khách Chung";
+
+            // 1. Kiểm tra nếu khách nhắn Số Điện Thoại -> Xuất ngay thẻ VietQR chuẩn Đỏ - Xanh Đất Phú + Gắn Nhãn Nhóm Khách
             const phoneMatch = text.match(/(0[3|5|7|8|9])+([0-9]{8})\b/);
             if (phoneMatch) {
                 const phone = phoneMatch[0];
-                const prod = selectedProduct || s.products[0];
+                const explicitMatch = findBestProductMatch(s, lower);
+                const prod = explicitMatch || selectedProduct || s.products[0];
                 const code = 'DP' + Math.floor(1000 + Math.random() * 9000);
                 const qrUrl = `https://img.vietqr.io/image/${s.bankCode}-${s.bankAcc}-compact2.png?amount=${prod.price}&addInfo=${encodeURIComponent(code + ' ' + phone)}&accountName=${encodeURIComponent(s.bankHolder)}`;
 
                 ordersList.unshift({
+                    shopId: activeShopId,
+                    segment: activeSegBadge,
                     time: "Vừa xong",
                     phone,
                     item: `${prod.name} (${code})`,
@@ -783,10 +1234,12 @@
                 setTimeout(() => {
                     addBotBubble(`
                         <div class="space-y-2">
-                            <div class="flex items-center gap-1.5 dp-text-red font-extrabold">
-                                <span>🦅 ĐÃ LÊN ĐƠN & KÍCH HOẠT BẢO HÀNH 6K ĐẤT PHÚ</span>
+                            <div class="flex items-center justify-between gap-1.5 dp-text-red font-extrabold">
+                                <span>🦅 ĐÃ LÊN ĐƠN & KÍCH HOẠT BẢO HÀNH 6K</span>
+                                <span class="text-[10px] dp-bg-blue text-white px-2 py-0.5 rounded-full">${activeSegBadge}</span>
                             </div>
                             <div class="bg-[#e8ecf7] border border-[#1B2A6B]/20 rounded-xl p-3 text-xs space-y-1">
+                                <div>• Nhóm khách hàng: <b class="dp-text-red">${activeSegBadge}</b></div>
                                 <div>• Mã đơn bảo hành: <b class="dp-text-blue">${code}</b></div>
                                 <div>• SĐT Khách hàng: <b>${phone}</b></div>
                                 <div>• Sản phẩm/Gói: <b>${prod.name}</b></div>
@@ -803,16 +1256,79 @@
                 return;
             }
 
-            if (lower.includes('gặp chủ tiệm') || lower.includes('gọi điện')) {
+            if (lower.includes('giá sỉ') || lower.includes('mua sỉ') || lower.includes('đại lý') || lower.includes('chiết khấu')) {
+                setTimeout(() => {
+                    addBotBubble(`
+                        📦 <b class="dp-text-blue">[Chính Sách Khách Sỉ & Đại Lý — ${s.name}]:</b><br/>
+                        • <b>Chiết khấu sỉ:</b> Giảm ngay <b>15% – 25%</b> cho đơn hàng từ 5 – 10 sản phẩm/gói trở lên.<br/>
+                        • <b>Hỗ trợ pháp lý & Vận chuyển:</b> Xuất đầy đủ Hóa đơn điện tử TT78, gom chuyến Logistics liên tỉnh giảm 35% phí ship.<br/><br/>
+                        👉 Anh/Chị để lại <b>Số điện thoại</b> để Bộ phận Bán Sỉ gửi bảng giá đại lý qua Zalo ngay nhé!
+                    `);
+                }, 300);
+                return;
+            }
+
+            if (lower.includes('gặp chủ tiệm') || lower.includes('gọi điện') || lower.includes('nhân viên')) {
                 triggerHumanHandoff();
                 return;
             }
 
-            setTimeout(() => {
-                const matched = s.products.find(p => {
-                    const words = p.name.toLowerCase().split(' ').filter(w => w.length > 2);
-                    return words.some(w => lower.includes(w));
-                });
+            if (lower.includes('bảng giá') || lower.includes('menu') || lower.includes('danh mục') || lower.includes('có những gì')) {
+                setTimeout(() => showMenuInChat(), 300);
+                return;
+            }
+
+            if (lower.includes('ship') || lower.includes('giao hàng') || lower.includes('vận chuyển') || lower.includes('tận nơi')) {
+                setTimeout(() => {
+                    addBotBubble(`
+                        🚚 <b class="dp-text-blue">Chính sách Giao hàng & Lắp đặt tận nơi (${s.name}):</b><br/>
+                        • <b>Nội thành TP. Tuy Hòa:</b> Giao nhanh / Có mặt trong <b>15 – 30 phút</b> (Miễn phí ship cho đơn Combo hoặc gói dịch vụ 6K).<br/>
+                        • <b>Các huyện Phú Hòa, Đông Hòa, Tuy An, Tây Hòa, Sông Cầu & Liên tỉnh:</b> Gom chuyến qua GHN / Viettel Post giảm 35% cước phí.<br/><br/>
+                        👉 Anh/Chị đang ở khu vực nào để em báo thời gian giao chính xác nhất ạ?
+                    `);
+                }, 300);
+                return;
+            }
+
+            if (lower.includes('bảo hành') || lower.includes('uy tín') || lower.includes('cam kết') || lower.includes('otp')) {
+                setTimeout(() => {
+                    addBotBubble(`
+                        🛡️ <b class="dp-text-blue">Cam kết Bảo chứng Kín Kẽ 6K Đất Phú:</b><br/>
+                        • <b>Khóa giá K3:</b> Báo giá niêm yết minh bạch trước khi làm, tuyệt đối không phát sinh phụ phí.<br/>
+                        • <b>Nghiệm thu OTP K5:</b> Khách hàng kiểm tra hài lòng và đọc mã OTP 4 số thì thợ mới được tất toán.<br/>
+                        • <b>Bảo hành Điện tử K6:</b> Bảo hành từ 3 – 12 tháng bằng mã QR trên hệ thống Đất Phú OneBase!
+                    `);
+                }, 300);
+                return;
+            }
+
+            if (lower.includes('địa chỉ') || lower.includes('ở đâu') || lower.includes('cửa hàng')) {
+                setTimeout(() => {
+                    addBotBubble(`
+                        📍 <b class="dp-text-blue">Thông tin Liên hệ & Trụ sở (${s.name}):</b><br/>
+                        • <b>Văn phòng điều phối Đất Phú:</b> Số 21/146 Ngô Gia Tự, P. Phú Yên, TP. Tuy Hòa.<br/>
+                        • <b>Trực tuyến:</b> Hệ thống Trợ lý AI & Đội ngũ Thợ 6K phục vụ 24/7 khắp 12 phường/xã Tuy Hòa.<br/>
+                        👉 Anh/Chị cần đặt hàng hay gọi thợ tới địa chỉ nào cứ nhắn vào đây kèm <b>Số điện thoại</b> nhé!
+                    `);
+                }, 300);
+                return;
+            }
+
+            setTimeout(async () => {
+                // 1. Kiểm tra Kho Tri Thức Câu Hỏi Thường Gặp (FAQ) riêng của tiệm trước tiên
+                if (Array.isArray(s.faqs)) {
+                    const matchedFaq = s.faqs.find(f => f.keywords.some(kw => lower.includes(kw.toLowerCase())));
+                    if (matchedFaq) {
+                        addBotBubble(`
+                            ${matchedFaq.answer}<br/><br/>
+                            👉 Anh/Chị nhắn <b>Số điện thoại</b> vào đây để em lên đơn và xuất mã VietQR ngay nhé!
+                        `);
+                        return;
+                    }
+                }
+
+                // 2. Chấm điểm khớp cụm từ sản phẩm (Bigram & Stop-word NLP)
+                const matched = findBestProductMatch(s, lower);
 
                 if (matched) {
                     selectedProduct = matched;
@@ -822,7 +1338,33 @@
                         🎁 Ưu đãi: <b>${matched.promo}</b><br/><br/>
                         Anh/Chị nhắn <b>Số điện thoại</b> vào đây để em xuất mã VietQR chốt đơn liền nghen!
                     `);
-                } else if (lower.includes('giá') || lower.includes('menu') || lower.includes('gói')) {
+                    return;
+                }
+
+                // 3. Nếu Chủ tiệm đã nhập Google Gemini API Key -> Gọi Gemini 1.5 Flash trả lời theo đúng Bảng giá & FAQ của tiệm
+                const geminiKey = localStorage.getItem('dp_gemini_api_key');
+                if (geminiKey) {
+                    try {
+                        const sysContext = `Bạn là Trợ lý AI của cửa hàng "${s.name}". CHỈ trả lời dựa trên bảng giá sau: ${JSON.stringify(s.products)} và FAQ: ${JSON.stringify(s.faqs || [])}. Tuyệt đối không tự bịa giá. Trả lời ngắn gọn dưới 4 dòng, thân thiện, mời khách để lại Số điện thoại.`;
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: `${sysContext}\n\nKhách hỏi: ${text}` }] }]
+                            })
+                        });
+                        const data = await res.json();
+                        const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (aiText) {
+                            addBotBubble(aiText.replace(/\n/g, '<br/>'));
+                            return;
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+
+                if (lower.includes('giá') || lower.includes('menu') || lower.includes('gói')) {
                     showMenuInChat();
                 } else {
                     addBotBubble(`
@@ -856,18 +1398,49 @@
             if (activeBtn) {
                 activeBtn.classList.add('dp-bg-red', 'shadow');
             }
+            if (viewName === 'worker6k') {
+                loadLiveSupabase6kData();
+            }
         }
 
         function verifyOtp6k() {
-            const otpVal = document.getElementById('otp6kInput').value.trim();
-            const resEl = document.getElementById('otp6kResult');
+            const inp = document.getElementById('otpInput6k') || document.getElementById('otp6kInput');
+            const resEl = document.getElementById('otpResultMsg') || document.getElementById('otp6kResult');
+            const otpVal = inp ? inp.value.trim() : '6821';
             if (!otpVal || otpVal.length < 4) {
                 alert('Vui lòng nhập đủ 4 số mã OTP nghiệm thu của khách hàng Chị Phượng!');
                 return;
             }
-            resEl.classList.remove('hidden');
-            resEl.innerHTML = `✅ <b>ĐÃ KHỚP MÃ OTP (${otpVal}) — NGHIỆM THU K5 THÀNH CÔNG!</b><br/>` +
-                `⚡ Đã tự động giải ngân VietQR Tức Thì: <b>475.000đ (95%)</b> về TK Thợ <b>Lê Văn Hùng</b> | <b>25.000đ (5% phí nền tảng)</b> về TK Đất Phú OneBase.`;
+            if (resEl) {
+                resEl.classList.remove('hidden');
+                resEl.innerHTML = `✅ <b>ĐÃ KHỚP MÃ OTP (${otpVal}) — NGHIỆM THU K5 THÀNH CÔNG!</b><br/>` +
+                    `⚡ Đã tự động giải ngân VietQR Tức Thì: <b>475.000đ (95%)</b> về TK Thợ | <b>25.000đ (5% phí nền tảng)</b> về TK Đất Phú OneBase.`;
+            }
+        }
+
+        async function loadLiveSupabase6kData() {
+            const grid = document.getElementById('liveSupabaseWorkersGrid');
+            if (!grid) return;
+            try {
+                const res = await fetch('https://ckyydvyzucvcdunvedmg.supabase.co/rest/v1/workers?select=*', {
+                    headers: { 'apikey': 'sb_publishable_jAkkgpNicp_xFBYPOFBvFQ_1w1GBDAC' }
+                });
+                const workers = await res.json();
+                if (Array.isArray(workers) && workers.length > 0) {
+                    grid.innerHTML = workers.map(w => `
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <div class="font-extrabold dp-text-blue">${w.full_name}</div>
+                                <div class="text-[11px] text-slate-600">📍 ${w.district} • 📞 ${w.phone}</div>
+                                <div class="text-[10px] text-emerald-700 font-bold mt-0.5">★ ${w.rating} • Đã xác thực 6K</div>
+                            </div>
+                            <a href="tel:${w.phone}" class="dp-bg-red text-white font-bold text-[11px] px-2.5 py-1.5 rounded-lg shadow">Gọi</a>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         function renderCatalogView() {
@@ -889,15 +1462,22 @@
         }
 
         function renderOrdersTable() {
-            document.getElementById('navLeadBadge').innerText = ordersList.length;
-            document.getElementById('merchantStatOrders').innerText = ordersList.length + ' Đơn';
-            const total = ordersList.reduce((sum, o) => sum + o.amount, 0);
+            const s = shops[activeShopId];
+            const shopOrders = ordersList.filter(o => o.shopId === activeShopId);
+            document.getElementById('navLeadBadge').innerText = shopOrders.length;
+            document.getElementById('merchantStatOrders').innerText = shopOrders.length + ' Đơn';
+            const total = shopOrders.reduce((sum, o) => sum + o.amount, 0);
             document.getElementById('merchantStatRev').innerText = total.toLocaleString('vi-VN') + 'đ';
+            const titleSpan = document.getElementById('ordersTableShopName');
+            if (titleSpan && s) titleSpan.innerText = s.name;
 
-            document.getElementById('merchantOrdersBody').innerHTML = ordersList.map(o => `
+            document.getElementById('merchantOrdersBody').innerHTML = shopOrders.map(o => `
                 <tr class="hover:bg-slate-50">
                     <td class="py-3 px-2 text-slate-400">${o.time}</td>
-                    <td class="py-3 px-2 font-bold dp-text-blue font-mono text-sm">${o.phone}</td>
+                    <td class="py-3 px-2">
+                        <div class="font-bold dp-text-blue font-mono text-sm">${o.phone}</div>
+                        <span class="inline-block text-[10px] font-bold bg-[#e8ecf7] dp-text-blue px-2 py-0.5 rounded-full mt-0.5">${o.segment || '🌐 Khách Chung'}</span>
+                    </td>
                     <td class="py-3 px-2 font-semibold text-slate-800">
                         ${o.item}
                         <div class="text-[10px] text-slate-400">${o.shop}</div>
@@ -929,6 +1509,27 @@
             alert(`✅ Đã lưu cài đặt cho [${s.name}]!`);
             switchMainView('chat');
             showMenuInChat();
+        }
+
+        function saveFaqAndGemini() {
+            const s = shops[activeShopId];
+            if (!Array.isArray(s.faqs)) s.faqs = [];
+
+            const kwRaw = document.getElementById('addFaqKeywords').value.trim();
+            const ansRaw = document.getElementById('addFaqAnswer').value.trim();
+            const apiKey = document.getElementById('geminiApiKeyInput').value.trim();
+
+            if (apiKey) {
+                localStorage.setItem('dp_gemini_api_key', apiKey);
+            }
+            if (kwRaw && ansRaw) {
+                const keywords = kwRaw.split(',').map(k => k.trim()).filter(Boolean);
+                s.faqs.unshift({ keywords, answer: ansRaw });
+                document.getElementById('addFaqKeywords').value = '';
+                document.getElementById('addFaqAnswer').value = '';
+            }
+            alert(`✅ Đã dạy thêm câu trả lời mới cho AI của tiệm [${s.name}]!`);
+            switchMainView('chat');
         }
 
         let lastGeostampDataUrl = "";
@@ -988,7 +1589,8 @@
         function openQrModal() {
             const s = shops[activeShopId];
             document.getElementById('qrModalShopName').innerText = s.name;
-            document.getElementById('qrModalImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent('https://zalo.me/' + s.id)}`;
+            const isolatedUrl = `https://datphu-onebase.vercel.app/zalo_ai_chat.html?shop=${s.id}&role=customer`;
+            document.getElementById('qrModalImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(isolatedUrl)}`;
             document.getElementById('qrModal').classList.remove('hidden');
         }
 
@@ -1025,6 +1627,92 @@
             closeQuickSetupModal();
             selectShop(id);
             switchMainView('chat');
+        }
+
+        function openScenarioModal() { document.getElementById('scenarioModal').classList.remove('hidden'); }
+        function closeScenarioModal() { document.getElementById('scenarioModal').classList.add('hidden'); }
+
+        const simulatedScenarios = [
+            {
+                shopId: "datphu-kythuat",
+                segmentId: "ho-gia-dinh",
+                title: "Tình huống 1: Chủ nhà bị nước giếng tràn ngược ra đồng hồ nước máy lúc 10h đêm",
+                steps: [
+                    "Sao nước giếng nhà chị cứ tràn ngược qua đồng hồ nước máy quay tiền oan vậy em?",
+                    "Vậy lắp cho chị Gói 1 Tự Động Hóa Nước Máy - Nước Giếng nhé, SĐT chị 0935112288"
+                ]
+            },
+            {
+                shopId: "datphu-kythuat",
+                segmentId: "doanh-nghiep",
+                title: "Tình huống 2: Kế toán doanh nghiệp hỏi thủ tục đăng ký Chữ ký số FastCA + 500 Hóa đơn điện tử",
+                steps: [
+                    "Chào Đất Phú, bên mình là doanh nghiệp mới mở, thủ tục đăng ký chữ ký số cần giấy tờ gì?",
+                    "Giá Gói 3 Chữ ký số + Hóa đơn điện tử là bao nhiêu, kích hoạt cho mình qua SĐT 0905668899"
+                ]
+            },
+            {
+                shopId: "datphu-kythuat",
+                segmentId: "chu-quan",
+                title: "Tình huống 3: Chủ quán hỏi thuê Trợ lý AI 199K/tháng và gói mua đứt 3.9 Triệu",
+                steps: [
+                    "Mình là chủ quán muốn thuê bot 199k hay mua đứt 3.900.000đ thì mỗi cửa hàng có riêng biệt không?",
+                    "Ok cho mình đăng ký Gói 4 Trợ lý AI bán hàng nhé, SĐT chủ quán 0914778899"
+                ]
+            },
+            {
+                shopId: "datphu-kythuat",
+                segmentId: "tho-ctv",
+                title: "Tình huống 4: Thợ điện nước tại Tuy Hòa xin đăng ký vào Đội Thợ 6K hưởng 95%",
+                steps: [
+                    "Anh là thợ điện nước ở Tuy Hòa muốn đăng ký thợ 6K hưởng 95% và làm cộng tác viên hoa hồng sao em?",
+                    "Tuyệt vời, cho anh đăng ký hồ sơ Thợ 6K qua SĐT 0977334455 nhé"
+                ]
+            },
+            {
+                shopId: "dacsan-chiba",
+                segmentId: "khach-si-ctv",
+                title: "Tình huống 5: Khách sỉ ở TP.HCM hỏi mua buôn 10kg Bò Một Nắng Krông Pa",
+                steps: [
+                    "Chị ở Sài Gòn muốn lấy giá sỉ 10kg bò một nắng về bán đại lý thì chiết khấu sao em?",
+                    "Ok lên đơn trước 1kg Combo bò một nắng mẫu gửi về SĐT 0988990011 giúp chị nghen"
+                ]
+            },
+            {
+                shopId: "bepchay-tamduc",
+                segmentId: "qua-bieu-tiec",
+                title: "Tình huống 6: Gia chủ đặt 2 Mâm cỗ chay 8 món cúng giỗ và hỏi mượn bát đĩa",
+                steps: [
+                    "Cho cô hỏi Mâm cỗ 8 món gồm gì và đặt 2 mâm có được mượn bát đĩa tận nhà không?",
+                    "Đặt cho cô Mâm cỗ chay 8 món ngày mai nhé, SĐT cô 0905223344"
+                ]
+            }
+        ];
+
+        function runSimulatedScenario(idx) {
+            const sc = simulatedScenarios[idx];
+            if (!sc) return;
+            closeScenarioModal();
+            switchMainView('chat');
+            selectShop(sc.shopId);
+
+            setTimeout(() => {
+                addBotBubble(`
+                    <div class="bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-xs text-amber-900 font-semibold">
+                        🎬 <b>ĐANG CHẠY MÔ PHỎNG TỰ ĐỘNG:</b> ${sc.title}
+                    </div>
+                `);
+            }, 400);
+
+            setTimeout(() => {
+                document.getElementById('zaloChatInput').value = sc.steps[0];
+                sendZaloMessage();
+            }, 1100);
+
+            setTimeout(() => {
+                document.getElementById('zaloChatInput').value = sc.steps[1];
+                sendZaloMessage();
+            }, 2600);
         }
 
         function toggleMobileShopDrawer() {
