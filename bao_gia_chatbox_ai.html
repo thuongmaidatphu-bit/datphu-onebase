@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Giá Cho Thuê & Bán Đứt Trợ Lý Chatbox AI — CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; color: #0f172a; }
+        .dp-blue { background-color: #1B2A6B; }
+        .dp-red { background-color: #D32027; }
+        .dp-text-blue { color: #1B2A6B; }
+        .dp-text-red { color: #D32027; }
+        .dp-gradient { background: linear-gradient(135deg, #1B2A6B 0%, #243b94 65%, #D32027 100%); }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; }
+        }
+    </style>
+</head>
+<body class="py-6 px-4">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-[#1B2A6B]">
+        
+        <!-- HEADER THƯƠNG HIỆU ĐẤT PHÚ -->
+        <header class="dp-gradient text-white p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <img src="./logo_datphu.jpg" alt="Logo Đất Phú" class="w-16 h-16 rounded-2xl border-2 border-white bg-white object-cover shadow-lg">
+                <div>
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ • MST: 4401020233</div>
+                    <h1 class="text-xl md:text-2xl font-extrabold mt-1">GIẢI PHÁP TRỢ LÝ CHATBOX AI BÁN HÀNG 24/7</h1>
+                    <p class="text-xs md:text-sm opacity-90 mt-0.5">Tự động báo giá • Tự động xuất mã VietQR về thẳng TK Chủ Tiệm • Kết nối Zalo, Facebook, Web</p>
+                </div>
+            </div>
+            <div class="no-print flex gap-2">
+                <a href="./zalo_ai_chat.html" class="bg-white dp-text-blue font-extrabold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-slate-100">
+                    💬 Mở Bản Demo Chat Thử
+                </a>
+                <button onclick="window.print()" class="dp-red text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow border border-white/30">
+                    🖨️ In Báo Giá / Xuất PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- LỢI ÍCH CỐT LÕI 30 GIÂY -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3 p-6 bg-slate-50 border-b border-slate-200 text-center">
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="text-2xl">⚡</div>
+                <div class="font-extrabold text-xs dp-text-blue mt-1">Trả lời trong 2 giây</div>
+                <div class="text-[11px] text-slate-500">Trực ca đêm, nghỉ trưa, lễ Tết không mất khách</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="text-2xl">💳</div>
+                <div class="font-extrabold text-xs dp-text-red mt-1">Tiền về thẳng Chủ Tiệm</div>
+                <div class="text-[11px] text-slate-500">Tự xuất mã VietQR chính xác số tiền từng đơn</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="text-2xl">🛡️</div>
+                <div class="font-extrabold text-xs dp-text-blue mt-1">Chống báo sai giá 100%</div>
+                <div class="text-[11px] text-slate-500">Chỉ tư vấn đúng bảng giá niêm yết của cửa hàng</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="text-2xl">📱</div>
+                <div class="font-extrabold text-xs dp-text-red mt-1">Dễ dùng như Zalo</div>
+                <div class="text-[11px] text-slate-500">Bàn giao trong 15 phút • Tặng bảng Mica QR quầy</div>
+            </div>
+        </section>
+
+        <!-- 3 GÓI ĐẦU TƯ: CHO THUÊ THÁNG / CHO THUÊ NĂM / BÁN ĐỨT TRỌN GÓI -->
+        <section class="p-6 md:p-8">
+            <div class="text-center mb-6">
+                <span class="text-xs font-extrabold uppercase dp-text-red bg-red-50 px-3 py-1 rounded-full border border-red-200">Linh hoạt theo nhu cầu cửa hàng</span>
+                <h2 class="text-xl font-extrabold dp-text-blue mt-2">BẢNG GIÁ CHO THUÊ & CHUYỂN GIAO TRỌN GÓI</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- GÓI 1: THUÊ THEO THÁNG -->
+                <div class="border-2 border-slate-200 rounded-3xl p-6 flex flex-col justify-between bg-white hover:border-[#1B2A6B] transition">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase text-slate-500">Gói 1 • Dùng Thử Nhẹ Nhàng</span>
+                        <h3 class="text-lg font-extrabold dp-text-blue mt-1">THUÊ THEO THÁNG</h3>
+                        <div class="mt-3 flex items-baseline gap-1">
+                            <span class="text-3xl font-extrabold dp-text-red">199.000đ</span>
+                            <span class="text-xs text-slate-500 font-semibold">/ tháng (Chỉ 6.500đ/ngày)</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">Phù hợp tiệm nhỏ, quán ăn, shop online muốn trải nghiệm ngay.</p>
+                        <ul class="mt-4 space-y-2.5 text-xs text-slate-700">
+                            <li>✅ <b>1.500 lượt</b> AI tư vấn & báo giá/tháng</li>
+                            <li>✅ Cài đặt sẵn <b>Bảng giá + Mã VietQR</b> của tiệm</li>
+                            <li>✅ Tự động lưu SĐT khách đặt hàng</li>
+                            <li>✅ Giao diện mượt như Zalo + Mã nhúng Web</li>
+                            <li>✅ Chuyển giao gặp chủ tiệm khi khách cần</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPackage('THUE_THANG_199K', 'Gói Thuê Tháng Chatbox AI', 199000)" class="no-print mt-6 w-full dp-blue hover:opacity-95 text-white font-bold text-xs py-3 rounded-xl shadow">
+                        Đăng Ký Gói 199K / Tháng
+                    </button>
+                </div>
+
+                <!-- GÓI 2: THUÊ THEO NĂM (KHUYÊN DÙNG) -->
+                <div class="border-4 border-[#D32027] rounded-3xl p-6 flex flex-col justify-between bg-red-50/20 relative shadow-lg">
+                    <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 dp-red text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow">
+                        🔥 TIẾT KIỆM NHẤT • TẶNG 2 THÁNG
+                    </span>
+                    <div>
+                        <span class="text-xs font-extrabold uppercase dp-text-red">Gói 2 • Đa Kênh Toàn Diện</span>
+                        <h3 class="text-lg font-extrabold dp-text-blue mt-1">THUÊ TRỌN NĂM (12 THÁNG)</h3>
+                        <div class="mt-3 flex items-baseline gap-1">
+                            <span class="text-3xl font-extrabold dp-text-red">1.990.000đ</span>
+                            <span class="text-xs text-slate-500 font-semibold">/ năm</span>
+                        </div>
+                        <p class="text-xs text-emerald-700 font-bold mt-1">🎁 Tặng 01 Bảng Mica QR đặt quầy thu ngân</p>
+                        <ul class="mt-4 space-y-2.5 text-xs text-slate-800">
+                            <li>✅ <b>5.000 lượt</b> AI trả lời/tháng (60.000 lượt/năm)</li>
+                            <li>✅ Kết nối <b>Zalo OA + Facebook Fanpage + Web</b></li>
+                            <li>✅ Gửi <b>Báo cáo doanh thu tự động</b> mỗi tối Chủ Nhật</li>
+                            <li>✅ Tích hợp Camera 6K đóng dấu tọa độ nghiệm thu</li>
+                            <li>✅ Hỗ trợ cập nhật bảng giá miễn phí cả năm</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPackage('THUE_NAM_1990K', 'Gói Thuê Năm Chatbox AI Đa Kênh', 1990000)" class="no-print mt-6 w-full dp-red hover:opacity-95 text-white font-bold text-xs py-3 rounded-xl shadow-md">
+                        Chọn Gói Năm 1.990K (Tặng Bảng Mica)
+                    </button>
+                </div>
+
+                <!-- GÓI 3: BÁN ĐỨT / CHUYỂN GIAO SỞ HỮU RIÊNG -->
+                <div class="border-2 border-[#1B2A6B] rounded-3xl p-6 flex flex-col justify-between bg-[#e8ecf7]/40">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase dp-text-blue">Gói 3 • Mua Đứt 1 Lần</span>
+                        <h3 class="text-lg font-extrabold dp-text-blue mt-1">BÁN ĐỨT HỆ THỐNG RIÊNG</h3>
+                        <div class="mt-3 flex items-baseline gap-1">
+                            <span class="text-3xl font-extrabold dp-text-blue">3.900.000đ</span>
+                            <span class="text-xs text-slate-500 font-semibold">/ trọn đời</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-2">Dành cho chuỗi cửa hàng, doanh nghiệp muốn sở hữu riêng vĩnh viễn, không đóng phí tháng.</p>
+                        <ul class="mt-4 space-y-2.5 text-xs text-slate-700">
+                            <li>✅ <b>Bàn giao toàn bộ mã nguồn & Database Supabase riêng</b></li>
+                            <li>✅ Gắn <b>Logo, Tên miền & Thương hiệu riêng</b> của khách</li>
+                            <li>✅ Cài đặt sẵn luồng 6 Node n8n + Gemini Key riêng</li>
+                            <li>✅ <b>Không giới hạn</b> số lượng tin nhắn & sản phẩm</li>
+                            <li>✅ Bảo hành kỹ thuật 12 tháng • Đào tạo 1-1</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPackage('MUA_DUT_3900K', 'Gói Mua Đứt Hệ Thống Chatbox AI Riêng', 3900000)" class="no-print mt-6 w-full dp-blue hover:opacity-95 text-white font-bold text-xs py-3 rounded-xl shadow">
+                        Mua Đứt Hệ Thống (3.900K)
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- KHU VỰC THANH TOÁN VIETQR CHÍNH THỨC CỦA CÔNG TY ĐẤT PHÚ -->
+        <section id="paymentSection" class="m-6 md:m-8 mt-0 p-6 rounded-2xl bg-[#e8ecf7] border-2 border-[#1B2A6B] flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-2">
+                <span class="text-xs font-extrabold uppercase dp-red text-white px-3 py-1 rounded-full">Kích Hoạt Tự Động Trong 15 Phút</span>
+                <h3 id="selectedPkgTitle" class="text-lg font-extrabold dp-text-blue pt-1">Thanh Toán Đăng Ký: Gói Thuê Năm Chatbox AI Đa Kênh</h3>
+                <div class="text-sm text-slate-700 space-y-1">
+                    <div>• Đơn vị cung cấp: <b>CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ</b> (MST: 4401020233)</div>
+                    <div>• Ngân hàng thụ hưởng: <b>Vietcombank (VCB)</b></div>
+                    <div>• Số tài khoản: <b class="dp-text-red font-mono text-base">0751000025858</b></div>
+                    <div>• Số tiền thanh toán: <b id="selectedPkgAmount" class="dp-text-red text-lg font-extrabold">1.990.000đ</b></div>
+                </div>
+                <p class="text-xs text-slate-500 pt-1">👉 Ngay sau khi quét mã VietQR, kỹ thuật viên Đất Phú sẽ bàn giao tài khoản và bảng Mica QR trong 15 phút.</p>
+            </div>
+            <div class="bg-white p-3 rounded-2xl border-2 border-[#D32027] shadow-md text-center shrink-0">
+                <img id="companyVietQr" src="https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=1990000&addInfo=THUE%20NAM%20AI%20DATPHU&accountName=CONG%20TY%20TNHH%20THUONG%20MAI%20DAT%20PHU" alt="VietQR Đất Phú" class="w-44 h-44 mx-auto">
+                <div class="text-[11px] font-extrabold dp-text-blue mt-1">Quét VietQR Thanh Toán Ngay</div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function selectPackage(code, title, amount) {
+            document.getElementById('selectedPkgTitle').innerText = 'Thanh Toán Đăng Ký: ' + title;
+            document.getElementById('selectedPkgAmount').innerText = amount.toLocaleString('vi-VN') + 'đ';
+            const qrUrl = `https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(code)}&accountName=${encodeURIComponent('CONG TY TNHH THUONG MAI DAT PHU')}`;
+            document.getElementById('companyVietQr').src = qrUrl;
+            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

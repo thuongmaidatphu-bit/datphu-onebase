@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Tuần 2: Chiến Dịch 15 Cửa Hàng Tiên Phong Tuy Hòa | Đất Phú</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1B2A6B">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; }
+        .dp-bg-blue { background-color: #1B2A6B; }
+        .dp-bg-red { background-color: #D32027; }
+        .dp-text-blue { color: #1B2A6B; }
+        .dp-text-red { color: #D32027; }
+        .dp-gradient { background: linear-gradient(135deg, #1B2A6B 0%, #111c4e 55%, #D32027 100%); }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+
+    <!-- HEADER -->
+    <header class="dp-gradient text-white shadow-xl border-b-4 border-[#D32027] sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <img src="./logo_datphu.jpg" alt="Đất Phú" class="w-12 h-12 rounded-xl object-cover border-2 border-white shadow" onerror="this.src='https://placehold.co/80x80/D32027/FFFFFF?text=DP'">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-[#D32027] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">CHIẾN DỊCH TUẦN 2 • TP. TUY HÒA</span>
+                        <span class="bg-white/15 text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full">TK VCB: 0751000025858</span>
+                    </div>
+                    <h1 class="text-base md:text-lg font-black tracking-tight mt-0.5">CRM CHỐT ĐƠN & CÀI ĐẶT 15 CỬA HÀNG TIÊN PHONG TẠI TUY HÒA</h1>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="./bo_cong_cu_ban_hang_tuan1.html" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs px-3.5 py-2 rounded-xl">
+                    ⚡ Tuần 1: Go-Live & Sales Kit
+                </a>
+                <a href="./zalo_ai_chat.html" target="_blank" class="bg-[#D32027] hover:bg-red-700 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+                    💬 Mở App Zalo AI & 6K
+                </a>
+                <a href="./chien_luoc_phat_trien_datphu.html" class="bg-white text-[#1B2A6B] font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+                    🏛️ Master Plan 2030
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-6 space-y-6">
+
+        <!-- THANH KPI TIẾN ĐỘ DOANH THU TUẦN 2 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl p-4 shadow border-l-4 border-[#1B2A6B]">
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase">Mục tiêu Cửa hàng Tuần 2</div>
+                <div class="text-2xl font-black dp-text-blue mt-1" id="kpiTotalShops">15 Tiệm</div>
+                <div class="text-xs text-slate-500 mt-0.5">5 Ngành × 3 Tiệm tại Tuy Hòa</div>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow border-l-4 border-emerald-600">
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase">Đã Chốt & Thu Tiền VCB</div>
+                <div class="text-2xl font-black text-emerald-600 mt-1" id="kpiPaidCount">0 / 15 Tiệm</div>
+                <div class="text-xs text-emerald-700 font-semibold mt-0.5" id="kpiProgressText">Tiến độ: 0%</div>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow border-l-4 border-[#D32027]">
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase">Tiền Mặt Đã Về VCB Đất Phú</div>
+                <div class="text-2xl font-black dp-text-red mt-1" id="kpiCashCollected">0đ</div>
+                <div class="text-xs text-slate-500 mt-0.5">STK: <b>0751000025858</b></div>
+            </div>
+            <div class="bg-slate-900 text-white rounded-2xl p-4 shadow border-l-4 border-amber-400">
+                <div class="text-[11px] font-extrabold text-amber-300 uppercase">Tổng Giá Trị Pipeline 15 Tiệm</div>
+                <div class="text-2xl font-black text-white mt-1" id="kpiPipelineTotal">31.830.000đ</div>
+                <div class="text-xs text-slate-300 mt-0.5">Hoa hồng Sale (25%): <b id="kpiCommission" class="text-amber-300">7.957.500đ</b></div>
+            </div>
+        </section>
+
+        <!-- BẢNG CRM 15 CỬA HÀNG TIÊN PHONG TẠI TUY HÒA -->
+        <section class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-[#1B2A6B]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider dp-text-red">DANH SÁCH MỤC TIÊU THỰC CHIẾN • TP. TUY HÒA</span>
+                    <h2 class="text-xl font-black dp-text-blue mt-0.5">Bảng Điều Khiển 15 Cửa Hàng Tiên Phong (Bấm Để Hiện Mã VietQR Thu Tiền & Copy Prompt)</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <select id="filterIndustry" onchange="renderCrmTable()" class="border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold dp-text-blue bg-slate-50">
+                        <option value="ALL">Tất cả 5 Ngành (15 Tiệm)</option>
+                        <option value="DAC_SAN">1. Đặc sản Phú Yên & Quà biếu (3)</option>
+                        <option value="DIEN_LANH_6K">2. Điện lạnh - Điện nước - Camera 6K (3)</option>
+                        <option value="ME_BE">3. Siêu thị Mẹ & Bé / Tạp hóa (3)</option>
+                        <option value="AM_THUC">4. Ẩm thực - Bếp Chay - Hải sản (3)</option>
+                        <option value="GARA_SPA">5. Gara Ô tô - Spa - Nha khoa (3)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto mt-4">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="dp-bg-blue text-white">
+                            <th class="py-3 px-3 rounded-tl-xl">#</th>
+                            <th class="py-3 px-3">Tên Cửa Hàng & Khu Vực Tuy Hòa</th>
+                            <th class="py-3 px-3">Ngành Hàng</th>
+                            <th class="py-3 px-3">SĐT Chủ Tiệm</th>
+                            <th class="py-3 px-3">Gói Đề Xuất</th>
+                            <th class="py-3 px-3">Trạng Thái</th>
+                            <th class="py-3 px-3 rounded-tr-xl text-center">Thao Tác Chốt Đơn & Cài Đặt 3 Phút</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crmTableBody" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- BỘ 5 MẪU SYSTEM PROMPT & BẢNG GIÁ JSON CÀI ĐẶT NHANH -->
+        <section class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-[#D32027]">
+            <span class="text-xs font-extrabold uppercase tracking-wider dp-text-red">CÔNG CỤ KỸ THUẬT CÀI ĐẶT TRONG 3 PHÚT</span>
+            <h2 class="text-xl font-black dp-text-blue mt-0.5">Kho 5 Mẫu System Prompt & Bảng Giá JSON Chuẩn Chống Bịa Giá (1-Click Copy)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-4">
+                <button onclick="copyIndustryTemplate('DAC_SAN')" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 text-left transition">
+                    <div class="font-black dp-text-blue text-xs">🥩 1. Đặc Sản Phú Yên</div>
+                    <p class="text-[11px] text-slate-600 mt-1">Bò 1 nắng, Nước mắm Gành Đỏ, Mực 1 nắng</p>
+                    <span class="inline-block mt-2 text-[10px] font-extrabold dp-text-red underline">📋 Bấm Copy Mẫu</span>
+                </button>
+                <button onclick="copyIndustryTemplate('DIEN_LANH_6K')" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 text-left transition">
+                    <div class="font-black dp-text-blue text-xs">🛠️ 2. Điện Lạnh & Thợ 6K</div>
+                    <p class="text-[11px] text-slate-600 mt-1">Vệ sinh, Tháo lắp máy lạnh 500K, Camera</p>
+                    <span class="inline-block mt-2 text-[10px] font-extrabold dp-text-red underline">📋 Bấm Copy Mẫu</span>
+                </button>
+                <button onclick="copyIndustryTemplate('ME_BE')" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 text-left transition">
+                    <div class="font-black dp-text-blue text-xs">🍼 3. Siêu Thị Mẹ & Bé</div>
+                    <p class="text-[11px] text-slate-600 mt-1">Sữa công thức, Tã bỉm nội địa, Đồ ăn dặm</p>
+                    <span class="inline-block mt-2 text-[10px] font-extrabold dp-text-red underline">📋 Bấm Copy Mẫu</span>
+                </button>
+                <button onclick="copyIndustryTemplate('AM_THUC')" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 text-left transition">
+                    <div class="font-black dp-text-blue text-xs">🍲 4. Ẩm Thực & Bếp Chay</div>
+                    <p class="text-[11px] text-slate-600 mt-1">Mâm cỗ chay 8 món, Lẩu hải sản, Cơm niêu</p>
+                    <span class="inline-block mt-2 text-[10px] font-extrabold dp-text-red underline">📋 Bấm Copy Mẫu</span>
+                </button>
+                <button onclick="copyIndustryTemplate('GARA_SPA')" class="p-3.5 rounded-2xl border-2 border-slate-200 hover:border-[#D32027] bg-slate-50 text-left transition">
+                    <div class="font-black dp-text-blue text-xs">🚗 5. Gara Ô Tô & Spa</div>
+                    <p class="text-[11px] text-slate-600 mt-1">Chăm sóc xe, Gội đầu dưỡng sinh, Chăm sóc da</p>
+                    <span class="inline-block mt-2 text-[10px] font-extrabold dp-text-red underline">📋 Bấm Copy Mẫu</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL HIỆN MÃ VIETQR THU TIỀN TẠI QUÁN -->
+    <div id="qrCheckoutModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-t-8 border-[#D32027] text-center">
+            <div class="text-xs font-extrabold uppercase dp-text-red">PHIẾU KÍCH HOẠT DỊCH VỤ CHATBOX AI ĐẤT PHÚ</div>
+            <h3 id="modalShopName" class="text-lg font-black dp-text-blue mt-1">Đặc Sản Phú Yên Chị Ba</h3>
+            <p id="modalPlanLabel" class="text-xs font-bold text-slate-600 mt-0.5">Gói Thuê Năm — 1.990.000đ (Tặng 2 tháng)</p>
+
+            <img id="modalVietQrImg" src="" alt="VietQR" class="w-56 h-56 mx-auto my-3 rounded-2xl border-2 border-[#1B2A6B] p-1.5 shadow">
+
+            <div class="bg-slate-50 rounded-xl p-3 text-xs text-left space-y-1 border border-slate-200">
+                <div>🏦 Ngân hàng: <b>Vietcombank (VCB)</b></div>
+                <div>💳 Số tài khoản: <b class="dp-text-red font-mono">0751000025858</b></div>
+                <div>🏢 Chủ TK: <b>CONG TY TNHH THUONG MAI DAT PHU</b></div>
+                <div>📝 Nội dung CK: <b id="modalMemo" class="dp-text-blue font-mono">DP1990K 0914882341</b></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <button onclick="closeQrModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs py-3 rounded-xl">
+                    Đóng lại
+                </button>
+                <button onclick="confirmMarkPaid()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-xl shadow-lg">
+                    ✅ Xác Nhận Đã Thu Tiền
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const INDUSTRY_TEMPLATES = {
+            DAC_SAN: {
+                label: 'Đặc sản Phú Yên',
+                prompt: 'Bạn là Trợ lý Bán hàng AI của cửa hàng Đặc Sản Phú Yên. Xưng "Em", gọi khách là "Anh/Chị" thân tình xứ Nẫu. Chỉ báo giá đúng các món trong bảng giá chính thức. Luôn gợi ý Combo làm quà biếu để được Freeship Tuy Hòa.',
+                catalog: [
+                    { name: "Bò Một Nắng Krông Pa (Gói 500g kèm Muối Kiến Vàng)", price: 280000, promo: "Tặng 1 hũ muối kiến rừng" },
+                    { name: "Combo Quà Biếu Bò 1 Nắng 1Kg + Mực 1 Nắng 500g", price: 820000, promo: "Freeship Tuy Hòa & Đóng thùng xốp" },
+                    { name: "Nước Mắm Nhỉ Gành Đỏ Truyền Thống (Cặp 2 chai)", price: 160000, promo: "Chuẩn OCOP Phú Yên" }
+                ]
+            },
+            DIEN_LANH_6K: {
+                label: 'Điện lạnh & Thợ 6K',
+                prompt: 'Bạn là Trợ lý Điều phối Kỹ thuật 6K tại Tuy Hòa. Khi khách báo hỏng máy lạnh/điện nước/camera, hãy báo đúng khung giá 6K, cam kết Khóa giá K3 không phát sinh phụ phí, có mặt sau 30 phút và nghiệm thu OTP 4 số.',
+                catalog: [
+                    { name: "Vệ sinh & Kiểm tra gas máy lạnh treo tường", price: 150000, promo: "Giảm còn 120K từ máy thứ 2" },
+                    { name: "Tháo lắp & Di dời máy lạnh Inverter 1HP - 1.5HP", price: 500000, promo: "Bảo hành 3 tháng chuẩn 6K" },
+                    { name: "Lắp đặt Camera WiFi EZVIZ Xoay 360 Độ (Thẻ 64GB)", price: 1050000, promo: "Miễn phí công lắp đặt Tuy Hòa" }
+                ]
+            },
+            ME_BE: {
+                label: 'Siêu thị Mẹ & Bé',
+                prompt: 'Bạn là Trợ lý Tư vấn Mẹ & Bé 24/7. Xưng "Em", gọi khách là "Ba/Mẹ". Hỏi tháng tuổi và cân nặng của bé để tư vấn đúng dòng sữa/size tã trong bảng giá và nhắc ưu đãi giao nhanh 30 phút tại Tuy Hòa.',
+                catalog: [
+                    { name: "Combo 2 Bịch Tã Quần Nội Địa Đủ Size (M/L/XL)", price: 450000, promo: "Tặng 2 gói khăn ướt cao cấp" },
+                    { name: "Sữa Công Thức Tăng Đề Kháng Lon 800g", price: 520000, promo: "Chính hãng 100%" },
+                    { name: "Combo Ăn Dặm Khởi Đầu Cho Bé 6 Tháng", price: 295000, promo: "Freeship bán kính 5km" }
+                ]
+            },
+            AM_THUC: {
+                label: 'Ẩm thực & Bếp Chay',
+                prompt: 'Bạn là Trợ lý Đặt món & Đặt tiệc 24/7. Báo đúng thực đơn niêm yết. Hướng dẫn khách để lại SĐT và quét mã VietQR để giữ bàn hoặc đặt mâm cỗ tận nhà đúng giờ.',
+                catalog: [
+                    { name: "Mâm Cỗ Giỗ Chay Thanh Tịnh 8 Món (Tận nhà)", price: 850000, promo: "Miễn phí mượn bát đĩa" },
+                    { name: "Set Lẩu Hải Sản Tươi Sống Gia Đình 4-6 Người", price: 450000, promo: "Tặng kèm rau nấm & bún tươi" },
+                    { name: "Combo Cơm Phần Gia Đình Xứ Nẫu (4 món)", price: 220000, promo: "Giao nóng trong 25 phút" }
+                ]
+            },
+            GARA_SPA: {
+                label: 'Gara Ô tô & Spa',
+                prompt: 'Bạn là Trợ lý Đặt lịch hẹn AI chuyên nghiệp. Báo giá minh bạch theo gói dịch vụ và mời khách để lại SĐT kèm khung giờ để giữ lịch ưu tiên không phải chờ đợi.',
+                catalog: [
+                    { name: "Gói Rửa Xe Chi Tiết + Hút Bụi + Khử Mùi Ô Tô", price: 250000, promo: "Tặng nước rửa kính" },
+                    { name: "Gội Đầu Dưỡng Sinh & Massage Cổ Vai Gáy 75 Phút", price: 199000, promo: "Đi 2 người giảm 10%" },
+                    { name: "Chăm Sóc Da Chuyên Sâu Cấp Ẩm Phục Hồi", price: 350000, promo: "Miễn phí soi da AI" }
+                ]
+            }
+        };
+
+        const DEFAULT_15_SHOPS = [
+            { id: 1, name: "Đặc Sản Xứ Nẫu Chị Ba", area: "Đường Hùng Vương, P.7, Tuy Hòa", industry: "DAC_SAN", phone: "0914882341", plan: "Gói Năm (1.990K)", amount: 1990000, status: "PAID" },
+            { id: 2, name: "Hải Sản Khô & Bò 1 Nắng Tám Lộc", area: "Lê Duẩn, P.7, Tuy Hòa", industry: "DAC_SAN", phone: "0905223445", plan: "Gói Năm (1.990K)", amount: 1990000, status: "DEMO" },
+            { id: 3, name: "Quà Biếu OCOP Phú Yên Hương Biển", area: "Chợ Tuy Hòa, P.4", industry: "DAC_SAN", phone: "0988776543", plan: "Gói Năm (1.990K)", amount: 1990000, status: "DEMO" },
+
+            { id: 4, name: "Trung Tâm Điện Lạnh Lê Văn Hùng (6K)", area: "Phường 7, TP. Tuy Hòa", industry: "DIEN_LANH_6K", phone: "0935668999", plan: "Gói Năm (1.990K)", amount: 1990000, status: "PAID" },
+            { id: 5, name: "Camera An Ninh & WiFi Minh Phát", area: "Nguyễn Tất Thành, P.9", industry: "DIEN_LANH_6K", phone: "0913445566", plan: "Gói Năm (1.990K)", amount: 1990000, status: "DEMO" },
+            { id: 6, name: "Điện Nước & Sửa Khóa Tận Nhà Thành Đạt", area: "Phường 5, TP. Tuy Hòa", industry: "DIEN_LANH_6K", phone: "0977889900", plan: "Gói Tháng (199K)", amount: 199000, status: "LEAD" },
+
+            { id: 7, name: "Hệ Thống Sữa Tã Mẹ & Bé Năm Tiền", area: "Trần Hưng Đạo, P.4, Tuy Hòa", industry: "ME_BE", phone: "0989112567", plan: "Bán Đứt Trọn Đời (3.900K)", amount: 3900000, status: "PAID" },
+            { id: 8, name: "Shop Mẹ Bỉm Sữa Thiên Thần Nhỏ", area: "Nguyễn Huệ, P.5, Tuy Hòa", industry: "ME_BE", phone: "0905667788", plan: "Gói Năm (1.990K)", amount: 1990000, status: "DEMO" },
+            { id: 9, name: "Tạp Hóa Sỉ Lẻ Gia Đình Phúc Thịnh", area: "Lê Lợi, P.3, Tuy Hòa", industry: "ME_BE", phone: "0914998877", plan: "Gói Năm (1.990K)", amount: 1990000, status: "LEAD" },
+
+            { id: 10, name: "Bếp Chay Thanh Tịnh Tâm Đức", area: "Nguyễn Công Trứ, P.6, Tuy Hòa", industry: "AM_THUC", phone: "0935112233", plan: "Gói Năm (1.990K)", amount: 1990000, status: "PAID" },
+            { id: 11, name: "Hải Sản Tươi Sống Bờ Kè Bạch Đằng", area: "Bạch Đằng, P.4, Tuy Hòa", industry: "AM_THUC", phone: "0905998811", plan: "Gói Năm (1.990K)", amount: 1990000, status: "DEMO" },
+            { id: 12, name: "Cơm Niêu & Đặc Sản Đồng Quê Phú Yên", area: "Độc Lập, P.7, Tuy Hòa", industry: "AM_THUC", phone: "0982334455", plan: "Gói Tháng (199K)", amount: 199000, status: "LEAD" },
+
+            { id: 13, name: "Gara Chăm Sóc Ô Tô AutoPro Tuy Hòa", area: "Đại lộ Hùng Vương, P.9", industry: "GARA_SPA", phone: "0914777999", plan: "Bán Đứt Trọn Đời (3.900K)", amount: 3900000, status: "DEMO" },
+            { id: 14, name: "Spa Dưỡng Sinh & Chăm Sóc Da Mộc Nhiên", area: "KĐT Nam Tuy Hòa", industry: "GARA_SPA", phone: "0935888666", plan: "Gói Năm (1.990K)", amount: 1990000, status: "LEAD" },
+            { id: 15, name: "Phòng Khám Nha Khoa Thẩm Mỹ Nụ Cười Việt", area: "Trần Phú, P.7, Tuy Hòa", industry: "GARA_SPA", phone: "0905444333", plan: "Bán Đứt Trọn Đời (3.900K)", amount: 3900000, status: "LEAD" }
+        ];
+
+        let shopsData = JSON.parse(localStorage.getItem('datphu_week2_crm')) || DEFAULT_15_SHOPS;
+        let currentModalShopId = null;
+
+        function saveCrm() {
+            localStorage.setItem('datphu_week2_crm', JSON.stringify(shopsData));
+            renderCrmTable();
+        }
+
+        function renderCrmTable() {
+            const filter = document.getElementById('filterIndustry').value;
+            const tbody = document.getElementById('crmTableBody');
+
+            const filtered = filter === 'ALL' ? shopsData : shopsData.filter(s => s.industry === filter);
+
+            tbody.innerHTML = filtered.map(s => {
+                const indLabel = INDUSTRY_TEMPLATES[s.industry]?.label || s.industry;
+                let badgeHtml = '';
+                if (s.status === 'PAID') {
+                    badgeHtml = `<span class="bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full text-[11px]">✅ Đã Thu Tiền VCB</span>`;
+                } else if (s.status === 'DEMO') {
+                    badgeHtml = `<span class="bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full text-[11px]">🔥 Đã Demo (Chờ CK)</span>`;
+                } else {
+                    badgeHtml = `<span class="bg-slate-100 text-slate-700 font-bold px-2.5 py-1 rounded-full text-[11px]">📍 Chuẩn bị gặp</span>`;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-3 font-black dp-text-blue">${s.id}</td>
+                        <td class="py-3 px-3">
+                            <div class="font-extrabold text-slate-900 text-sm">${s.name}</div>
+                            <div class="text-[11px] text-slate-500">📍 ${s.area}</div>
+                        </td>
+                        <td class="py-3 px-3 font-bold dp-text-blue">${indLabel}</td>
+                        <td class="py-3 px-3 font-mono font-bold text-slate-800">${s.phone}</td>
+                        <td class="py-3 px-3">
+                            <div class="font-extrabold dp-text-red">${s.amount.toLocaleString('vi-VN')}đ</div>
+                            <div class="text-[10px] text-slate-500">${s.plan}</div>
+                        </td>
+                        <td class="py-3 px-3">${badgeHtml}</td>
+                        <td class="py-3 px-3 text-center">
+                            <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                <button onclick="openShopQrModal(${s.id})" class="dp-bg-red hover:bg-red-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] shadow">
+                                    📲 VietQR Thu Tiền
+                                </button>
+                                <button onclick="copyIndustryTemplate('${s.industry}')" class="dp-bg-blue hover:bg-blue-900 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] shadow">
+                                    📋 Copy Prompt
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateKpis();
+        }
+
+        function updateKpis() {
+            const paidShops = shopsData.filter(s => s.status === 'PAID');
+            const totalCash = paidShops.reduce((sum, s) => sum + s.amount, 0);
+            const pipelineTotal = shopsData.reduce((sum, s) => sum + s.amount, 0);
+            const pct = Math.round((paidShops.length / shopsData.length) * 100);
+
+            document.getElementById('kpiPaidCount').innerText = `${paidShops.length} / ${shopsData.length} Tiệm`;
+            document.getElementById('kpiProgressText').innerText = `Hoàn thành: ${pct}% mục tiêu Tuần 2`;
+            document.getElementById('kpiCashCollected').innerText = totalCash.toLocaleString('vi-VN') + 'đ';
+            document.getElementById('kpiPipelineTotal').innerText = pipelineTotal.toLocaleString('vi-VN') + 'đ';
+            document.getElementById('kpiCommission').innerText = Math.round(pipelineTotal * 0.25).toLocaleString('vi-VN') + 'đ';
+        }
+
+        function openShopQrModal(shopId) {
+            const s = shopsData.find(x => x.id === shopId);
+            if (!s) return;
+            currentModalShopId = shopId;
+
+            const memo = `DP ${s.phone}`;
+            const qrUrl = `https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=${s.amount}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent('CONG TY TNHH THUONG MAI DAT PHU')}`;
+
+            document.getElementById('modalShopName').innerText = s.name;
+            document.getElementById('modalPlanLabel').innerText = `${s.plan} — ${s.amount.toLocaleString('vi-VN')}đ`;
+            document.getElementById('modalVietQrImg').src = qrUrl;
+            document.getElementById('modalMemo').innerText = memo;
+
+            const modal = document.getElementById('qrCheckoutModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeQrModal() {
+            const modal = document.getElementById('qrCheckoutModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmMarkPaid() {
+            const s = shopsData.find(x => x.id === currentModalShopId);
+            if (s) {
+                s.status = 'PAID';
+                saveCrm();
+            }
+            closeQrModal();
+        }
+
+        function copyIndustryTemplate(indKey) {
+            const tpl = INDUSTRY_TEMPLATES[indKey];
+            if (!tpl) return;
+            const payload = `=== CẤU HÌNH CHATBOX AI ĐẤT PHÚ (${tpl.label.toUpperCase()}) ===\n\n` +
+                `[SYSTEM PROMPT]:\n${tpl.prompt}\n\n` +
+                `[ITEMS CATALOG JSON]:\n${JSON.stringify(tpl.catalog, null, 2)}`;
+            navigator.clipboard.writeText(payload);
+            alert(`✅ Đã copy bộ System Prompt & Bảng Giá JSON chuẩn của ngành [${tpl.label}]! Bạn có thể dán ngay vào cấu hình cửa hàng.`);
+        }
+
+        renderCrmTable();
+    </script>
+</body>
+</html>
