@@ -1,13 +1,12 @@
 @echo off
 chcp 65001 > nul
-title ĐĂNG TẢI DỮ LIỆU ĐẤT PHÚ CHỢ PHIÊN LÊN GITHUB
+title ĐỒNG BỘ DỮ LIỆU ĐẤT PHÚ ONEBASE GEN 4 LÊN GITHUB & VERCEL
 color 0A
 
 echo =====================================================================
-echo    CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ - HỆ THỐNG ĐỒNG BỘ GITHUB
+echo    CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ - ĐỒNG BỘ GITHUB & VERCEL (GEN 4)
 echo =====================================================================
 echo.
-echo Đang kiểm tra thư mục hiện tại: %~dp0
 cd /d "%~dp0"
 
 if not exist ".git" (
@@ -16,12 +15,13 @@ if not exist ".git" (
     )
 )
 
-git status
+echo [1/3] Đang gom toàn bộ file mới nhất trong thư mục E:\datphu-onebase...
+git add -A
+git commit -m "feat(gen4): update Dat Phu OneBase Gen 4 ecosystem" 2>nul
+
 echo.
-echo =====================================================================
-echo Đang tiến hành đẩy toàn bộ dữ liệu mới nhất lên GitHub...
+echo [2/3] Đang đẩy toàn bộ dữ liệu lên GitHub...
 echo Kho lưu trữ: https://github.com/thuongmaidatphu-bit/datphu-onebase.git
-echo =====================================================================
 echo.
 
 git push origin main
@@ -29,15 +29,16 @@ git push origin main
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo =====================================================================
-    echo [THÀNH CÔNG] Toàn bộ dữ liệu và mã nguồn đã được đăng lên GitHub!
-    echo Vercel sẽ tự động cập nhật website online trong vòng 1-2 phút.
+    echo [3/3 - THÀNH CÔNG RỰC RỠ]
+    echo Toàn bộ dữ liệu đã được đưa lên GitHub!
+    echo Vercel sẽ tự động cập nhật website online trong vòng 1 phút.
     echo =====================================================================
 ) else (
     echo.
     echo =====================================================================
-    echo [LƯU Ý] Nếu GitHub yêu cầu đăng nhập:
-    echo Bạn vui lòng chọn 'Sign in with your browser' hoặc dán mã Token GitHub.
-    echo Sau khi đăng nhập xong, lần sau hệ thống sẽ tự động đồng bộ 100%.
+    echo [HƯỚNG DẪN ĐĂNG NHẬP GITHUB]
+    echo Nếu cửa sổ GitHub hiện lên, vui lòng bấm "Sign in with your browser".
+    echo Hoặc bạn có thể kéo thả trực tiếp thư mục E:\datphu-onebase lên GitHub/Vercel!
     echo =====================================================================
 )
 
