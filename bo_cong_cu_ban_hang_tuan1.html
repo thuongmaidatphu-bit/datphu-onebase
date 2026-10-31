@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tuần 1 Go-Live: Hạ Tầng SQL & Bộ Công Cụ Bán Hàng Di Động | Đất Phú</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1B2A6B">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; }
+        .dp-bg-blue { background-color: #1B2A6B; }
+        .dp-bg-red { background-color: #D32027; }
+        .dp-text-blue { color: #1B2A6B; }
+        .dp-text-red { color: #D32027; }
+        .dp-gradient { background: linear-gradient(135deg, #1B2A6B 0%, #111c4e 55%, #D32027 100%); }
+        .phone-frame {
+            width: 390px;
+            height: 760px;
+            border: 12px solid #0f172a;
+            border-radius: 44px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(27, 42, 107, 0.35);
+            background: #fff;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+
+    <!-- HEADER GO-LIVE TUẦN 1 -->
+    <header class="dp-gradient text-white shadow-xl border-b-4 border-[#D32027] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <img src="./logo_datphu.jpg" alt="Đất Phú" class="w-12 h-12 rounded-xl object-cover border-2 border-white shadow" onerror="this.src='https://placehold.co/80x80/D32027/FFFFFF?text=DP'">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-[#D32027] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">TUẦN 1: GO-LIVE HẠ TẦNG & SALES KIT</span>
+                        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-bold px-2 py-0.5 rounded-full">● SUPABASE: fxaqxgvounimfrxjcszw</span>
+                    </div>
+                    <h1 class="text-base md:text-lg font-black tracking-tight mt-0.5">TRUNG TÂM KÍCH HOẠT HẠ TẦNG & BỘ CÔNG CỤ BÁN HÀNG TRÊN ĐIỆN THOẠI</h1>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="./zalo_ai_chat.html" target="_blank" class="bg-[#D32027] hover:bg-red-700 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow flex items-center gap-1.5">
+                    📱 Mở Full App Zalo AI
+                </a>
+                <a href="./bao_gia_chatbox_ai.html" target="_blank" class="bg-white text-[#1B2A6B] hover:bg-blue-50 font-extrabold text-xs px-3.5 py-2 rounded-xl shadow flex items-center gap-1.5">
+                    💳 Mở Full Trang Báo Giá
+                </a>
+                <a href="./chien_luoc_phat_trien_datphu.html" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs px-3 py-2 rounded-xl">
+                    🏛️ Master Plan 2030
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-6 space-y-8">
+
+        <!-- PHẦN 1: KHỞI CHẠY DATABASE 00_MASTER_SETUP_GEN4.SQL -->
+        <section class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-[#1B2A6B]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider dp-text-red">NHIỆM VỤ 1 • KHỞI CHẠY CƠ SỞ DỮ LIỆU SUPABASE GEN 4</span>
+                    <h2 class="text-xl font-black dp-text-blue mt-0.5">Kích Hoạt File `00_MASTER_SETUP_GEN4.sql` (9 Phân Hệ • 16 Bảng • RLS Bảo Mật)</h2>
+                    <p class="text-xs text-slate-600 mt-1">
+                        Bao gồm: Sàn TMĐT Chợ Phiên + Cho thuê Chatbox AI Multi-tenant + Webhook Đa kênh (Zalo/FB/Viber) + VietQR Zero-Float + Gọi Thợ 6K (Case Chị Phượng OTP 6821) + Tín nhiệm Pro VAS.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                    <button onclick="copySqlCommand()" class="dp-bg-red hover:bg-red-700 text-white font-extrabold text-xs px-4 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+                        📋 Copy Lệnh Chạy Tự Động
+                    </button>
+                    <a href="https://supabase.com/dashboard/project/fxaqxgvounimfrxjcszw/sql/new" target="_blank" class="dp-bg-blue hover:bg-blue-900 text-white font-extrabold text-xs px-4 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+                        ⚡ Mở Supabase SQL Editor ↗
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <!-- Cách 1: Chạy trực tiếp trên Supabase SQL Editor -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-[#1B2A6B] text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-md">CÁCH 1: KHUYÊN DÙNG (30 GIÂY)</span>
+                        <span class="text-xs font-bold text-emerald-600">✓ Không cần cài đặt</span>
+                    </div>
+                    <ol class="text-xs text-slate-700 space-y-2 mt-3 list-decimal list-inside">
+                        <li>Mở file <a href="./supabase/migrations/00_MASTER_SETUP_GEN4.sql" target="_blank" class="font-bold dp-text-red underline">00_MASTER_SETUP_GEN4.sql</a> (bấm <kbd class="bg-white border px-1.5 py-0.5 rounded">Ctrl + A</kbd> rồi <kbd class="bg-white border px-1.5 py-0.5 rounded">Ctrl + C</kbd>).</li>
+                        <li>Bấm nút <b>"⚡ Mở Supabase SQL Editor"</b> ở góc phải (Project ID: <code>fxaqxgvounimfrxjcszw</code>).</li>
+                        <li>Dán toàn bộ nội dung vào khung SQL Editor và bấm nút <b>RUN</b> màu xanh lá.</li>
+                    </ol>
+                </div>
+
+                <!-- Cách 2: Chạy bằng Node.js CLI -->
+                <div class="bg-slate-900 text-slate-100 rounded-2xl p-4 font-mono text-xs">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-amber-400 font-bold font-sans text-[11px]">CÁCH 2: CHẠY TỰ ĐỘNG QUA TERMINAL (NODE.JS)</span>
+                        <span id="copyToast" class="text-[11px] text-emerald-400 font-sans hidden">✓ Đã copy lệnh!</span>
+                    </div>
+                    <code id="cliCmdText" class="block bg-black/50 p-3 rounded-xl text-emerald-300 break-all select-all">
+                        cd E:\datphu-onebase\supabase && node migrate.js "postgresql://postgres:[MAT_KHAU_DB]@db.fxaqxgvounimfrxjcszw.supabase.co:5432/postgres"
+                    </code>
+                    <p class="text-[11px] text-slate-400 font-sans mt-2">
+                        • File <code>supabase/migrate.js</code> đã được cấu hình trỏ thẳng vào <code>00_MASTER_SETUP_GEN4.sql</code>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 2: BỘ CÔNG CỤ BÁN HÀNG TRÊN ĐIỆN THOẠI (MOBILE SALES KIT) -->
+        <section class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-[#D32027]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider dp-text-red">NHIỆM VỤ 2 • BỘ CÔNG CỤ BÁN HÀNG TRÊN ĐIỆN THOẠI (MOBILE SALES KIT)</span>
+                    <h2 class="text-xl font-black dp-text-blue mt-0.5">2 Màn Hình Vũ Khí Đi Thị Trường Tuy Hòa + Trình Tạo Tin Nhắn Zalo Chốt Chủ Tiệm</h2>
+                    <p class="text-xs text-slate-600 mt-1">
+                        Nhân viên kinh doanh chỉ cần mở trang này trên điện thoại: Màn hình trái để <b>Demo trực tiếp</b> cho chủ quán — Màn hình phải để <b>Tạo mã VietQR thu tiền ngay</b>!
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="switchMobilePreview('zalo')" id="btnPrevZalo" class="dp-bg-red text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow">
+                        📱 1. App Zalo AI & Gọi Thợ 6K
+                    </button>
+                    <button onclick="switchMobilePreview('pricing')" id="btnPrevPricing" class="dp-bg-blue text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow">
+                        💳 2. Báo Giá & VietQR Thu Tiền
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-start">
+
+                <!-- CỘT TRÁI (5 CỘT): CÔNG CỤ TẠO TIN NHẮN ZALO GỬI KHÁCH & KỊCH BẢN 3 PHÚT -->
+                <div class="lg:col-span-5 space-y-5">
+
+                    <!-- Hộp tạo nhanh Tin nhắn Zalo gửi Chủ tiệm kèm QR -->
+                    <div class="bg-blue-50/70 border-2 border-[#1B2A6B] rounded-2xl p-5">
+                        <div class="flex items-center justify-between">
+                            <span class="dp-bg-blue text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg">⚡ CÔNG CỤ CHỐT SALE TẠI QUÁN (30 GIÂY)</span>
+                            <span class="text-xs font-bold dp-text-red">TK VCB: 0751000025858</span>
+                        </div>
+                        <h3 class="font-black dp-text-blue text-base mt-2.5">Tạo Tin Nhắn Zalo & Mã VietQR Gửi Chủ Tiệm</h3>
+                        <div class="space-y-3 mt-3 text-xs">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Tên Cửa Hàng / Chủ Quán:</label>
+                                <input id="pitchShopName" type="text" value="Đặc Sản Phú Yên Chị Lan" oninput="updatePitchBox()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-900">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Số Điện Thoại Zalo Khách:</label>
+                                <input id="pitchPhone" type="text" value="0914668899" oninput="updatePitchBox()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-900">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Gói Chatbox AI Khách Chọn:</label>
+                                <select id="pitchPlan" onchange="updatePitchBox()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold dp-text-blue bg-white">
+                                    <option value="199000|Gói Thuê Tháng (199K/tháng)|DP199K">Gói Khởi Đầu — 199.000đ / tháng</option>
+                                    <option value="1990000|Gói Thuê Năm (1.990K/năm - Tặng 2 tháng)|DP1990K" selected>⭐ Gói Thuê Năm — 1.990.000đ / năm (Tặng 2 tháng)</option>
+                                    <option value="3900000|Gói Bán Đứt Trọn Đời (3.900K)|DP3900K">Gói Bán Đứt Sở Hữu Trọn Đời — 3.900.000đ</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Nội dung tin nhắn gửi qua Zalo cho Chủ tiệm:</label>
+                                <textarea id="pitchMessageOutput" rows="6" class="w-full border border-slate-300 rounded-xl p-3 text-xs bg-white leading-relaxed text-slate-800"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button onclick="copyPitchMessage()" class="dp-bg-red hover:bg-red-700 text-white font-extrabold py-2.5 px-3 rounded-xl shadow text-xs">
+                                    📋 Copy Tin Nhắn Zalo
+                                </button>
+                                <button onclick="openVietQrModal()" class="dp-bg-blue hover:bg-blue-900 text-white font-extrabold py-2.5 px-3 rounded-xl shadow text-xs">
+                                    📲 Hiện Mã VietQR Thu Tiền
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Khung hiển thị VietQR trực tiếp -->
+                        <div id="liveSalesQrBox" class="mt-4 bg-white rounded-2xl p-4 border-2 border-[#D32027] text-center hidden">
+                            <div class="text-xs font-extrabold dp-text-blue">QUÉT VIETQR ĐỂ KÍCH HOẠT CHATBOX AI NGAY</div>
+                            <img id="liveSalesQrImg" src="" alt="VietQR Đất Phú" class="w-48 h-48 mx-auto my-2 rounded-xl border p-1">
+                            <div class="text-xs font-bold dp-text-red" id="liveSalesQrAmount">1.990.000đ</div>
+                            <div class="text-[11px] text-slate-600">VCB: <b>0751000025858</b> • CONG TY TNHH THUONG MAI DAT PHU</div>
+                        </div>
+                    </div>
+
+                    <!-- Kịch bản 3 bước nói chuyện trực tiếp tại quán -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                        <span class="text-[11px] font-black uppercase dp-text-red">KỊCH BẢN 3 PHÚT GẶP CHỦ QUÁN TẠI TUY HÒA</span>
+                        <h4 class="font-extrabold dp-text-blue text-sm mt-1">Đánh trúng tâm lý "Sợ mất khách ban đêm & Sợ phần mềm khó"</h4>
+                        <div class="space-y-2.5 mt-3 text-xs text-slate-700">
+                            <div class="p-2.5 bg-white rounded-xl border-l-4 border-[#1B2A6B]">
+                                <b>Phút 1 (Mở lời):</b> "Anh/Chị ơi, tối 9–10h đêm khách nhắn Zalo/Facebook hỏi giá mà mình bận ngủ hoặc đang đông khách chưa kịp trả lời là khách qua tiệm khác mất. Bên em làm sẵn Trợ lý AI trả lời & xuất mã QR tiền về thẳng tài khoản của Anh/Chị trong 3 giây!"
+                            </div>
+                            <div class="p-2.5 bg-white rounded-xl border-l-4 border-[#D32027]">
+                                <b>Phút 2 (Đưa điện thoại cho bấm thử):</b> Mở khung điện thoại bên cạnh, bấm chọn ngành hàng tương ứng (Đặc sản / Sữa tã / Cỗ chay / Điện lạnh 6K) để Chủ quán tận mắt thấy AI báo đúng bảng giá và hiện mã VietQR ngay trong khung chat.
+                            </div>
+                            <div class="p-2.5 bg-white rounded-xl border-l-4 border-emerald-600">
+                                <b>Phút 3 (Chốt gói 199K hoặc 1.990K/năm):</b> "Tính ra mỗi ngày chỉ 5.500đ — chưa bằng nửa ly trà đá mà có nhân viên trực 24/24 không bao giờ nghỉ phép, lại được đưa sản phẩm lên Sàn Đất Phú Chợ Phiên miễn phí. Em cài cho mình trong 15 phút dùng luôn nhé!"
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CỘT PHẢI (7 CỘT): BỘ ĐÔI MÀN HÌNH ĐIỆN THOẠI TRỰC QUAN -->
+                <div class="lg:col-span-7 flex flex-col items-center">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-xs font-extrabold dp-text-blue">📲 MÔ PHỎNG TRỰC TIẾP TRÊN ĐIỆN THOẠI (BẤM TƯƠNG TÁC NGAY):</span>
+                    </div>
+
+                    <!-- Khung Điện Thoại 1: Zalo AI Chat & Gọi Thợ 6K -->
+                    <div id="previewFrameZalo" class="phone-frame">
+                        <iframe src="./zalo_ai_chat.html" class="w-full h-full border-0" title="Zalo AI Chat App"></iframe>
+                    </div>
+
+                    <!-- Khung Điện Thoại 2: Báo Giá & Checkout VietQR -->
+                    <div id="previewFramePricing" class="phone-frame hidden">
+                        <iframe src="./bao_gia_chatbox_ai.html" class="w-full h-full border-0" title="Báo Giá Chatbox AI"></iframe>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        }
+
+        function copySqlCommand() {
+            const cmd = document.getElementById('cliCmdText').innerText.trim();
+            navigator.clipboard.writeText(cmd);
+            const toast = document.getElementById('copyToast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function switchMobilePreview(mode) {
+            const fZalo = document.getElementById('previewFrameZalo');
+            const fPricing = document.getElementById('previewFramePricing');
+            const bZalo = document.getElementById('btnPrevZalo');
+            const bPricing = document.getElementById('btnPrevPricing');
+
+            if (mode === 'zalo') {
+                fZalo.classList.remove('hidden');
+                fPricing.classList.add('hidden');
+                bZalo.className = 'dp-bg-red text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow';
+                bPricing.className = 'dp-bg-blue text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow opacity-80';
+            } else {
+                fZalo.classList.add('hidden');
+                fPricing.classList.remove('hidden');
+                bPricing.className = 'dp-bg-red text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow';
+                bZalo.className = 'dp-bg-blue text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow opacity-80';
+            }
+        }
+
+        function updatePitchBox() {
+            const shop = document.getElementById('pitchShopName').value.trim() || 'Quý Cửa Hàng';
+            const phone = document.getElementById('pitchPhone').value.trim() || '0914668899';
+            const [amount, planName, code] = document.getElementById('pitchPlan').value.split('|');
+            const formattedAmount = Number(amount).toLocaleString('vi-VN') + 'đ';
+            const memo = `${code} ${phone}`;
+
+            const msg = `Dạ Công ty TNHH Thương Mại Đất Phú xin gửi ${shop} thông tin kích hoạt Trợ Lý Bán Hàng Chatbox AI 24/7:\n` +
+                `✅ Gói đăng ký: ${planName}\n` +
+                `✅ Quyền lợi: Tư vấn bảng giá tự động 24/7 trên Zalo/Facebook/Web + Tự động tạo mã VietQR về thẳng TK của tiệm + Đưa gian hàng lên Sàn Đất Phú Chợ Phiên.\n` +
+                `💳 Thanh toán phí phần mềm: ${formattedAmount}\n` +
+                `🏦 Ngân hàng: Vietcombank (VCB) - STK: 0751000025858 (CONG TY TNHH THUONG MAI DAT PHU)\n` +
+                `📝 Nội dung CK: ${memo}`;
+
+            document.getElementById('pitchMessageOutput').value = msg;
+
+            const qrUrl = `https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent('CONG TY TNHH THUONG MAI DAT PHU')}`;
+            document.getElementById('liveSalesQrImg').src = qrUrl;
+            document.getElementById('liveSalesQrAmount').innerText = `${formattedAmount} — Nội dung: ${memo}`;
+        }
+
+        function copyPitchMessage() {
+            const text = document.getElementById('pitchMessageOutput').value;
+            navigator.clipboard.writeText(text);
+            alert('Đã copy nội dung tin nhắn Zalo gửi Chủ tiệm!');
+        }
+
+        function openVietQrModal() {
+            updatePitchBox();
+            document.getElementById('liveSalesQrBox').classList.remove('hidden');
+        }
+
+        updatePitchBox();
+    </script>
+</body>
+</html>

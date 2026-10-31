@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#059669">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./logo_datphu.jpg">
+    <title>Đất Phú AI SaaS — Cho Thuê Chatbox AI Đa Kênh (Zalo, Facebook, Viber, Web)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .chat-scroll::-webkit-scrollbar { width: 5px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+            50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+        .lead-flash { animation: pulseGlow 1.5s ease-in-out 2; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- TOP NAVBAR -->
+    <header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-30 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-extrabold text-xl shadow-lg">
+                🤖
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="font-bold text-lg tracking-tight text-white">ĐẤT PHÚ AI OMNI-CHAT SaaS</h1>
+                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">Zalo • Facebook • Viber • Web</span>
+                </div>
+                <p class="text-xs text-slate-400">Nền tảng cho thuê Trợ lý AI Bán Hàng đa kênh tự động chốt đơn 24/7</p>
+            </div>
+        </div>
+
+        <!-- CHỌN KHÁCH THUÊ (TENANT SWITCHER) -->
+        <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5">
+                <span class="text-xs text-slate-400">🏪 Đang quản lý Shop thuê:</span>
+                <select id="tenantSelect" onchange="switchTenant(this.value)" class="bg-transparent text-sm font-semibold text-emerald-400 focus:outline-none cursor-pointer">
+                </select>
+            </div>
+            <button onclick="showWeeklyRoiReport()" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                <span>📊</span> Báo Cáo ROI Tuần
+            </button>
+            <button onclick="printMicaStandee()" class="bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                <span>🖨️</span> Bảng Mica QR Quầy
+            </button>
+            <button onclick="openNewTenantModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-lg">
+                <span>➕</span> Cài Bot 15 Phút (3 Bước)
+            </button>
+        </div>
+    </header>
+
+    <!-- KPI ROW -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 px-6 pt-5">
+        <div class="glass rounded-2xl p-4">
+            <div class="text-xs text-slate-400">Doanh thu cho thuê (MRR)</div>
+            <div id="kpiMrr" class="text-2xl font-extrabold text-emerald-400 mt-1">1.898.000đ</div>
+            <div class="text-[11px] text-slate-400 mt-1">📈 <span id="kpiTenantCount">3</span> Shop đang thuê hoạt động</div>
+        </div>
+        <div class="glass rounded-2xl p-4">
+            <div class="text-xs text-slate-400">Kênh nhắn tin đang kết nối</div>
+            <div class="flex items-center gap-1.5 mt-1.5">
+                <span class="px-2 py-0.5 rounded bg-blue-600/30 border border-blue-500/40 text-blue-300 text-xs font-bold">🔵 Zalo OA</span>
+                <span class="px-2 py-0.5 rounded bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs font-bold">💬 Facebook</span>
+                <span class="px-2 py-0.5 rounded bg-purple-600/30 border border-purple-500/40 text-purple-300 text-xs font-bold">🟣 Viber</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold">🌐 Web</span>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Đồng bộ Webhook thời gian thực</div>
+        </div>
+        <div class="glass rounded-2xl p-4">
+            <div class="text-xs text-slate-400">SĐT Khách Hàng AI Đã Chốt</div>
+            <div id="kpiLeadsCount" class="text-2xl font-extrabold text-amber-400 mt-1">4 SĐT</div>
+            <div class="text-[11px] text-slate-400 mt-1">🎯 Tự động lọc SĐT từ Zalo, FB, Viber</div>
+        </div>
+        <div class="glass rounded-2xl p-4">
+            <div class="text-xs text-slate-400">Quota tin nhắn của Shop đang chọn</div>
+            <div id="kpiQuotaText" class="text-2xl font-extrabold text-sky-400 mt-1">1.420 / 5.000</div>
+            <div class="w-full bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                <div id="kpiQuotaBar" class="bg-sky-400 h-full transition-all duration-300" style="width: 28%"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
+
+        <!-- LEFT COLUMN: 7 COLS (CONTROL PANEL) -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+            <!-- TABS NAVIGATION -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+                <button onclick="switchTab('tab-omni')" id="btn-tab-omni" class="tab-btn bg-emerald-600 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                    <span>📡 1. Kết Nối Zalo / FB / Viber</span>
+                    <span class="bg-white/20 text-white px-1.5 py-0.2 rounded text-[10px]">MỚI</span>
+                </button>
+                <button onclick="switchTab('tab-train')" id="btn-tab-train" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+                    📚 2. Kho Sản Phẩm & Huấn Luyện AI
+                </button>
+                <button onclick="switchTab('tab-leads')" id="btn-tab-leads" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                    <span>🎯 3. SĐT Khách & Đơn AI Chốt</span>
+                    <span id="badgeLeadCount" class="bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded-full text-[11px] font-extrabold">4</span>
+                </button>
+                <button onclick="switchTab('tab-embed')" id="btn-tab-embed" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+                    🎨 4. Mã Nhúng Web
+                </button>
+                <button onclick="switchTab('tab-billing')" id="btn-tab-billing" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+                    💳 5. Gói Thuê
+                </button>
+            </div>
+
+            <!-- TAB 1: OMNI-CHANNEL CONNECTIONS (ZALO, FACEBOOK, VIBER) -->
+            <div id="tab-omni" class="tab-panel glass rounded-2xl p-5 flex flex-col gap-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/80 pb-3">
+                    <div>
+                        <h2 class="font-bold text-base text-white">Cổng Kết Nối Tin Nhắn Đa Kênh (Zalo OA • Facebook • Viber)</h2>
+                        <p class="text-xs text-slate-400">Khi khách nhắn vào Zalo, Fanpage hoặc Viber của Shop, Webhook sẽ đẩy về AI tự động trả lời ngay</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-300">Chế độ AI tự trả lời:</span>
+                        <button id="btnGlobalAutoReply" onclick="toggleHumanHandover()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                            🤖 AI Đang Tự Động Trả Lời 24/7
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3 CHANNEL CARDS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- ZALO OA CARD -->
+                    <div class="bg-slate-900/90 border border-blue-500/40 rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-xs font-extrabold">🔵 ZALO OA</span>
+                                <span id="status-zalo" class="text-[11px] text-emerald-400 font-semibold">● Đã kết nối</span>
+                            </div>
+                            <div class="mt-3 space-y-2">
+                                <div>
+                                    <label class="text-[11px] text-slate-400">Zalo Official Account ID</label>
+                                    <input id="inpZaloId" type="text" value="44019928173645" class="w-full mt-0.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] text-slate-400">Zalo OA Access Token</label>
+                                    <input type="password" value="zalo_token_live_998877" class="w-full mt-0.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800 flex flex-col gap-2">
+                            <button onclick="simulateIncomingChannelMessage('zalo')" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded-xl transition shadow">
+                                ⚡ Giả lập Khách nhắn từ Zalo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FACEBOOK MESSENGER CARD -->
+                    <div class="bg-slate-900/90 border border-indigo-500/40 rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-xs font-extrabold">💬 FACEBOOK</span>
+                                <span id="status-facebook" class="text-[11px] text-emerald-400 font-semibold">● Đã kết nối</span>
+                            </div>
+                            <div class="mt-3 space-y-2">
+                                <div>
+                                    <label class="text-[11px] text-slate-400">Fanpage ID</label>
+                                    <input id="inpFbId" type="text" value="10928374651928" class="w-full mt-0.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] text-slate-400">Page Access Token</label>
+                                    <input type="password" value="EAAGm0PX4ZCpsBA..." class="w-full mt-0.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800 flex flex-col gap-2">
+                            <button onclick="simulateIncomingChannelMessage('facebook')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-2 rounded-xl transition shadow">
+                                ⚡ Giả lập Khách nhắn từ FB
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- VIBER BOT CARD -->
+                    <div class="bg-slate-900/90 border border-purple-500/40 rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-lg bg-purple-600 text-white text-xs font-extrabold">🟣 VIBER BOT</span>
+                                <span id="status-viber" class="text-[11px] text-emerald-400 font-semibold">● Đã kết nối</span>
+                            </div>
+                            <div class="mt-3 space-y-2">
+                                <div>
+                                    <label class="text-[11px] text-slate-400">Viber Bot Account URI</label>
+                                    <input id="inpViberId" type="text" value="datphu-oa-viber" class="w-full mt-0.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] text-slate-400">X-Viber-Auth-Token</label>
+                                    <input type="password" value="51a8b9c0d1e2f3..." class="w-full mt-0.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800 flex flex-col gap-2">
+                            <button onclick="simulateIncomingChannelMessage('viber')" class="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2 rounded-xl transition shadow">
+                                ⚡ Giả lập Khách nhắn từ Viber
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEBHOOK URL & OMNI-INBOX STREAM -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-emerald-400">🔗 Webhook URL Của Shop (Dán vào Zalo Developers / Meta App / Viber):</span>
+                        <button onclick="navigator.clipboard.writeText(document.getElementById('webhookUrlText').innerText); alert('Đã copy Webhook URL!');" class="text-[11px] bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded text-white">Copy URL</button>
+                    </div>
+                    <div id="webhookUrlText" class="text-xs font-mono text-amber-300 mt-1.5 break-all">
+                        https://ckyydvyzucvcdunvedmg.supabase.co/functions/v1/omni-webhook?bot_code=bot-dac-san-phu-yen
+                    </div>
+                </div>
+
+                <!-- LIVE OMNI-CHANNEL ACTIVITY FEED -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">📥 Nhật Ký Tin Nhắn Đa Kênh Đổ Về (Live Omni-Inbox)</h3>
+                        <span class="text-[11px] text-slate-400">Tự động cập nhật khi khách nhắn từ Zalo / FB / Viber / Web</span>
+                    </div>
+                    <div id="omniFeedList" class="space-y-2 max-h-44 overflow-y-auto pr-1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: TRAIN AI & PRODUCT CATALOG -->
+            <div id="tab-train" class="tab-panel hidden glass rounded-2xl p-5 flex flex-col gap-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/80 pb-3">
+                    <div>
+                        <h2 class="font-bold text-base text-white">Kho Kiến Thức & Sản Phẩm Của Shop</h2>
+                        <p class="text-xs text-slate-400">Dữ liệu này dùng chung để AI trả lời trên cả Zalo, Facebook, Viber và Website</p>
+                    </div>
+                    <button onclick="toggleAddProductForm()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl">
+                        + Thêm Sản Phẩm / Chính Sách
+                    </button>
+                </div>
+
+                <!-- ADD PRODUCT FORM -->
+                <div id="addProductForm" class="hidden bg-slate-900/90 border border-emerald-500/40 rounded-xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-xs text-slate-400">Tên sản phẩm / Dịch vụ *</label>
+                        <input id="newProdName" type="text" placeholder="VD: Mực một nắng Sông Cầu" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">Giá bán (VNĐ) *</label>
+                        <input id="newProdPrice" type="number" placeholder="VD: 350000" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">Ưu đãi / Quà tặng kèm</label>
+                        <input id="newProdPromo" type="text" placeholder="VD: Tặng 1 hũ tương ớt rim" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-xs text-slate-400">Mô tả chi tiết để AI tư vấn</label>
+                        <input id="newProdDesc" type="text" placeholder="VD: Mực lá câu tươi phơi 1 nắng giòn ngọt, đóng gói hút chân không 500g" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button onclick="addProductToTenant()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-lg">Lưu Vào Bộ Nhớ AI</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCT LIST -->
+                <div id="productListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1">
+                </div>
+
+                <!-- SYSTEM PROMPT & GEMINI API KEY -->
+                <div class="border-t border-slate-700/80 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">🎭 Tính cách & Kịch bản chốt đơn của AI (System Prompt):</label>
+                        <textarea id="personaInput" rows="3" onchange="updatePersona(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:border-emerald-500 outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">🔑 Google Gemini API Key (Tùy chọn để kết nối LLM thật):</label>
+                        <input id="geminiApiKey" type="password" placeholder="AIzaSy... (Để trống vẫn chạy AI RAG nội bộ mượt mà)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:border-emerald-500 outline-none">
+                        <p class="text-[11px] text-slate-400 mt-1.5">
+                            💡 Mọi thay đổi trong kho sản phẩm sẽ lập tức có hiệu lực trên cả 4 kênh: Zalo OA, Facebook Messenger, Viber và Website.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: CAPTURED LEADS CRM -->
+            <div id="tab-leads" class="tab-panel hidden glass rounded-2xl p-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+                    <div>
+                        <h2 class="font-bold text-base text-white">Danh Sách Khách Hàng Do AI Tự Động Chốt Đơn Đa Kênh</h2>
+                        <p class="text-xs text-slate-400">Tự động gom SĐT khách hàng từ Zalo, Facebook, Viber và Website về chung 1 bảng</p>
+                    </div>
+                    <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full font-semibold">Omni-CRM</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-700 text-slate-400">
+                                <th class="py-2.5 px-3">Thời gian</th>
+                                <th class="py-2.5 px-3">Nguồn Kênh</th>
+                                <th class="py-2.5 px-3">SĐT Khách Hàng</th>
+                                <th class="py-2.5 px-3">Sản phẩm quan tâm</th>
+                                <th class="py-2.5 px-3">Giá trị</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadsTableBody" class="divide-y divide-slate-800">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 4: WIDGET CUSTOMIZATION & EMBED CODE -->
+            <div id="tab-embed" class="tab-panel hidden glass rounded-2xl p-5 flex flex-col gap-4">
+                <h2 class="font-bold text-base text-white border-b border-slate-700/80 pb-3">Tùy Biến Giao Diện & Cấp Mã Nhúng Website</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-xs text-slate-400">Tên Hiển Thị Trợ Lý AI</label>
+                        <input id="cfgBotName" type="text" oninput="updateAppearance()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">Màu Thương Hiệu Chủ Đạo</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input id="cfgThemeColor" type="color" oninput="updateAppearance()" class="h-9 w-16 rounded cursor-pointer bg-transparent border-0">
+                            <span id="cfgColorHex" class="text-xs font-mono text-slate-300">#d97706</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">Mã Định Danh Bot (Bot Code)</label>
+                        <input id="cfgBotCode" type="text" readonly class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-emerald-400 font-mono">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400">Lời Chào Mở Đầu Tự Động</label>
+                    <input id="cfgWelcome" type="text" oninput="updateAppearance()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 mt-2">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-emerald-400">📋 Đoạn Mã Nhúng Gửi Cho Khách Hàng (Dán trước thẻ &lt;/body&gt;):</span>
+                        <button onclick="copyEmbedCode()" id="btnCopyCode" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1 rounded-lg text-white font-semibold">Copy Mã Nhúng</button>
+                    </div>
+                    <pre id="embedCodeBlock" class="text-xs text-amber-300 font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed"></pre>
+                </div>
+            </div>
+
+            <!-- TAB 5: SAAS PRICING & BILLING -->
+            <div id="tab-billing" class="tab-panel hidden glass rounded-2xl p-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+                    <div>
+                        <h2 class="font-bold text-base text-white">Mô Hình Định Giá Cho Thuê Đa Kênh (SaaS Pricing Tiers)</h2>
+                        <p class="text-xs text-slate-400">Bấm chọn gói để nâng cấp ngay cho Shop đang chọn</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border border-slate-700 bg-slate-900/60 rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase text-slate-400">Gói Khởi Nghiệp</span>
+                            <div class="text-2xl font-extrabold text-white mt-1">199.000đ<span class="text-xs font-normal text-slate-400">/tháng</span></div>
+                            <ul class="text-xs text-slate-300 space-y-2 mt-4">
+                                <li>✅ 1.000 tin nhắn AI trả lời/tháng</li>
+                                <li>✅ Nhúng Website + 1 Fanpage FB</li>
+                                <li>✅ Tự động lưu SĐT khách đặt hàng</li>
+                            </ul>
+                        </div>
+                        <button onclick="changePlan('starter', 199000, 1000)" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2.5 rounded-xl">Áp dụng Gói 199K</button>
+                    </div>
+
+                    <div class="border-2 border-emerald-500 bg-slate-900/90 rounded-2xl p-4 flex flex-col justify-between relative">
+                        <span class="absolute -top-2.5 right-3 bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">ĐA KÊNH BÁN CHẠY</span>
+                        <div>
+                            <span class="text-xs font-bold uppercase text-emerald-400">Gói Tăng Trưởng</span>
+                            <div class="text-2xl font-extrabold text-white mt-1">499.000đ<span class="text-xs font-normal text-slate-400">/tháng</span></div>
+                            <ul class="text-xs text-slate-300 space-y-2 mt-4">
+                                <li>✅ 5.000 tin nhắn AI trả lời/tháng</li>
+                                <li>✅ Kết nối đủ: <b>Zalo OA + Facebook + Viber + Web</b></li>
+                                <li>✅ Kịch bản Upsell & Mua kèm tự động</li>
+                            </ul>
+                        </div>
+                        <button onclick="changePlan('growth', 499000, 5000)" class="mt-5 w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl">Áp dụng Gói 499K</button>
+                    </div>
+
+                    <div class="border border-slate-700 bg-slate-900/60 rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase text-sky-400">Gói Chuỗi Siêu Thị</span>
+                            <div class="text-2xl font-extrabold text-white mt-1">1.200.000đ<span class="text-xs font-normal text-slate-400">/tháng</span></div>
+                            <ul class="text-xs text-slate-300 space-y-2 mt-4">
+                                <li>✅ 20.000 tin nhắn AI trả lời/tháng</li>
+                                <li>✅ Không giới hạn Fanpage & Zalo OA</li>
+                                <li>✅ Đồng bộ tồn kho Supabase Realtime</li>
+                            </ul>
+                        </div>
+                        <button onclick="changePlan('enterprise', 1200000, 20000)" class="mt-5 w-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold py-2.5 rounded-xl">Áp dụng Gói 1.2M</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: 5 COLS (LIVE OMNI-CHANNEL CHATBOX SIMULATOR) -->
+        <div class="lg:col-span-5 flex flex-col items-center">
+            
+            <!-- CHANNEL SELECTOR BAR ABOVE SIMULATOR -->
+            <div class="w-full max-w-md mb-2.5 bg-slate-900 border border-slate-700 rounded-2xl p-1.5 flex items-center justify-between gap-1">
+                <button onclick="setActiveChannel('website')" id="ch-btn-website" class="ch-btn flex-1 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-600 text-white">
+                    🌐 Web
+                </button>
+                <button onclick="setActiveChannel('zalo')" id="ch-btn-zalo" class="ch-btn flex-1 py-1.5 rounded-xl text-xs font-bold transition text-slate-300 hover:bg-slate-800">
+                    🔵 Zalo OA
+                </button>
+                <button onclick="setActiveChannel('facebook')" id="ch-btn-facebook" class="ch-btn flex-1 py-1.5 rounded-xl text-xs font-bold transition text-slate-300 hover:bg-slate-800">
+                    💬 Facebook
+                </button>
+                <button onclick="setActiveChannel('viber')" id="ch-btn-viber" class="ch-btn flex-1 py-1.5 rounded-xl text-xs font-bold transition text-slate-300 hover:bg-slate-800">
+                    🟣 Viber
+                </button>
+            </div>
+
+            <div class="w-full max-w-md bg-white text-slate-800 rounded-3xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col h-[590px]">
+                
+                <!-- CHATBOX HEADER -->
+                <div id="widgetHeader" class="p-4 text-white flex items-center justify-between transition-colors duration-300" style="background: #d97706;">
+                    <div class="flex items-center gap-3">
+                        <div id="widgetChannelIcon" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xl shadow-inner">
+                            🌐
+                        </div>
+                        <div>
+                            <div id="widgetTitle" class="font-bold text-sm leading-tight">Út Nẫu AI - Chuyên Đặc Sản Phú Yên</div>
+                            <div class="text-[11px] opacity-90 flex items-center gap-1 mt-0.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-300 inline-block animate-pulse"></span>
+                                <span id="widgetSubtitle">Đang giả lập khách nhắn từ: Website</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="resetChat()" title="Làm mới cuộc trò chuyện" class="text-xs bg-white/20 hover:bg-white/30 px-2.5 py-1 rounded-lg font-semibold">
+                        🔄 Mới
+                    </button>
+                </div>
+
+                <!-- QUICK SUGGESTION CHIPS -->
+                <div id="quickChips" class="bg-slate-100 px-3 py-2 border-b border-slate-200 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap text-xs">
+                </div>
+
+                <!-- CHAT MESSAGES STREAM -->
+                <div id="chatMessages" class="flex-1 p-4 overflow-y-auto chat-scroll bg-slate-50 flex flex-col gap-3 text-sm">
+                </div>
+
+                <!-- TYPING INDICATOR -->
+                <div id="typingIndicator" class="hidden px-4 py-1.5 text-xs text-slate-400 italic bg-slate-50">
+                    🤖 Trợ lý AI đang xử lý Webhook & soạn phản hồi...
+                </div>
+
+                <!-- CHAT INPUT -->
+                <div class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+                    <input id="chatInput" type="text" placeholder="Nhắn thử qua kênh đang chọn (kèm SĐT để test chốt đơn)..." 
+                        onkeypress="if(event.key==='Enter') handleUserSend()"
+                        class="flex-1 bg-slate-100 border border-slate-300 rounded-full px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-emerald-600">
+                    <button id="chatSendBtn" onclick="handleUserSend()" class="text-white font-bold text-sm px-5 py-2.5 rounded-full shadow transition" style="background: #d97706;">
+                        Gửi
+                    </button>
+                </div>
+
+                <!-- POWERED BY FOOTER -->
+                <div class="bg-slate-100 text-center py-1.5 text-[11px] text-slate-500 border-t border-slate-200">
+                    ⚡ Hệ thống Đa Kênh <b>Đất Phú AI Omni-Chat</b> (Zalo • FB • Viber • Web)
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL: CREATE NEW TENANT BOT -->
+    <div id="newTenantModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <h3 class="text-lg font-bold text-white">➕ Khởi Tạo Chatbox AI Cho Khách Thuê Mới</h3>
+            <div>
+                <label class="text-xs text-slate-400">Tên Cửa Hàng / Doanh Nghiệp Thuê *</label>
+                <input id="modalShopName" type="text" placeholder="VD: Nha Khoa Sài Gòn Tuy Hòa" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+            </div>
+            <div>
+                <label class="text-xs text-slate-400">Tên Trợ Lý AI Hiển Thị *</label>
+                <input id="modalBotName" type="text" placeholder="VD: Trợ Lý Nha Khoa 24/7" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs text-slate-400">Gói Thuê Đăng Ký</label>
+                    <select id="modalPlan" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                        <option value="starter">Khởi Nghiệp (199K)</option>
+                        <option value="growth" selected>Tăng Trưởng (499K)</option>
+                        <option value="enterprise">Chuỗi Siêu Thị (1.2M)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400">Màu Thương Hiệu</label>
+                    <input id="modalColor" type="color" value="#059669" class="w-full h-10 mt-1 rounded bg-transparent cursor-pointer">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeNewTenantModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Hủy</button>
+                <button onclick="createNewTenant()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">Tạo Bot Ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // CẤU HÌNH ĐA KÊNH (ZALO, FACEBOOK, VIBER, WEBSITE)
+        // =========================================================================
+        const channelMeta = {
+            website:  { label: "🌐 Website",     icon: "🌐", color: null,      badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" },
+            zalo:     { label: "🔵 Zalo OA",     icon: "🔵", color: "#0068ff", badgeClass: "bg-blue-500/20 text-blue-300 border-blue-500/30" },
+            facebook: { label: "💬 Facebook",    icon: "💬", color: "#0866ff", badgeClass: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30" },
+            viber:    { label: "🟣 Viber Bot",   icon: "🟣", color: "#7360f2", badgeClass: "bg-purple-500/20 text-purple-300 border-purple-500/30" }
+        };
+
+        let activeChannel = "website";
+        let aiAutoReplyEnabled = true;
+
+        const tenantsData = {
+            "bot-dat-phu-ky-thuat-so": {
+                code: "bot-dat-phu-ky-thuat-so",
+                shopName: "Đất Phú: Giải Pháp Số & Kỹ Thuật Trọn Gói",
+                botName: "Trợ Lý Điều Phối Đất Phú (Gen 4)",
+                themeColor: "#059669",
+                bankCode: "MB",
+                bankAccount: "0935889900",
+                bankHolder: "CONG TY TNHH THUONG MAI DAT PHU",
+                welcome: "Dạ Đất Phú xin chào anh/chị! Để đảm bảo chất lượng và bảo hành điện tử QR 90 ngày, bên em chuyên nhận các Gói Giải Pháp Kỹ Thuật Đồng Bộ & Dịch Vụ Số (Chữ ký số, HĐĐT, Thuê AI Chatbox). Anh/chị cần hỗ trợ mảng nào ạ?",
+                persona: "Kỷ luật, minh bạch, kín kẽ. Chỉ tư vấn đúng bảng giá, chống chém gió. Tự động sinh mã VietQR Zero-Float khi khách chốt đơn.",
+                plan: "enterprise",
+                fee: 1200000,
+                used: 890,
+                quota: 20000,
+                quickQuestions: ["Nước giếng và nước máy bị tràn ngược?", "Đặt Gói tự động hóa nước SĐT 0935889900", "Cho tôi gặp chủ tiệm", "Shop có bán máy giặt cũ không?"],
+                products: [
+                    { id: 101, name: "Gói 1: Tự Động Hóa Nước Máy - Nước Giếng Chống Tràn", price: 1650000, promo: "Bảo hành điện tử QR 12 tháng + Rơ-le 12V chống giật", desc: "Lắp 2 van 1 chiều đồng độc lập + Phân tầng phao cơ/phao điện + Bộ đổi nguồn phao 12V an toàn tuyệt đối." },
+                    { id: 102, name: "Gói 2: Nâng Cấp An Toàn Điện Nước Phòng Tắm", price: 1150000, promo: "Thay mới 100% dây cấp Inox 304 + Aptomat chống giật RCBO", desc: "Chấm dứt nguy cơ rò điện bình nóng lạnh và bục dây cấp nước ban đêm. Có chụp ảnh Geostamp nghiệm thu." },
+                    { id: 103, name: "Gói 3: Combo Chữ Ký Số FastCA + 500 Hóa Đơn Điện Tử", price: 1490000, promo: "Cấp phát từ xa trong 20 phút • Hỗ trợ kê khai ban đầu", desc: "Sản phẩm số B2B chuẩn Thông tư 78, thanh toán VietQR kích hoạt ngay lập tức." },
+                    { id: 104, name: "Gói 4: Thuê Trợ Lý Chatbox AI Đa Kênh (Zalo/FB/Viber/Web)", price: 199000, promo: "Gói Năm 1.990.000đ (Tặng 2 tháng + Bảng Mica QR đặt quầy)", desc: "Tích hợp n8n 6 Node + Gemini JSON + VietQR Zero-Float tiền về thẳng STK chủ tiệm." }
+                ]
+            },
+            "bot-dac-san-phu-yen": {
+                code: "bot-dac-san-phu-yen",
+                shopName: "Đặc Sản Xứ Nẫu Chị Ba",
+                botName: "Út Nẫu AI - Chuyên Đặc Sản Phú Yên",
+                themeColor: "#d97706",
+                bankCode: "VCB",
+                bankAccount: "0914882341",
+                bankHolder: "NGUYEN THI BA",
+                welcome: "Dạ Út Nẫu chào anh/chị nghen! Anh/chị đang tìm Bò một nắng Krông Pa, Nước mắm Gành Đỏ hay Mực một nắng Sông Cầu để ăn gia đình hay biếu tặng ạ?",
+                persona: "Xưng là Út Nẫu, giọng điệu thân thiện mộc mạc chuẩn xứ Nẫu Phú Yên. Luôn báo giá rõ ràng, gợi ý lấy combo 1kg để được tặng muối kiến vàng và xin SĐT khách để ship nhanh.",
+                plan: "growth",
+                fee: 499000,
+                used: 1420,
+                quota: 5000,
+                quickQuestions: ["Giá Bò một nắng?", "Nước mắm Gành Đỏ bao nhiêu?", "Shop có freeship không?", "Tôi muốn đặt 1kg bò: 0912345678"],
+                products: [
+                    { id: 1, name: "Bò Một Nắng Krông Pa (Gói 500g)", price: 280000, promo: "Tặng 1 hũ muối kiến vàng rừng", desc: "Thịt bò cỏ tơ phơi đúng 1 nắng giòn ngọt, áp chảo hoặc nướng than cực ngon." },
+                    { id: 2, name: "Combo Quà Biếu Bò Một Nắng 1Kg", price: 550000, promo: "Freeship + Tặng 2 hũ muối kiến vàng", desc: "Tiết kiệm 10.000đ, đóng hộp lịch sự làm quà biếu đặc sản Phú Yên." },
+                    { id: 3, name: "Nước Mắm Gành Đỏ Truyền Thống (Cặp 2 chai)", price: 160000, promo: "Ủ chượp cá cơm than 12 tháng", desc: "Độ đạm tự nhiên 40 độ, thơm dịu, không chất bảo quản." }
+                ]
+            },
+            "bot-sieu-thi-nam-tien": {
+                code: "bot-sieu-thi-nam-tien",
+                shopName: "Hệ Thống 10 Siêu Thị Sữa Tã Năm Tiền",
+                botName: "Trợ Lý Mẹ & Bé Năm Tiền",
+                themeColor: "#0284c7",
+                welcome: "Dạ Hệ thống 10 Siêu thị Mẹ & Bé Năm Tiền chào Ba Mẹ ạ! Ba mẹ đang tìm sữa công thức, bỉm tã hay đồ sơ sinh cho bé mấy tháng tuổi để em tư vấn chuẩn nhất ạ?",
+                persona: "Chuyên gia dinh dưỡng Mẹ & Bé tận tâm, lịch sự. Tư vấn đúng độ tuổi của bé, cam kết hàng chính hãng 100% và xin SĐT để cửa hàng Năm Tiền gần nhất giao ngay trong 15 phút.",
+                plan: "enterprise",
+                fee: 1200000,
+                used: 6850,
+                quota: 20000,
+                quickQuestions: ["Sữa Meiji nội địa giá sao?", "Tã Moony có size M không?", "Chốt 2 bịch tã Moony SĐT 0988776655"],
+                products: [
+                    { id: 1, name: "Sữa Meiji Nội Địa Nhật Số 0 (800g)", price: 525000, promo: "Tặng bình tập uống khi mua 2 lon", desc: "Dành cho bé 0-1 tuổi, mát bụng, chống táo bón, giàu DHA." },
+                    { id: 2, name: "Tã Dán/Quần Moony Natural Cao Cấp", price: 365000, promo: "Mua 3 bịch giảm ngay 30.000đ", desc: "Bề mặt bông hữu cơ Organic mềm mịn, chống hăm tuyệt đối cho bé." }
+                ]
+            },
+            "bot-bep-chay-tam-duc": {
+                code: "bot-bep-chay-tam-duc",
+                shopName: "Bếp Chay Thanh Tịnh Tâm Đức",
+                botName: "Trợ Lý Bếp Chay Tâm Đức",
+                themeColor: "#059669",
+                welcome: "Nam Mô A Di Đà Phật! Bếp Chay Tâm Đức xin kính chào quý gia chủ. Quý vị cần đặt Mâm cỗ cúng giỗ chay tận nhà hay thực đơn cơm chay thanh tịnh hôm nay ạ?",
+                persona: "Nhẹ nhàng, lễ phép, mang tinh thần Phật giáo Chánh Mạng. Nhấn mạnh nguyên liệu tươi sạch không hàn the, hỗ trợ mang bát đĩa sành sứ tận nơi.",
+                plan: "starter",
+                fee: 199000,
+                used: 380,
+                quota: 1000,
+                quickQuestions: ["Mâm cỗ giỗ 8 món gồm gì?", "Đặt 2 mâm ngày mai SĐT 0905112233"],
+                products: [
+                    { id: 1, name: "Mâm Cỗ Đám Giỗ Chay 8 Món Truyền Thống", price: 850000, promo: "Miễn phí mượn bát đĩa sành sứ & dọn dẹp", desc: "Gồm: Nem nấm rơm, Chả giò sen, Soup hạt sen nấm tuyết, Gỏi tiến vua, Nấm đùi gà kho tiêu, Lẩu nấm, Chè hạt sen." }
+                ]
+            }
+        };
+
+        let currentTenantKey = "bot-dat-phu-ky-thuat-so";
+        let lastDiscussedProduct = null;
+
+        let capturedLeads = [
+            { time: "10:15 Hôm nay", channel: "zalo",     phone: "0914.882.341", product: "Combo Quà Biếu Bò Một Nắng 1Kg", value: 550000, shop: "Đặc Sản Xứ Nẫu Chị Ba" },
+            { time: "11:02 Hôm nay", channel: "facebook", phone: "0989.112.567", product: "Sữa Meiji Nội Địa Nhật Số 0",    value: 525000, shop: "Hệ Thống 10 Siêu Thị Sữa Tã Năm Tiền" },
+            { time: "12:30 Hôm nay", channel: "viber",    phone: "0905.678.910", product: "Mâm Cỗ Đám Giỗ Chay 8 Món",     value: 1700000, shop: "Bếp Chay Thanh Tịnh Tâm Đức" },
+            { time: "13:45 Hôm nay", channel: "website",  phone: "0377.445.992", product: "Nước Mắm Gành Đỏ Truyền Thống",  value: 320000, shop: "Đặc Sản Xứ Nẫu Chị Ba" }
+        ];
+
+        let omniFeed = [
+            { time: "13:55", channel: "zalo",     sender: "Khách Zalo (Anh Minh)", text: "Shop ơi bò 1 nắng ship về Tuy Hòa bao lâu?", reply: "Dạ nội thành Tuy Hòa Út Nẫu giao hỏa tốc 30 phút tới liền ạ!" },
+            { time: "13:48", channel: "facebook", sender: "Khách FB (Chị Hương)",  text: "Cho chị 2 cặp nước mắm Gành Đỏ về Q3 nhé", reply: "Dạ chị Hương cho em xin SĐT để em lên đơn ship COD nhé!" },
+            { time: "13:30", channel: "viber",    sender: "Khách Viber (Đại lý)",   text: "Lấy sỉ 10kg bò một nắng giá sao shop?", reply: "Dạ lấy sỉ 10kg bên em chiết khấu ngay 15% kèm freeship ạ!" }
+        ];
+
+        // =========================================================================
+        // KHỞI TẠO HỆ THỐNG
+        // =========================================================================
+        function initApp() {
+            renderTenantDropdown();
+            switchTenant(currentTenantKey);
+            renderLeadsTable();
+            renderOmniFeed();
+            updateGlobalKpis();
+        }
+
+        function renderTenantDropdown() {
+            const sel = document.getElementById('tenantSelect');
+            sel.innerHTML = Object.values(tenantsData).map(t => 
+                `<option value="${t.code}" ${t.code === currentTenantKey ? 'selected' : ''}>${t.shopName} (${t.plan.toUpperCase()})</option>`
+            ).join('');
+        }
+
+        function switchTenant(key) {
+            currentTenantKey = key;
+            const t = tenantsData[key];
+            lastDiscussedProduct = t.products[0] || null;
+
+            document.getElementById('personaInput').value = t.persona;
+            document.getElementById('cfgBotName').value = t.botName;
+            document.getElementById('cfgThemeColor').value = t.themeColor;
+            document.getElementById('cfgColorHex').innerText = t.themeColor;
+            document.getElementById('cfgBotCode').value = t.code;
+            document.getElementById('cfgWelcome').value = t.welcome;
+            document.getElementById('webhookUrlText').innerText = `https://ckyydvyzucvcdunvedmg.supabase.co/functions/v1/omni-webhook?bot_code=${t.code}`;
+
+            renderProducts();
+            updateAppearance();
+            updateGlobalKpis();
+            resetChat();
+        }
+
+        // =========================================================================
+        // CHUYỂN ĐỔI KÊNH TRÊN SIMULATOR & GIẢ LẬP TIN NHẮN ĐẾN TỪ ZALO/FB/VIBER
+        // =========================================================================
+        function setActiveChannel(ch) {
+            activeChannel = ch;
+            const meta = channelMeta[ch];
+            const t = tenantsData[currentTenantKey];
+
+            document.querySelectorAll('.ch-btn').forEach(b => {
+                b.className = "ch-btn flex-1 py-1.5 rounded-xl text-xs font-bold transition text-slate-300 hover:bg-slate-800";
+            });
+            const activeBtn = document.getElementById('ch-btn-' + ch);
+            if (activeBtn) {
+                activeBtn.className = "ch-btn flex-1 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-600 text-white shadow";
+            }
+
+            const headerColor = meta.color || t.themeColor;
+            document.getElementById('widgetHeader').style.background = headerColor;
+            document.getElementById('chatSendBtn').style.background = headerColor;
+            document.getElementById('widgetChannelIcon').innerText = meta.icon;
+            document.getElementById('widgetSubtitle').innerText = `Đang nhận tin nhắn từ: ${meta.label}`;
+        }
+
+        function simulateIncomingChannelMessage(ch) {
+            setActiveChannel(ch);
+            const t = tenantsData[currentTenantKey];
+            const prod = t.products[0];
+            const sampleMessages = {
+                zalo:     `Chào shop trên Zalo! Cho mình hỏi ${prod ? prod.name : 'sản phẩm'} còn hàng không? Đặt 1 phần về SĐT 0918223344 nhé!`,
+                facebook: `Shop ơi trên Fanpage mình thấy đăng ${prod ? prod.name : 'món này'}, báo giá giúp mình qua SĐT 0987654321 nha!`,
+                viber:    `Xin chào qua Viber! Mình muốn đặt mua ${prod ? prod.name : 'hàng'} giao hôm nay, gọi mình số 0909888777.`
+            };
+            document.getElementById('chatInput').value = sampleMessages[ch];
+            handleUserSend();
+        }
+
+        function toggleHumanHandover() {
+            aiAutoReplyEnabled = !aiAutoReplyEnabled;
+            const btn = document.getElementById('btnGlobalAutoReply');
+            if (aiAutoReplyEnabled) {
+                btn.className = "bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition";
+                btn.innerText = "🤖 AI Đang Tự Động Trả Lời 24/7";
+            } else {
+                btn.className = "bg-amber-500 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition";
+                btn.innerText = "🙋‍♂️ Nhân Viên Đang Tiếp Quản (Tạm Dừng AI)";
+            }
+        }
+
+        function renderOmniFeed() {
+            const box = document.getElementById('omniFeedList');
+            box.innerHTML = omniFeed.map(item => {
+                const meta = channelMeta[item.channel] || channelMeta.website;
+                return `
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-xs flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-white flex items-center gap-1.5">
+                                <span class="px-2 py-0.5 rounded border text-[10px] ${meta.badgeClass}">${meta.label}</span>
+                                <span>${item.sender}</span>
+                            </span>
+                            <span class="text-[11px] text-slate-500">${item.time}</span>
+                        </div>
+                        <div class="text-slate-300">💬 Khách: "${item.text}"</div>
+                        <div class="text-emerald-400">🤖 AI Phản hồi: "${item.reply}"</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateGlobalKpis() {
+            const allTenants = Object.values(tenantsData);
+            const totalMrr = allTenants.reduce((sum, item) => sum + item.fee, 0);
+            document.getElementById('kpiMrr').innerText = totalMrr.toLocaleString('vi-VN') + 'đ';
+            document.getElementById('kpiTenantCount').innerText = allTenants.length;
+            document.getElementById('kpiLeadsCount').innerText = capturedLeads.length + ' SĐT';
+            document.getElementById('badgeLeadCount').innerText = capturedLeads.length;
+
+            const t = tenantsData[currentTenantKey];
+            document.getElementById('kpiQuotaText').innerText = `${t.used.toLocaleString('vi-VN')} / ${t.quota.toLocaleString('vi-VN')}`;
+            const pct = Math.min(100, Math.round((t.used / t.quota) * 100));
+            document.getElementById('kpiQuotaBar').style.width = pct + '%';
+        }
+
+        // =========================================================================
+        // QUẢN LÝ KHO SẢN PHẨM
+        // =========================================================================
+        function renderProducts() {
+            const t = tenantsData[currentTenantKey];
+            const container = document.getElementById('productListContainer');
+            container.innerHTML = t.products.map((p, idx) => `
+                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between gap-2">
+                            <span class="font-bold text-sm text-white">${p.name}</span>
+                            <button onclick="deleteProduct(${idx})" class="text-slate-500 hover:text-rose-400 text-xs">✕</button>
+                        </div>
+                        <div class="text-emerald-400 font-bold text-xs mt-1">
+                            ${p.price > 0 ? p.price.toLocaleString('vi-VN') + 'đ' : 'Chính sách / Tư vấn'}
+                            ${p.promo ? `<span class="ml-1 text-amber-300 font-normal">• 🎁 ${p.promo}</span>` : ''}
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">${p.desc}</p>
+                    </div>
+                    <button onclick="sendProductCardToChat(${idx})" class="mt-2.5 text-[11px] bg-slate-800 hover:bg-slate-700 text-sky-300 py-1.5 px-2.5 rounded-lg self-start font-semibold">
+                        📤 Đẩy thẻ sản phẩm này vào khung Chat
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleAddProductForm() {
+            document.getElementById('addProductForm').classList.toggle('hidden');
+        }
+
+        function addProductToTenant() {
+            const name = document.getElementById('newProdName').value.trim();
+            const price = Number(document.getElementById('newProdPrice').value) || 0;
+            const promo = document.getElementById('newProdPromo').value.trim();
+            const desc = document.getElementById('newProdDesc').value.trim();
+            if (!name) return alert('Vui lòng nhập tên sản phẩm!');
+
+            tenantsData[currentTenantKey].products.unshift({
+                id: Date.now(), name, price, promo: promo || 'Ưu đãi khách mới', desc: desc || 'Cam kết chất lượng chính hãng.'
+            });
+            document.getElementById('newProdName').value = '';
+            document.getElementById('newProdPrice').value = '';
+            document.getElementById('newProdPromo').value = '';
+            document.getElementById('newProdDesc').value = '';
+            document.getElementById('addProductForm').classList.add('hidden');
+            renderProducts();
+        }
+
+        function deleteProduct(idx) {
+            tenantsData[currentTenantKey].products.splice(idx, 1);
+            renderProducts();
+        }
+
+        function updatePersona(val) {
+            tenantsData[currentTenantKey].persona = val;
+        }
+
+        function updateAppearance() {
+            const t = tenantsData[currentTenantKey];
+            t.botName = document.getElementById('cfgBotName').value;
+            t.themeColor = document.getElementById('cfgThemeColor').value;
+            t.welcome = document.getElementById('cfgWelcome').value;
+
+            document.getElementById('cfgColorHex').innerText = t.themeColor;
+            setActiveChannel(activeChannel);
+            document.getElementById('widgetTitle').innerText = t.botName;
+
+            const embedCode = `<!-- Mã Nhúng Chatbox AI Bán Hàng - Khách hàng: ${t.shopName} -->\n<script \n  src="https://cdn.datphu.vn/datphu-chat-widget.js" \n  data-bot-code="${t.code}"\n  data-bot-name="${t.botName}"\n  data-theme-color="${t.themeColor}">\n<\/script>`;
+            document.getElementById('embedCodeBlock').innerText = embedCode;
+        }
+
+        function copyEmbedCode() {
+            navigator.clipboard.writeText(document.getElementById('embedCodeBlock').innerText);
+            const btn = document.getElementById('btnCopyCode');
+            btn.innerText = '✅ Đã Copy!';
+            setTimeout(() => btn.innerText = 'Copy Mã Nhúng', 2000);
+        }
+
+        // =========================================================================
+        // XỬ LÝ TIN NHẮN ĐA KÊNH & TỰ ĐỘNG BẮT SĐT
+        // =========================================================================
+        function resetChat() {
+            const t = tenantsData[currentTenantKey];
+            const msgBox = document.getElementById('chatMessages');
+            msgBox.innerHTML = '';
+
+            const chipsBox = document.getElementById('quickChips');
+            chipsBox.innerHTML = t.quickQuestions.map(q => `
+                <button onclick="sendQuickQuestion('${q.replace(/'/g, "\\'")}')" class="bg-white hover:bg-emerald-50 text-slate-700 border border-slate-300 rounded-full px-3 py-1 font-medium transition shadow-sm">
+                    ${q}
+                </button>
+            `).join('');
+
+            appendBotMessage(t.welcome);
+            if (t.products.length > 0) {
+                setTimeout(() => sendProductCardToChat(0), 350);
+            }
+        }
+
+        function sendQuickQuestion(q) {
+            document.getElementById('chatInput').value = q;
+            handleUserSend();
+        }
+
+        function appendUserMessage(text) {
+            const meta = channelMeta[activeChannel];
+            const t = tenantsData[currentTenantKey];
+            const msgBox = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'self-end max-w-[82%] text-white px-4 py-2.5 rounded-2xl rounded-tr-sm shadow-sm text-sm';
+            div.style.background = meta.color || t.themeColor;
+            div.innerHTML = `<div class="text-[10px] opacity-80 font-semibold mb-0.5">Gửi từ ${meta.label}</div><div>${text}</div>`;
+            msgBox.appendChild(div);
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        function appendBotMessage(htmlContent) {
+            const msgBox = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'self-start max-w-[86%] bg-white text-slate-800 border border-slate-200 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm text-sm leading-relaxed';
+            div.innerHTML = htmlContent;
+            msgBox.appendChild(div);
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        function sendProductCardToChat(prodIdx) {
+            const t = tenantsData[currentTenantKey];
+            const p = t.products[prodIdx];
+            if (!p) return;
+            lastDiscussedProduct = p;
+
+            const cardHtml = `
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                    <div class="text-xs font-bold uppercase tracking-wider text-emerald-700">🌟 ${t.shopName}</div>
+                    <div class="font-bold text-slate-900 text-sm mt-0.5">${p.name}</div>
+                    <div class="text-rose-600 font-extrabold text-sm mt-1">
+                        ${p.price > 0 ? p.price.toLocaleString('vi-VN') + 'đ' : 'Liên hệ tư vấn'}
+                    </div>
+                    <div class="text-xs text-amber-700 font-medium mt-0.5">🎁 ${p.promo}</div>
+                    <p class="text-xs text-slate-600 mt-1.5">${p.desc}</p>
+                    <button onclick="promptPhoneForProduct('${p.name.replace(/'/g, "\\'")}')" 
+                        class="mt-2.5 w-full text-white text-xs font-bold py-2 rounded-lg shadow" style="background: ${t.themeColor}">
+                        🛒 Đặt mua ngay món này
+                    </button>
+                </div>
+            `;
+            appendBotMessage(cardHtml);
+        }
+
+        function promptPhoneForProduct(prodName) {
+            const t = tenantsData[currentTenantKey];
+            const found = t.products.find(item => item.name === prodName);
+            if (found) lastDiscussedProduct = found;
+            appendBotMessage(`Dạ anh/chị muốn đặt <b>${prodName}</b> qua <b>${channelMeta[activeChannel].label}</b> đúng không ạ? 🥰<br/>Anh/chị nhắn giúp em <b>Số Điện Thoại + Địa chỉ</b> vào ô chat để em lên đơn ngay nhé!`);
+            document.getElementById('chatInput').focus();
+        }
+
+        async function handleUserSend() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            appendUserMessage(text);
+
+            const t = tenantsData[currentTenantKey];
+            const meta = channelMeta[activeChannel];
+
+            if (!aiAutoReplyEnabled) {
+                appendBotMessage(`🙋‍♂️ <i>[Chế độ Nhân viên tiếp quản đang bật: AI tạm dừng tự động trả lời để chủ shop trực tiếp nhắn tin với khách trên ${meta.label}]</i>`);
+                return;
+            }
+
+            t.used += 1;
+            updateGlobalKpis();
+
+            const indicator = document.getElementById('typingIndicator');
+            indicator.classList.remove('hidden');
+
+            const lower = text.toLowerCase();
+
+            // 0. CƠ CHẾ HUMAN HANDOFF TỰ ĐỘNG (Khi khách gõ "gặp chủ tiệm", "gọi điện", "nhân viên")
+            if (lower.includes('gặp chủ tiệm') || lower.includes('gọi điện') || lower.includes('gặp người thật')) {
+                aiAutoReplyEnabled = false;
+                const btn = document.getElementById('btnGlobalAutoReply');
+                btn.className = "bg-amber-500 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition";
+                btn.innerText = "🙋‍♂️ Tạm Dừng Bot 30 Phút (Đã Báo Zalo Chủ Tiệm)";
+
+                setTimeout(() => {
+                    indicator.classList.add('hidden');
+                    appendBotMessage(`
+                        🔔 <b>[CHUYỂN GIAO CHỦ TIỆM - HUMAN HANDOFF]</b><br/>
+                        Dạ em đã tạm dừng trả lời tự động trong <b>30 phút</b> và vừa gửi thông báo đẩy về <b>Zalo cá nhân của Chủ tiệm (${t.shopName})</b>.<br/>
+                        Chủ tiệm sẽ trực tiếp vào hỗ trợ Anh/Chị ngay bây giờ ạ!
+                    `);
+                }, 400);
+                return;
+            }
+
+            // 1. KIỂM TRA SỐ ĐIỆN THOẠI ĐẶT HÀNG -> SINH MÃ VIETQR ĐỘNG (ZERO-FLOAT)
+            const phoneRegex = /(0[3|5|7|8|9])+([0-9]{8})\b/;
+            const phoneMatch = text.match(phoneRegex);
+
+            if (phoneMatch) {
+                const capturedPhone = phoneMatch[0];
+                const prodName = lastDiscussedProduct ? lastDiscussedProduct.name : (t.products[0]?.name || 'Đơn đặt qua ' + meta.label);
+                const prodPrice = lastDiscussedProduct ? lastDiscussedProduct.price : (t.products[0]?.price || 280000);
+                const bankCode = t.bankCode || 'MB';
+                const bankAcc = t.bankAccount || '0935889900';
+                const bankHolder = encodeURIComponent(t.bankHolder || t.shopName);
+                const orderCode = 'DP' + Math.floor(1000 + Math.random() * 9000);
+                const addInfo = encodeURIComponent(`${orderCode} ${capturedPhone}`);
+                const vietQrUrl = `https://img.vietqr.io/image/${bankCode}-${bankAcc}-compact2.png?amount=${prodPrice}&addInfo=${addInfo}&accountName=${bankHolder}`;
+
+                capturedLeads.unshift({
+                    time: "Vừa xong",
+                    channel: activeChannel,
+                    phone: capturedPhone,
+                    product: `${prodName} (${orderCode})`,
+                    value: prodPrice,
+                    shop: t.shopName
+                });
+
+                const replyPlain = `Đã chốt đơn ${orderCode} (${prodPrice.toLocaleString('vi-VN')}đ) + Xuất mã VietQR cho SĐT ${capturedPhone}`;
+                omniFeed.unshift({
+                    time: "Vừa xong",
+                    channel: activeChannel,
+                    sender: `Khách ${meta.label} (${capturedPhone})`,
+                    text: text,
+                    reply: replyPlain
+                });
+
+                renderLeadsTable();
+                renderOmniFeed();
+                updateGlobalKpis();
+
+                const leadBtn = document.getElementById('btn-tab-leads');
+                leadBtn.classList.add('lead-flash');
+                setTimeout(() => leadBtn.classList.remove('lead-flash'), 3000);
+
+                setTimeout(() => {
+                    indicator.classList.add('hidden');
+                    appendBotMessage(`
+                        🎉 <b>CHỐT ĐƠN & XUẤT MÃ VIETQR (ZERO-FLOAT) THÀNH CÔNG!</b><br/>
+                        • 🧾 Mã đơn: <b>${orderCode}</b> (Bảo hành điện tử QR)<br/>
+                        • 📞 SĐT Khách: <b class="text-emerald-700">${capturedPhone}</b><br/>
+                        • 📦 Sản phẩm: <b>${prodName}</b><br/>
+                        • 💰 Số tiền: <b class="text-rose-600">${prodPrice.toLocaleString('vi-VN')}đ</b><br/>
+                        <div class="mt-2 p-2 bg-slate-100 rounded-xl border border-slate-300 text-center">
+                            <div class="text-[11px] font-bold text-slate-700 mb-1">Quét VietQR chuyển thẳng 100% về TK Chủ Tiệm (${bankCode} - ${bankAcc})</div>
+                            <img src="${vietQrUrl}" alt="VietQR" class="mx-auto w-44 rounded-lg shadow border border-white" />
+                        </div>
+                        <span class="text-[11px] text-slate-500 mt-1.5 block">✅ JSON Output đã lưu vào bảng <b>b2b_ai_orders</b> trên Supabase!</span>
+                    `);
+                }, 500);
+                return;
+            }
+
+            // 2. TRẢ LỜI BẰNG ENGINE RAG ĐA KÊNH + CHỐNG CHÉM GIÓ (ANTI-HALLUCINATION)
+            setTimeout(() => {
+                indicator.classList.add('hidden');
+                const matchedProd = t.products.find(p => {
+                    const words = p.name.toLowerCase().split(' ').filter(w => w.length > 2);
+                    return words.some(w => lower.includes(w));
+                });
+
+                let botReplyHtml = "";
+                let botReplySummary = "";
+
+                if (matchedProd) {
+                    lastDiscussedProduct = matchedProd;
+                    botReplySummary = `Báo giá chuẩn ${matchedProd.name}: ${matchedProd.price.toLocaleString('vi-VN')}đ`;
+                    botReplyHtml = `
+                        Dạ em nhận được tin nhắn từ <b>${meta.label}</b> của anh/chị rồi ạ!<br/>
+                        Về <b>${matchedProd.name}</b> giá niêm yết trong bảng giá là <b class="text-rose-600">${matchedProd.price.toLocaleString('vi-VN')}đ</b> (${matchedProd.promo}).<br/>
+                        ✨ ${matchedProd.desc}<br/><br/>
+                        Anh/chị nhắn giúp em <b>Số điện thoại</b> ngay tại đây để em xuất mã <b>VietQR</b> và kích hoạt phiếu bảo hành điện tử nghen!
+                    `;
+                } else if (lower.includes('giá') || lower.includes('menu') || lower.includes('tư vấn') || lower.includes('có những gói nào')) {
+                    const summary = t.products.map(p => `• <b>${p.name}</b>: <span class="text-rose-600 font-bold">${p.price.toLocaleString('vi-VN')}đ</span>`).join('<br/>');
+                    botReplySummary = `Gửi bảng giá chuẩn của ${t.shopName}`;
+                    botReplyHtml = `Dạ bảng giá niêm yết chính thức của <b>${t.shopName}</b> gồm có:<br/>${summary}<br/><br/>Anh/chị chọn món nào nhắn <b>SĐT</b> để em tạo mã VietQR thanh toán trong 3 giây ạ!`;
+                } else {
+                    // QUY TẮC CỨNG CHỐNG CHÉM GIÓ (ANTI-HALLUCINATION GUARDRAIL)
+                    botReplySummary = `[Chống chém gió] Báo món ngoài danh mục -> Chuyển chủ tiệm`;
+                    botReplyHtml = `
+                        🛡️ <b>[Anti-Hallucination Guardrail]</b><br/>
+                        <i>"Dạ món/yêu cầu này cửa hàng hiện chưa có trong bảng giá niêm yết, em xin báo chủ tiệm (<b>${t.shopName}</b>) hỗ trợ Anh/Chị ngay ạ!"</i><br/><br/>
+                        <span class="text-xs text-slate-500">💡 Hoặc Anh/Chị để lại <b>Số điện thoại</b> để chủ tiệm gọi lại tư vấn trực tiếp nhé!</span>
+                    `;
+                }
+
+                omniFeed.unshift({
+                    time: "Vừa xong",
+                    channel: activeChannel,
+                    sender: `Khách ${meta.label}`,
+                    text: text,
+                    reply: botReplySummary
+                });
+                renderOmniFeed();
+                appendBotMessage(botReplyHtml);
+            }, 500);
+        }
+
+        function showWeeklyRoiReport() {
+            const t = tenantsData[currentTenantKey];
+            const shopLeads = capturedLeads.filter(l => l.shop === t.shopName);
+            const count = Math.max(18, shopLeads.length);
+            const rev = shopLeads.reduce((s, i) => s + i.value, 0) + 5650000;
+            alert(
+                `📊 TIN NHẮN ZALO TỰ ĐỘNG TỐI CHỦ NHẬT GỬI CHỦ TIỆM [${t.shopName}]:\n\n` +
+                `"Chào Anh/Chị chủ tiệm ${t.shopName}!\n` +
+                `Tuần này Trợ lý AI đã tự động trực 168 giờ không nghỉ:\n` +
+                `• 💬 Đã trả lời: ${t.used} lượt khách hàng\n` +
+                `• 🎯 Đã tự động chốt: ${count} đơn hàng có SĐT\n` +
+                `• 💰 Tổng doanh thu chảy về VietQR của tiệm: ${rev.toLocaleString('vi-VN')}đ\n` +
+                `• ⚡ Chi phí thuê Trợ lý AI chỉ: 6.000đ/ngày (199.000đ/tháng)!"`
+            );
+        }
+
+        function printMicaStandee() {
+            const t = tenantsData[currentTenantKey];
+            const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent('https://zalo.me/' + t.code)}`;
+            const win = window.open('', '_blank', 'width=480,height=650');
+            win.document.write(`
+                <html><head><title>Bảng Mica QR Đặt Quầy - ${t.shopName}</title>
+                <style>body{font-family:sans-serif;text-align:center;padding:24px;background:#f8fafc;} .card{border:4px solid ${t.themeColor};border-radius:24px;padding:28px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);}</style>
+                </head><body>
+                <div class="card">
+                    <div style="font-size:13px;font-weight:bold;color:${t.themeColor};text-transform:uppercase;">QUÉT MÃ ZALO ĐẶT HÀNG & NHẬN BẢO HÀNH</div>
+                    <h2 style="margin:8px 0 4px 0;color:#0f172a;">${t.shopName}</h2>
+                    <p style="font-size:13px;color:#475569;margin-bottom:18px;">Trợ lý AI báo giá tức thì trong 3 giây • Thanh toán VietQR chính xác</p>
+                    <img src="${qrImg}" style="width:220px;height:220px;border:2px solid #e2e8f0;padding:10px;border-radius:16px;" />
+                    <div style="margin-top:16px;font-size:12px;color:#64748b;">Mở Zalo quét mã để nhận ưu đãi & tích điểm thành viên</div>
+                    <button onclick="window.print()" style="margin-top:20px;background:${t.themeColor};color:#fff;border:none;padding:10px 24px;border-radius:99px;font-weight:bold;cursor:pointer;">🖨️ In Bảng Mica Này</button>
+                </div>
+                </body></html>
+            `);
+        }
+
+        // =========================================================================
+        // HIỂN THỊ BẢNG LEADS ĐA KÊNH
+        // =========================================================================
+        function renderLeadsTable() {
+            const tbody = document.getElementById('leadsTableBody');
+            tbody.innerHTML = capturedLeads.map(l => {
+                const meta = channelMeta[l.channel] || channelMeta.website;
+                return `
+                    <tr class="hover:bg-slate-800/60 transition">
+                        <td class="py-3 px-3 text-slate-400">${l.time}</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2.5 py-1 rounded-full border text-[11px] font-bold ${meta.badgeClass}">
+                                ${meta.label}
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 font-bold text-emerald-400 font-mono text-sm">${l.phone}</td>
+                        <td class="py-3 px-3 text-white font-medium">
+                            ${l.product}
+                            <div class="text-[10px] text-slate-400">Shop: ${l.shop}</div>
+                        </td>
+                        <td class="py-3 px-3 font-bold text-amber-300">${l.value.toLocaleString('vi-VN')}đ</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('bg-emerald-600', 'text-white');
+                b.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+                activeBtn.classList.add('bg-emerald-600', 'text-white');
+            }
+        }
+
+        function changePlan(plan, fee, quota) {
+            const t = tenantsData[currentTenantKey];
+            t.plan = plan;
+            t.fee = fee;
+            t.quota = quota;
+            renderTenantDropdown();
+            updateGlobalKpis();
+            alert(`✅ Đã nâng cấp gói dịch vụ cho [${t.shopName}] lên gói ${plan.toUpperCase()} (${fee.toLocaleString('vi-VN')}đ/tháng)!`);
+        }
+
+        function openNewTenantModal() { document.getElementById('newTenantModal').classList.remove('hidden'); }
+        function closeNewTenantModal() { document.getElementById('newTenantModal').classList.add('hidden'); }
+        function createNewTenant() {
+            const shopName = document.getElementById('modalShopName').value.trim();
+            const botName = document.getElementById('modalBotName').value.trim() || 'Trợ Lý AI Bán Hàng';
+            const plan = document.getElementById('modalPlan').value;
+            const color = document.getElementById('modalColor').value;
+            if (!shopName) return alert('Vui lòng nhập tên cửa hàng thuê!');
+
+            const code = 'bot-' + shopName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+            const feeMap = { starter: 199000, growth: 499000, enterprise: 1200000 };
+            const quotaMap = { starter: 1000, growth: 5000, enterprise: 20000 };
+
+            tenantsData[code] = {
+                code, shopName, botName, themeColor: color,
+                welcome: `Dạ ${botName} xin chào anh/chị! Em có thể tư vấn dịch vụ hay báo giá sản phẩm nào của ${shopName} cho mình hôm nay ạ?`,
+                persona: `Trợ lý tư vấn chuyên nghiệp của ${shopName}, luôn báo giá rõ ràng và xin SĐT khách hàng.`,
+                plan, fee: feeMap[plan], used: 1, quota: quotaMap[plan],
+                quickQuestions: ["Bảng giá dịch vụ?", "Có khuyến mãi gì không?", "Đặt lịch tư vấn SĐT 0912345678"],
+                products: [
+                    { id: Date.now(), name: `Gói Dịch Vụ Tiêu Chuẩn - ${shopName}`, price: 390000, promo: "Giảm 10% khi đặt lịch qua AI", desc: "Dịch vụ chất lượng cao, bảo hành uy tín tận nơi." }
+                ]
+            };
+            closeNewTenantModal();
+            renderTenantDropdown();
+            switchTenant(code);
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1B2A6B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./logo_datphu.jpg">
+    <title>Đất Phú OneBase — Trợ Lý AI Bán Hàng & Chợ Phiên (Đỏ #D32027 & Xanh #1B2A6B)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dp-red: #D32027;
+            --dp-red-hover: #b51920;
+            --dp-blue: #1B2A6B;
+            --dp-blue-light: #e8ecf7;
+            --dp-gold: #F59E0B;
+        }
+        * { -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #eef1f8;
+            color: #0f172a;
+            overflow: hidden;
+        }
+        /* Hệ màu Nhị Hợp Đỏ (#D32027) & Xanh Hải Triều (#1B2A6B) chuẩn Đất Phú */
+        .dp-bg-blue { background-color: #1B2A6B; }
+        .dp-bg-red { background-color: #D32027; }
+        .dp-bg-red:hover { background-color: #b51920; }
+        .dp-text-blue { color: #1B2A6B; }
+        .dp-text-red { color: #D32027; }
+        .dp-gradient-brand {
+            background: linear-gradient(135deg, #1B2A6B 0%, #243b94 60%, #D32027 100%);
+        }
+        .zalo-chat-bg { background-color: #e4e8f2; }
+        .zalo-user-bubble {
+            background-color: #e8ecf7;
+            color: #1B2A6B;
+            border: 1px solid #c5d1f0;
+        }
+        .zalo-bot-bubble {
+            background-color: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 2px 5px rgba(27, 42, 107, 0.07);
+            border-left: 3px solid #D32027;
+        }
+        .smooth-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .smooth-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .msg-anim { animation: slideUpFade 0.2s ease-out forwards; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col md:flex-row">
+
+    <!-- ======================================================================= -->
+    <!-- 1. THANH ĐIỀU HƯỚNG XANH HẢI TRIỀU (#1B2A6B) + ĐIỂM NHẤN ĐỎ (#D32027)   -->
+    <!-- ======================================================================= -->
+    <nav class="dp-bg-blue text-white md:w-20 w-full md:h-full h-16 fixed md:static bottom-0 left-0 z-40 flex md:flex-col items-center justify-around md:justify-between py-2 md:py-4 shadow-xl border-t-2 md:border-t-0 md:border-r-2 border-[#D32027]">
+        <!-- Logo Đầu Đại Bàng Đất Phú Chính Thức -->
+        <div class="hidden md:flex flex-col items-center gap-1">
+            <img src="./logo_datphu.jpg" alt="Đất Phú Logo" class="w-12 h-12 rounded-xl object-cover border-2 border-[#D32027] shadow-md bg-white p-0.5">
+            <span class="text-[9px] font-extrabold tracking-wider text-amber-400 mt-0.5">ĐẤT PHÚ</span>
+        </div>
+
+        <!-- 4 Nút Chức Năng Chuẩn Zalo (Đơn giản, Chạm 1 lần) -->
+        <div class="flex md:flex-col items-center justify-around w-full md:gap-3 px-1">
+            <button onclick="switchMainView('chat')" id="nav-chat" class="nav-item flex flex-col items-center justify-center w-16 h-13 py-1.5 rounded-xl dp-bg-red text-white shadow transition" title="Trò chuyện & Đặt hàng">
+                <span class="text-xl">💬</span>
+                <span class="text-[10px] font-bold mt-0.5">Chat AI</span>
+            </button>
+
+            <button onclick="switchMainView('catalog')" id="nav-catalog" class="nav-item flex flex-col items-center justify-center w-16 h-13 py-1.5 rounded-xl hover:bg-white/10 transition relative" title="Kệ hàng & Bảng giá">
+                <span class="text-xl">🛍️</span>
+                <span class="text-[10px] font-bold mt-0.5">Bảng giá</span>
+            </button>
+
+            <button onclick="switchMainView('merchant')" id="nav-merchant" class="nav-item flex flex-col items-center justify-center w-16 h-13 py-1.5 rounded-xl hover:bg-white/10 transition relative" title="Dành cho Chủ Tiệm (3 Bước Cài Bot)">
+                <span class="text-xl">🏪</span>
+                <span class="text-[10px] font-bold mt-0.5">Chủ tiệm</span>
+                <span id="navLeadBadge" class="absolute top-0.5 right-2 dp-bg-red text-white text-[10px] font-extrabold px-1.5 rounded-full border border-white">4</span>
+            </button>
+
+            <button onclick="switchMainView('geostamp')" id="nav-geostamp" class="nav-item flex flex-col items-center justify-center w-16 h-13 py-1.5 rounded-xl hover:bg-white/10 transition" title="Camera Thợ đóng dấu tọa độ 6K">
+                <span class="text-xl">📸</span>
+                <span class="text-[10px] font-bold mt-0.5">Camera 6K</span>
+            </button>
+
+            <button onclick="switchMainView('worker6k')" id="nav-worker6k" class="nav-item flex flex-col items-center justify-center w-16 h-13 py-1.5 rounded-xl hover:bg-white/10 transition" title="Hành trình Gọi Thợ 6K (Case Chị Phượng + OTP)">
+                <span class="text-xl">🛠️</span>
+                <span class="text-[10px] font-bold mt-0.5">Gọi Thợ 6K</span>
+            </button>
+
+            <button onclick="switchMainView('provas')" id="nav-provas" class="nav-item flex flex-col items-center justify-center w-16 h-13 py-1.5 rounded-xl hover:bg-white/10 transition" title="Pro Dashboard & Dòng tiền VAS McKinsey">
+                <span class="text-xl">📈</span>
+                <span class="text-[10px] font-bold mt-0.5">Pro VAS</span>
+            </button>
+        </div>
+
+        <!-- Nút In Bảng Mica QR góc dưới PC -->
+        <div class="hidden md:flex flex-col items-center">
+            <button onclick="openQrModal()" class="w-14 py-2 rounded-xl bg-white/10 hover:bg-[#D32027] flex flex-col items-center justify-center transition border border-white/20" title="In Bảng QR Đặt Quầy">
+                <span class="text-base">🖨️</span>
+                <span class="text-[9px] font-bold mt-0.5">QR Quầy</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ======================================================================= -->
+    <!-- 2. CỘT DANH BẠ CỬA HÀNG (PHONG CÁCH ZALO SÁNG RÕ)                        -->
+    <!-- ======================================================================= -->
+    <aside id="sidebarList" class="bg-white md:w-80 w-full md:h-full border-r border-slate-200 flex flex-col shrink-0 hidden md:flex">
+        <!-- Header Cột Trái: Logo + Slogan Đất Phú -->
+        <div class="p-3.5 border-b border-slate-200 bg-gradient-to-r from-[#1B2A6B] to-[#263c91] text-white">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <img src="./logo_datphu.jpg" alt="Logo" class="w-9 h-9 rounded-lg object-cover border border-white bg-white">
+                    <div>
+                        <h1 class="font-extrabold text-sm tracking-tight leading-none">ĐẤT PHÚ CHỢ PHIÊN</h1>
+                        <p class="text-[10px] text-amber-300 font-semibold mt-1">Vững Bền Đất Phú • Tiên Phong Kết Nối</p>
+                    </div>
+                </div>
+                <button onclick="openQuickSetupModal()" class="text-[11px] dp-bg-red text-white font-bold px-2.5 py-1.5 rounded-lg shadow transition">
+                    + Mở Tiệm
+                </button>
+            </div>
+            <!-- Thanh tìm kiếm nhanh -->
+            <div class="mt-3">
+                <input id="searchShopInput" oninput="renderShopList()" type="text" placeholder="🔍 Tìm cửa hàng, gói điện nước, đặc sản..." 
+                    class="w-full bg-white/95 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+            </div>
+        </div>
+
+        <!-- Danh sách các tiệm đang hoạt động -->
+        <div id="shopListContainer" class="flex-1 overflow-y-auto smooth-scroll divide-y divide-slate-100">
+        </div>
+    </aside>
+
+    <!-- ======================================================================= -->
+    <!-- 3. KHUNG CHÍNH: MÀN HÌNH CHAT ZALO MƯỢT MÀ                              -->
+    <!-- ======================================================================= -->
+    <main class="flex-1 flex flex-col h-full pb-16 md:pb-0 relative overflow-hidden">
+
+        <!-- VIEW A: MÀN HÌNH TRÒ CHUYỆN ZALO -->
+        <section id="view-chat" class="flex-1 flex flex-col h-full">
+            <!-- Header Khung Chat -->
+            <header class="bg-white border-b-2 border-[#1B2A6B]/15 px-4 py-2.5 flex items-center justify-between shadow-sm z-10">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleMobileShopDrawer()" class="md:hidden w-9 h-9 rounded-lg dp-bg-blue text-white flex items-center justify-center font-bold">
+                        ☰
+                    </button>
+                    <div class="relative">
+                        <div id="chatAvatar" class="w-10 h-10 rounded-full dp-bg-blue text-white font-extrabold flex items-center justify-center text-sm shadow border-2 border-[#D32027]">
+                            ĐP
+                        </div>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white absolute bottom-0 right-0"></span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <h2 id="chatShopTitle" class="font-extrabold text-sm md:text-base dp-text-blue leading-tight">Đất Phú: Kỹ Thuật & Giải Pháp Số</h2>
+                            <span class="bg-red-50 dp-text-red text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-red-200">Bảo Chứng 6K</span>
+                        </div>
+                        <p id="chatShopSub" class="text-xs text-emerald-600 font-semibold mt-0.5">● Trợ lý AI trực 24/7 • Phản hồi trong 2 giây</p>
+                    </div>
+                </div>
+
+                <!-- Các nút tiện ích góc phải Header -->
+                <div class="flex items-center gap-2">
+                    <button onclick="openQrModal()" class="bg-[#e8ecf7] hover:bg-blue-100 dp-text-blue text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                        <span>📱</span> <span class="hidden sm:inline">Mã QR Tiệm</span>
+                    </button>
+                    <button onclick="triggerHumanHandoff()" class="dp-bg-red text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition">
+                        <span>📞</span> <span class="hidden sm:inline">Gặp Chủ Tiệm</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Vùng Luồng Tin Nhắn -->
+            <div id="zaloMessageStream" class="flex-1 zalo-chat-bg p-4 overflow-y-auto smooth-scroll flex flex-col gap-3">
+            </div>
+
+            <!-- Thanh Gợi Ý Chạm Nhanh -->
+            <div class="bg-white border-t border-slate-200 px-3 py-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap smooth-scroll">
+                <button onclick="showMenuInChat()" class="dp-bg-blue text-white text-xs font-bold px-3.5 py-1.5 rounded-full transition shrink-0 shadow-sm">
+                    📋 Xem Bảng Giá Chuẩn
+                </button>
+                <div id="quickQuestionPills" class="flex items-center gap-1.5">
+                </div>
+            </div>
+
+            <!-- Ô Nhập Tin Nhắn Chuẩn Zalo -->
+            <div class="bg-white border-t border-slate-200 px-3 py-2.5 flex items-center gap-2">
+                <button onclick="showMenuInChat()" title="Mở danh mục sản phẩm" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-lg shrink-0">
+                    🛍️
+                </button>
+                <input id="zaloChatInput" type="text" placeholder="Nhập câu hỏi hoặc Số điện thoại để nhận mã VietQR..."
+                    onkeypress="if(event.key==='Enter') sendZaloMessage()"
+                    class="flex-1 bg-slate-100 focus:bg-white border border-slate-300 focus:border-[#1B2A6B] rounded-full px-4 py-2 text-sm text-slate-800 focus:outline-none transition">
+                <button onclick="sendZaloMessage()" class="dp-bg-red text-white font-bold text-sm px-5 py-2 rounded-full shadow transition shrink-0">
+                    Gửi
+                </button>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW B: KỆ HÀNG & BẢNG GIÁ TRỰC QUAN                                -->
+        <!-- =================================================================== -->
+        <section id="view-catalog" class="hidden flex-1 flex flex-col h-full bg-slate-50 overflow-y-auto smooth-scroll p-4 md:p-6">
+            <div class="max-w-4xl mx-auto w-full space-y-4">
+                <div class="dp-gradient-brand text-white rounded-2xl p-5 shadow-md flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase bg-white/20 px-2.5 py-0.5 rounded-full">Niêm yết minh bạch 100%</span>
+                        <h2 id="catalogShopName" class="text-lg font-extrabold mt-1">Bảng Giá Chính Thức</h2>
+                        <p class="text-xs opacity-90">Thanh toán VietQR trực tiếp • Kích hoạt bảo hành điện tử QR 90 ngày</p>
+                    </div>
+                    <button onclick="switchMainView('chat')" class="bg-white dp-text-blue text-xs font-extrabold px-4 py-2.5 rounded-xl shadow">
+                        💬 Quay lại Khung Chat
+                    </button>
+                </div>
+
+                <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW C: DÀNH CHO CHỦ TIỆM (QUY TẮC 15 PHÚT: 3 BƯỚC SIÊU ĐƠN GIẢN)    -->
+        <!-- =================================================================== -->
+        <section id="view-merchant" class="hidden flex-1 flex flex-col h-full bg-slate-50 overflow-y-auto smooth-scroll p-4 md:p-6">
+            <div class="max-w-4xl mx-auto w-full space-y-5">
+                
+                <!-- Banner Đỏ - Xanh Hải Triều Đặc Trưng Đất Phú -->
+                <div class="dp-gradient-brand rounded-2xl p-5 text-white shadow-lg flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <img src="./logo_datphu.jpg" alt="Logo" class="w-14 h-14 rounded-2xl border-2 border-white bg-white object-cover shadow">
+                        <div>
+                            <span class="text-[10px] uppercase font-extrabold bg-[#D32027] px-2.5 py-0.5 rounded-full border border-white/30">Báo Cáo Trợ Lý AI Tuần Này</span>
+                            <h2 id="merchantBannerTitle" class="text-xl font-extrabold mt-1">Đất Phú: Kỹ Thuật & Giải Pháp Số</h2>
+                            <p class="text-xs opacity-90">Trực chiến 168/168 giờ • Tiền VietQR chảy thẳng 100% về STK Chủ Tiệm</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="bg-white/15 rounded-xl px-4 py-2.5 text-center border border-white/20">
+                            <div id="merchantStatOrders" class="text-2xl font-extrabold text-amber-300">4 Đơn</div>
+                            <div class="text-[11px] opacity-90">AI Đã Chốt SĐT</div>
+                        </div>
+                        <div class="bg-white/15 rounded-xl px-4 py-2.5 text-center border border-white/20">
+                            <div id="merchantStatRev" class="text-2xl font-extrabold text-white">3.575.000đ</div>
+                            <div class="text-[11px] opacity-90">Doanh thu VietQR</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danh sách Đơn Hàng & SĐT Khách AI Vừa Chốt -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-extrabold dp-text-blue text-base">📞 Danh Sách Khách Đặt Hàng Do AI Thu Thập</h3>
+                        <span class="text-xs bg-red-50 dp-text-red font-bold px-3 py-1 rounded-full border border-red-200">Tự động bắt SĐT 24/7</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-[#1B2A6B]/10 dp-text-blue font-bold">
+                                    <th class="py-2.5 px-2">Thời gian</th>
+                                    <th class="py-2.5 px-2">SĐT Khách</th>
+                                    <th class="py-2.5 px-2">Món khách đặt</th>
+                                    <th class="py-2.5 px-2">Số tiền VietQR</th>
+                                    <th class="py-2.5 px-2">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="merchantOrdersBody" class="divide-y divide-slate-100 text-slate-700">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Cài Đặt Cửa Hàng Trong 3 Bước Đơn Giản -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-extrabold dp-text-blue text-base">⚡ Cài Đặt Trợ Lý AI Cho Tiệm (Quy Tắc 15 Phút - 3 Bước)</h3>
+                            <p class="text-xs text-slate-500">Điền STK VietQR + Nhập món mới + Bấm Kích hoạt</p>
+                        </div>
+                        <button onclick="openQuickSetupModal()" class="dp-bg-red text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm">
+                            + Mở Tiệm Thuê Mới
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-[#e8ecf7]/60 p-3.5 rounded-xl border border-[#1B2A6B]/20">
+                            <div class="text-xs font-extrabold dp-text-blue mb-2">BƯỚC 1: Tài khoản nhận tiền VietQR</div>
+                            <label class="text-[11px] text-slate-600">Ngân hàng (VCB, MB, BIDV...)</label>
+                            <input id="editBankCode" type="text" class="w-full mt-0.5 mb-2 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold dp-text-blue">
+                            <label class="text-[11px] text-slate-600">Số tài khoản của Chủ tiệm</label>
+                            <input id="editBankAcc" type="text" class="w-full mt-0.5 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold dp-text-red">
+                        </div>
+
+                        <div class="bg-[#e8ecf7]/60 p-3.5 rounded-xl border border-[#1B2A6B]/20 md:col-span-2">
+                            <div class="text-xs font-extrabold dp-text-blue mb-2">BƯỚC 2: Thêm sản phẩm / Gói dịch vụ vào Bảng giá</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <input id="addName" type="text" placeholder="Tên món / Gói dịch vụ..." class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs">
+                                <input id="addPrice" type="number" placeholder="Giá tiền (VD: 280000)" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs">
+                                <input id="addPromo" type="text" placeholder="Khuyến mãi / Bảo hành..." class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs">
+                            </div>
+                            <div class="mt-3 flex justify-end">
+                                <button onclick="saveMerchantSettings()" class="dp-bg-red text-white text-xs font-bold px-5 py-2 rounded-lg shadow">
+                                    ✅ BƯỚC 3: Lưu & Kích Hoạt Ngay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW D: CAMERA NGHIỆM THU 6K ĐÓNG DẤU GEOSTAMP                      -->
+        <!-- =================================================================== -->
+        <section id="view-geostamp" class="hidden flex-1 flex flex-col h-full bg-slate-50 overflow-y-auto smooth-scroll p-4 md:p-6">
+            <div class="max-w-xl mx-auto w-full bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                <div class="flex items-center gap-3">
+                    <img src="./logo_datphu.jpg" alt="Logo" class="w-12 h-12 rounded-xl border border-[#D32027]">
+                    <div>
+                        <span class="text-[10px] font-extrabold bg-red-50 dp-text-red px-2.5 py-0.5 rounded-full border border-red-200">Tiêu Chuẩn Cứu Hộ 6K Đất Phú</span>
+                        <h2 class="text-base font-extrabold dp-text-blue mt-1">📸 Camera Đóng Dấu Tọa Độ & Giờ Thực Tế</h2>
+                        <p class="text-xs text-slate-500">Nén ảnh siêu nhẹ 120KB + Đóng dấu bảo chứng chống rủi ro đền bù oan</p>
+                    </div>
+                </div>
+
+                <div class="border-2 border-dashed border-[#1B2A6B]/40 bg-[#e8ecf7]/50 rounded-2xl p-6 text-center">
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="processGeostampImage(event)" class="hidden">
+                    <label for="cameraInput" class="cursor-pointer inline-flex items-center gap-2 dp-bg-red text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md">
+                        <span>📷</span> Bấm Chụp Ảnh Hiện Trạng / Nghiệm Thu
+                    </label>
+                    <p class="text-[11px] text-slate-600 mt-2">Chụp chân ren rỉ sét trước khi chạm mỏ lết hoặc chụp nghiệm thu hoàn thành</p>
+                </div>
+
+                <div id="geostampPreviewBox" class="hidden space-y-3">
+                    <canvas id="geostampCanvas" class="w-full rounded-xl border-2 border-[#1B2A6B] shadow-sm"></canvas>
+                    <div class="flex items-center justify-between text-xs dp-text-blue bg-[#e8ecf7] px-3 py-2 rounded-lg border border-[#1B2A6B]/20 font-semibold">
+                        <span>✅ Đã đóng dấu 6K Đất Phú & nén nhẹ (~120KB)</span>
+                        <button onclick="sendGeostampToChat()" class="dp-bg-red text-white font-bold px-3.5 py-1.5 rounded-lg shadow">
+                            Gửi vào Khung Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW E: HÀNH TRÌNH GỌI THỢ 6K (CHỊ PHƯỢNG + OTP 6821 + CHIA 95/5)    -->
+        <!-- =================================================================== -->
+        <section id="view-worker6k" class="hidden flex-1 flex flex-col h-full bg-slate-50 overflow-y-auto smooth-scroll p-4 md:p-6">
+            <div class="max-w-4xl mx-auto w-full space-y-4">
+                <div class="dp-gradient-brand text-white rounded-2xl p-5 shadow-md flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase bg-[#D32027] px-2.5 py-0.5 rounded-full border border-white/30">Quy Chuẩn Giao Dịch Kín Kẽ OS™ (6K)</span>
+                        <h2 class="text-lg font-extrabold mt-1">🛠️ Hành Trình Gọi Thợ 6K: Chị Phượng Đặt Tháo Lắp Máy Lạnh</h2>
+                        <p class="text-xs opacity-90">Số 12 Nguyễn Huệ, P.5, TP. Tuy Hòa • Mã đơn: REQ-882910 • Giá niêm yết cứng: 500.000đ</p>
+                    </div>
+                    <span class="bg-white dp-text-blue text-xs font-extrabold px-3 py-1.5 rounded-xl shadow">Chia tự động: 95% Thợ - 5% Sàn</span>
+                </div>
+
+                <!-- 6 Bước 6K Tương Tác -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    <div class="bg-white p-4 rounded-2xl border-l-4 border-[#1B2A6B] shadow-sm">
+                        <div class="font-extrabold dp-text-blue">1_CONNECT (Kết nối Zalo SDK)</div>
+                        <p class="text-slate-600 mt-1">Chị Phượng chọn <b>Tháo lắp máy lạnh (1 bộ)</b> lúc 14:00 tại Số 12 Nguyễn Huệ, P.5, Tuy Hòa.</p>
+                        <div class="mt-2 text-emerald-600 font-bold">✅ Đã định danh GPS</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border-l-4 border-[#1B2A6B] shadow-sm">
+                        <div class="font-extrabold dp-text-blue">2_CHECK (Geo-Matching 10km)</div>
+                        <p class="text-slate-600 mt-1">Quét thợ bán kính 10km, điểm ≥ 4.8. Giá chuẩn: <b>Tháo 200K + Lắp 300K = 500.000đ</b>.</p>
+                        <div class="mt-2 text-emerald-600 font-bold">✅ Không lo chặt chém</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border-l-4 border-[#1B2A6B] shadow-sm">
+                        <div class="font-extrabold dp-text-blue">3_CONTRACT & 4_ACTIVATE</div>
+                        <p class="text-slate-600 mt-1">Thợ <b>Nguyễn Văn Phú</b> (cách 2.5km, 5 năm KN) nhận đơn <b>REQ-882910</b>. Đã bắn ZNS báo giờ tới 13:50.</p>
+                        <div class="mt-2 text-emerald-600 font-bold">✅ Đang thực hiện tại nhà</div>
+                    </div>
+                </div>
+
+                <!-- Bước 5 & 6: Nghiệm thu OTP 4 số & Quyết toán VietQR 95/5 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-2xl p-5 border-2 border-[#1B2A6B] shadow-sm space-y-3">
+                        <span class="text-[11px] font-extrabold dp-bg-blue text-white px-2.5 py-1 rounded-full">BƯỚC 5: 5_CONTROL (Nghiệm Thu Mã OTP 4 Số)</span>
+                        <p class="text-xs text-slate-600">Thợ đã tải lên 2 ảnh Geostamp (máy lắp hoàn thiện + đồng hồ áp suất gas). Hệ thống đã gửi mã OTP <b>6821</b> về Zalo chị Phượng.</p>
+                        <div class="flex items-center gap-2 pt-1">
+                            <input id="otpInput6k" type="text" value="6821" maxlength="4" placeholder="Nhập OTP 4 số..." class="w-32 bg-slate-100 border-2 border-[#1B2A6B] rounded-xl px-3 py-2 text-center font-mono text-base font-extrabold dp-text-red">
+                            <button onclick="verifyOtp6k()" class="flex-1 dp-bg-red text-white font-bold text-xs py-3 rounded-xl shadow">
+                                🔐 Xác Nhận OTP Nghiệm Thu
+                            </button>
+                        </div>
+                        <div id="otpResultMsg" class="text-xs font-bold text-emerald-700 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
+                            ✅ Đã khớp mã OTP 6821! Mở khóa thanh toán Bước 6.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-5 border-2 border-[#D32027] shadow-sm flex items-center justify-between gap-4">
+                        <div class="space-y-1.5 text-xs">
+                            <span class="text-[11px] font-extrabold dp-bg-red text-white px-2.5 py-1 rounded-full">BƯỚC 6: 6_ACCOUNTING (Split-Fee)</span>
+                            <div class="font-extrabold dp-text-blue text-sm pt-1">Quyết Toán Tự Động Đơn REQ-882910</div>
+                            <div>• Tổng thu VietQR: <b class="dp-text-red text-sm">500.000đ</b></div>
+                            <div>• Ví Thợ Nguyễn Văn Phú (95%): <b class="text-emerald-700">475.000đ</b></div>
+                            <div>• Phí Hạ Tầng Sàn Đất Phú (5%): <b class="dp-text-blue">25.000đ</b></div>
+                            <div class="text-[11px] text-slate-500">🛡️ Đã gửi Phiếu bảo hành điện tử 6 tháng về Zalo chị Phượng!</div>
+                        </div>
+                        <img src="https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=500000&addInfo=REQ882910%20OTP6821&accountName=CONG%20TY%20TNHH%20THUONG%20MAI%20DAT%20PHU" class="w-32 h-32 rounded-xl border border-slate-200 shrink-0" alt="QR 500K">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- VIEW F: PRO DASHBOARD & ĐÒN BẨY DÒNG TIỀN VAS (MCKINSEY PE)          -->
+        <!-- =================================================================== -->
+        <section id="view-provas" class="hidden flex-1 flex flex-col h-full bg-slate-50 overflow-y-auto smooth-scroll p-4 md:p-6">
+            <div class="max-w-5xl mx-auto w-full space-y-5">
+                <div class="dp-gradient-brand text-white rounded-2xl p-5 shadow-lg flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-full">Khung Định Giá McKinsey & Private Equity (EV = EBITDA × Multiple)</span>
+                        <h2 class="text-xl font-extrabold mt-1">📈 Đòn Bẩy Doanh Thu Dịch Vụ Giá Trị Gia Tăng (VAS)</h2>
+                        <p class="text-xs opacity-90">Giữ phí sàn thấp (3-5%) cho bà con, tối đa hóa lợi nhuận chủ sàn gấp 2.9 lần nhờ SaaS, Logistics, Ads & Fintech</p>
+                    </div>
+                    <div class="bg-white/15 rounded-xl px-4 py-2 text-right border border-white/20">
+                        <div class="text-[11px] opacity-90">Chỉ số Kinh tế Đơn vị</div>
+                        <div class="text-lg font-extrabold text-amber-300">LTV / CAC = 6.8x (&gt;5x)</div>
+                    </div>
+                </div>
+
+                <!-- 4 Trụ Cột Dòng Tiền Chủ Sàn (Mô hình 100.000 đơn/tháng) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                    <div class="bg-white p-4 rounded-2xl border-t-4 border-[#1B2A6B] shadow-sm">
+                        <div class="text-slate-400 font-bold">1. Phí Sàn (3%) & SaaS AI</div>
+                        <div class="text-xl font-extrabold dp-text-blue mt-1">450.000.000đ</div>
+                        <div class="text-[11px] dp-text-red font-bold mt-1">Tỷ trọng: 34.6%</div>
+                        <p class="text-slate-500 mt-1.5">Hoa hồng 3% + Thuê bao Chatbox AI (199K) & Pro ERP (299K-599K).</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border-t-4 border-[#D32027] shadow-sm">
+                        <div class="text-slate-400 font-bold">2. Logistics & Gom Chuyến</div>
+                        <div class="text-xl font-extrabold dp-text-red mt-1">400.000.000đ</div>
+                        <div class="text-[11px] dp-text-blue font-bold mt-1">Tỷ trọng: 30.8%</div>
+                        <p class="text-slate-500 mt-1.5">Lời chênh lệch cước sỉ 4.000đ/đơn (GHN/VTPost) + Phí dán tem QR.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border-t-4 border-[#1B2A6B] shadow-sm">
+                        <div class="text-slate-400 font-bold">3. Quảng Cáo Nội Sàn (Ads)</div>
+                        <div class="text-xl font-extrabold dp-text-blue mt-1">300.000.000đ</div>
+                        <div class="text-[11px] dp-text-red font-bold mt-1">Tỷ trọng: 23.1%</div>
+                        <p class="text-slate-500 mt-1.5">Đấu giá từ khóa tìm kiếm, Banner Flash Sale, gửi ZNS khuyến mãi.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border-t-4 border-[#D32027] shadow-sm">
+                        <div class="text-slate-400 font-bold">4. Fintech & Bảo Hiểm 6K</div>
+                        <div class="text-xl font-extrabold dp-text-red mt-1">150.000.000đ</div>
+                        <div class="text-[11px] dp-text-blue font-bold mt-1">Tỷ trọng: 11.5%</div>
+                        <p class="text-slate-500 mt-1.5">Hoa hồng 1.5-3% kết nối vay tín chấp dòng tiền (MB/VCB) + Bảo hiểm thợ.</p>
+                    </div>
+                </div>
+
+                <!-- Pro ERP & AI Insights cho Nhà bán hàng -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="space-y-2">
+                        <h3 class="font-extrabold dp-text-blue text-sm">🧠 AI Demand Forecasting & Dynamic Pricing (Phú Yên - Đắk Lắk)</h3>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            🔥 <b>Dự báo tuần tới:</b> Nhu cầu <i>Gói bảo dưỡng máy lạnh & Tự động hóa phao bồn nước</i> tại TP. Tuy Hòa tăng <b>+42%</b> do nắng nóng đỉnh điểm. Đề xuất bật gói Combo Lọc Thô + Van 1 Chiều.
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            🥩 <b>Chợ Phiên OCOP:</b> Từ khóa <i>"Bò một nắng Krông Pa"</i> và <i>"Sầu riêng Ri6"</i> tăng <b>+65%</b> lượt hỏi qua Chatbox AI khung giờ 20h-22h.
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="font-extrabold dp-text-red text-sm">🗺️ Bản Đồ Nhiệt Nhu Cầu (Geographic Heatmap) & Điểm Tín Nhiệm Vay</h3>
+                        <div class="p-3 rounded-xl bg-[#e8ecf7]/60 border border-[#1B2A6B]/20 space-y-1.5">
+                            <div class="flex justify-between font-bold"><span>📍 Phường 7 & Phường 5 (TP. Tuy Hòa)</span><span class="dp-text-red">Mật độ đơn: 48%</span></div>
+                            <div class="flex justify-between font-bold"><span>📍 Phú Hòa & Đông Hòa</span><span class="dp-text-blue">Mật độ đơn: 29%</span></div>
+                            <div class="flex justify-between font-bold"><span>📍 Tuy An & Sông Cầu</span><span class="dp-text-blue">Mật độ đơn: 23%</span></div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold">
+                            💳 <b>Hồ sơ Fintech:</b> 38 Chủ tiệm đủ điều kiện giải ngân gói vay dòng tiền VietQR (Hạn mức 50 – 200 triệu/tiệm, hoa hồng sàn 2.0%).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- MODAL IN BẢNG MICA QR ĐẶT QUẦY (CHUẨN MÀU ĐỎ - XANH ĐẤT PHÚ)            -->
+    <!-- ======================================================================= -->
+    <div id="qrModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border-4 border-[#1B2A6B] space-y-3">
+            <img src="./logo_datphu.jpg" alt="Đất Phú" class="w-14 h-14 mx-auto rounded-xl border-2 border-[#D32027]">
+            <div class="text-xs font-extrabold dp-text-red uppercase tracking-wider">ĐẤT PHÚ ONEBASE • QUÉT MÃ ĐẶT HÀNG 24/7</div>
+            <h3 id="qrModalShopName" class="text-lg font-extrabold dp-text-blue">Đặc Sản Xứ Nẫu Chị Ba</h3>
+            <p class="text-xs text-slate-500">Trợ lý AI báo giá tức thì trong 2 giây • Thanh toán VietQR chính xác</p>
+            <div class="py-2 flex justify-center">
+                <img id="qrModalImg" src="" alt="QR Code" class="w-48 h-48 border-4 border-[#D32027] p-2 rounded-2xl shadow-sm">
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="document.getElementById('qrModal').classList.add('hidden')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl">Đóng</button>
+                <button onclick="window.print()" class="flex-1 dp-bg-red text-white font-bold text-xs py-2.5 rounded-xl shadow">🖨️ In Bảng Mica</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- MODAL MỞ TIỆM MỚI TRONG 1 PHÚT                                          -->
+    <!-- ======================================================================= -->
+    <div id="quickSetupModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-t-8 border-[#D32027] space-y-4">
+            <h3 class="text-base font-extrabold dp-text-blue">🏪 Tạo Trợ Lý AI Cho Cửa Hàng Mới (3 Bước)</h3>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="font-bold dp-text-blue">1. Tên Cửa Hàng / Hộ Kinh Doanh *</label>
+                    <input id="newShopName" type="text" placeholder="VD: Hải Sản Tươi Sống Sông Cầu" class="w-full mt-1 border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="font-bold dp-text-blue">2. Ngân hàng VietQR</label>
+                        <input id="newShopBank" type="text" value="VCB" class="w-full mt-1 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold">
+                    </div>
+                    <div>
+                        <label class="font-bold dp-text-blue">Số tài khoản nhận tiền *</label>
+                        <input id="newShopAcc" type="text" placeholder="0751000025858" class="w-full mt-1 border border-slate-300 rounded-xl px-3 py-2 text-sm font-mono">
+                    </div>
+                </div>
+                <div>
+                    <label class="font-bold dp-text-blue">3. Món chủ lực đầu tiên + Giá bán (VNĐ)</label>
+                    <div class="grid grid-cols-2 gap-2 mt-1">
+                        <input id="newShopFirstProd" type="text" placeholder="VD: Tôm hùm bông 1kg" class="border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                        <input id="newShopFirstPrice" type="number" placeholder="950000" class="border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeQuickSetupModal()" class="flex-1 bg-slate-100 text-slate-700 font-bold text-xs py-2.5 rounded-xl">Hủy</button>
+                <button onclick="createNewShopQuick()" class="flex-1 dp-bg-red text-white font-bold text-xs py-2.5 rounded-xl shadow">Kích Hoạt Ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // DỮ LIỆU CÁC CỬA HÀNG TRÊN ĐẤT PHÚ ZALO AI (MÀU ĐỎ #D32027 & XANH #1B2A6B)
+        // =====================================================================
+        const shops = {
+            "datphu-kythuat": {
+                id: "datphu-kythuat",
+                avatar: "ĐP",
+                avatarBg: "#1B2A6B",
+                name: "Đất Phú: Kỹ Thuật 6K & Giải Pháp Số",
+                tag: "Trụ sở chính",
+                bankCode: "VCB",
+                bankAcc: "0751000025858",
+                bankHolder: "CONG TY TNHH THUONG MAI DAT PHU",
+                greeting: "Dạ CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ xin kính chào Anh/Chị! 🦅 Em là Trợ lý AI trực 24/7. Anh/Chị cần lắp Gói tự động hóa nước máy - nước giếng, đăng ký Chữ ký số Hóa đơn điện tử hay Thuê Bot AI bán hàng chỉ 199k/tháng ạ?",
+                quickPills: ["Nước giếng tràn ngược?", "Bảng giá Gói điện nước", "Chữ ký số + Hóa đơn", "Đặt Gói số 1: 0935889900"],
+                products: [
+                    { id: 1, name: "Gói 1: Tự Động Hóa Nước Máy - Nước Giếng", price: 1650000, promo: "Bảo hành QR 12 tháng + Phao 12V chống giật", desc: "Gồm 2 van 1 chiều đồng + Rơ-le phao an toàn 12V, chấm dứt tràn bồn và cháy bơm." },
+                    { id: 2, name: "Gói 2: Nâng Cấp An Toàn Điện Nước Phòng Tắm", price: 1150000, promo: "Dây cấp Inox 304 + Aptomat chống giật RCBO", desc: "Thi công gọn trong 90 phút, có chụp ảnh Geostamp nghiệm thu 6K." },
+                    { id: 3, name: "Gói 3: Chữ Ký Số FastCA + 500 Hóa Đơn Điện Tử", price: 1490000, promo: "Kích hoạt từ xa trong 20 phút • Chuẩn TT 78", desc: "Hỗ trợ trọn gói thủ tục thuế ban đầu cho doanh nghiệp & hộ kinh doanh." },
+                    { id: 4, name: "Gói 4: Thuê Trợ Lý AI Bán Hàng Đa Kênh", price: 199000, promo: "Chỉ 6.000đ/ngày • Tự động xuất VietQR", desc: "Trực chat 24/7 trên Zalo, Facebook, Web; tiền về thẳng STK chủ tiệm." }
+                ]
+            },
+            "dacsan-chiba": {
+                id: "dacsan-chiba",
+                avatar: "CB",
+                avatarBg: "#D32027",
+                name: "Đặc Sản Xứ Nẫu Chị Ba",
+                tag: "Đặc sản OCOP",
+                bankCode: "VCB",
+                bankAcc: "0914882341",
+                bankHolder: "NGUYEN THI BA",
+                greeting: "Dạ Út Nẫu chào Anh/Chị nghen! 🥰 Hôm nay nhà Chị Ba vừa ra mẻ Bò một nắng Krông Pa thơm phức và Nước mắm Gành Đỏ nguyên chất. Anh/Chị lấy gói 500g hay 1kg để em báo giá ưu đãi ạ?",
+                quickPills: ["Bò 1 nắng giá sao?", "Nước mắm Gành Đỏ?", "Ship nội thành Tuy Hòa?", "Lấy 1kg bò SĐT 0914882341"],
+                products: [
+                    { id: 1, name: "Bò Một Nắng Krông Pa (Gói 500g)", price: 280000, promo: "Tặng 1 hũ muối kiến vàng rừng", desc: "Bò cỏ tơ phơi đúng 1 nắng giòn ngọt, hút chân không sạch sẽ." },
+                    { id: 2, name: "Combo Quà Biếu Bò Một Nắng 1Kg", price: 550000, promo: "Freeship + Tặng 2 hũ muối kiến vàng", desc: "Hộp quà sang trọng mang đậm hương vị Phú Yên." },
+                    { id: 3, name: "Nước Mắm Nhỉ Gành Đỏ (Cặp 2 chai)", price: 160000, promo: "Cá cơm than ủ chượp 12 tháng", desc: "Độ đạm tự nhiên 40 độ, không chất bảo quản." }
+                ]
+            },
+            "sieuthi-namtien": {
+                id: "sieuthi-namtien",
+                avatar: "NT",
+                avatarBg: "#1B2A6B",
+                name: "Siêu Thị Sữa Tã Năm Tiền",
+                tag: "10 Chi nhánh",
+                bankCode: "MB",
+                bankAcc: "0989112567",
+                bankHolder: "SIEU THI NAM TIEN",
+                greeting: "Dạ Hệ thống 10 Siêu thị Mẹ & Bé Năm Tiền chào Ba Mẹ ạ! 🍼 Ba mẹ cần tìm sữa Meiji, Pediasure hay tã Moony cho bé để cửa hàng gần nhất giao tận nhà trong 15 phút ạ?",
+                quickPills: ["Sữa Meiji nội địa?", "Tã Moony giảm giá?", "Đặt 1 lon Meiji: 0988776655"],
+                products: [
+                    { id: 1, name: "Sữa Meiji Nội Địa Nhật Số 0 (800g)", price: 525000, promo: "Tặng bình tập uống khi mua 2 lon", desc: "Mát bụng, dễ tiêu hóa, chuẩn nội địa Nhật Bản." },
+                    { id: 2, name: "Tã Quần/Dán Moony Natural Cao Cấp", price: 365000, promo: "Mua 3 bịch giảm ngay 30.000đ", desc: "Bề mặt bông Organic mềm mịn chống hăm cho bé." }
+                ]
+            },
+            "bepchay-tamduc": {
+                id: "bepchay-tamduc",
+                avatar: "TĐ",
+                avatarBg: "#D32027",
+                name: "Bếp Chay Thanh Tịnh Tâm Đức",
+                tag: "Ẩm thực chay",
+                bankCode: "VCB",
+                bankAcc: "0905112233",
+                bankHolder: "BEP CHAY TAM DUC",
+                greeting: "Nam Mô A Di Đà Phật! 🙏 Bếp Chay Tâm Đức kính chào quý gia chủ. Quý vị cần đặt Mâm cỗ giỗ chay 8 món trọn gói tận nhà hay cơm chay thanh tịnh hằng ngày ạ?",
+                quickPills: ["Mâm cỗ 8 món gồm gì?", "Có mượn bát đĩa không?", "Đặt 1 mâm cỗ SĐT 0905112233"],
+                products: [
+                    { id: 1, name: "Mâm Cỗ Cúng Giỗ Chay 8 Món Truyền Thống", price: 850000, promo: "Miễn phí mượn bát đĩa sành sứ & dọn dẹp", desc: "Nấu mới 100% từ nấm tươi, hạt sen, rau củ sạch không hàn the." },
+                    { id: 2, name: "Set 10 Phần Cơm Chay Thanh Tịnh", price: 300000, promo: "Hộp bã mía sinh học an toàn", desc: "Thực đơn đổi món mỗi ngày, giao nóng tận nơi." }
+                ]
+            }
+        };
+
+        let activeShopId = "datphu-kythuat";
+        let selectedProduct = null;
+
+        let ordersList = [
+            { time: "Vừa xong", phone: "0914.882.341", item: "Combo Bò Một Nắng 1Kg (DP8821)", amount: 550000, shop: "Đặc Sản Xứ Nẫu Chị Ba" },
+            { time: "15 phút trước", phone: "0935.889.900", item: "Gói 1: Tự Động Hóa Nước (DP7710)", amount: 1650000, shop: "Đất Phú: Kỹ Thuật 6K & Giải Pháp Số" },
+            { time: "1 giờ trước", phone: "0989.112.567", item: "Sữa Meiji Nội Địa Nhật (DP6502)", amount: 525000, shop: "Siêu Thị Sữa Tã Năm Tiền" },
+            { time: "2 giờ trước", phone: "0905.112.233", item: "Mâm Cỗ Chay 8 Món (DP5109)", amount: 850000, shop: "Bếp Chay Thanh Tịnh Tâm Đức" }
+        ];
+
+        function initZaloApp() {
+            renderShopList();
+            selectShop(activeShopId);
+            renderOrdersTable();
+        }
+
+        function renderShopList() {
+            const box = document.getElementById('shopListContainer');
+            const kw = (document.getElementById('searchShopInput')?.value || '').toLowerCase();
+            box.innerHTML = Object.values(shops)
+                .filter(s => s.name.toLowerCase().includes(kw))
+                .map(s => {
+                    const isActive = s.id === activeShopId;
+                    return `
+                        <div onclick="selectShop('${s.id}')" class="p-3.5 flex items-center gap-3 cursor-pointer transition border-l-4 ${isActive ? 'bg-[#e8ecf7] border-[#D32027]' : 'border-transparent hover:bg-slate-50'}">
+                            <div class="w-12 h-12 rounded-full text-white font-extrabold flex items-center justify-center text-sm shrink-0 shadow" style="background:${s.avatarBg}">
+                                ${s.avatar}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h3 class="font-bold text-sm dp-text-blue truncate">${s.name}</h3>
+                                    <span class="text-[10px] text-white dp-bg-red px-1.5 py-0.5 rounded font-bold shrink-0">${s.tag}</span>
+                                </div>
+                                <p class="text-xs text-slate-500 truncate mt-0.5">${s.products[0]?.name || 'Nhấn để chat tư vấn ngay'}...</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        function selectShop(shopId) {
+            activeShopId = shopId;
+            const s = shops[shopId];
+            selectedProduct = s.products[0];
+
+            renderShopList();
+
+            const av = document.getElementById('chatAvatar');
+            av.innerText = s.avatar;
+            av.style.background = s.avatarBg;
+            document.getElementById('chatShopTitle').innerText = s.name;
+
+            const pills = document.getElementById('quickQuestionPills');
+            pills.innerHTML = s.quickPills.map(q => `
+                <button onclick="quickAsk('${q.replace(/'/g, "\\'")}')" class="bg-[#e8ecf7] hover:bg-blue-200 dp-text-blue text-xs font-semibold px-3 py-1.5 rounded-full transition shrink-0">
+                    ${q}
+                </button>
+            `).join('');
+
+            const stream = document.getElementById('zaloMessageStream');
+            stream.innerHTML = '';
+            addBotBubble(s.greeting);
+            setTimeout(() => showMenuInChat(), 250);
+
+            renderCatalogView();
+            document.getElementById('merchantBannerTitle').innerText = s.name;
+            document.getElementById('editBankCode').value = s.bankCode;
+            document.getElementById('editBankAcc').value = s.bankAcc;
+        }
+
+        function addUserBubble(text) {
+            const stream = document.getElementById('zaloMessageStream');
+            const div = document.createElement('div');
+            div.className = 'self-end max-w-[80%] zalo-user-bubble rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm font-medium msg-anim';
+            div.innerText = text;
+            stream.appendChild(div);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function addBotBubble(html) {
+            const s = shops[activeShopId];
+            const stream = document.getElementById('zaloMessageStream');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'self-start max-w-[88%] flex items-start gap-2.5 msg-anim';
+            wrapper.innerHTML = `
+                <div class="w-8 h-8 rounded-full text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow" style="background:${s.avatarBg}">
+                    ${s.avatar}
+                </div>
+                <div class="zalo-bot-bubble rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed">
+                    ${html}
+                </div>
+            `;
+            stream.appendChild(wrapper);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function showMenuInChat() {
+            const s = shops[activeShopId];
+            const cardsHtml = s.products.map((p, idx) => `
+                <div class="border border-slate-200 rounded-xl p-3 bg-slate-50 hover:bg-white transition flex items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="font-bold dp-text-blue text-xs sm:text-sm">${p.name}</div>
+                        <div class="dp-text-red font-extrabold text-sm mt-0.5">${p.price.toLocaleString('vi-VN')}đ</div>
+                        <div class="text-[11px] text-slate-600 font-medium mt-0.5">🎁 ${p.promo}</div>
+                    </div>
+                    <button onclick="clickBuyProduct(${idx})" class="dp-bg-red text-white text-xs font-bold px-3.5 py-2 rounded-xl shrink-0 shadow">
+                        Chọn mua
+                    </button>
+                </div>
+            `).join('');
+
+            addBotBubble(`
+                <div class="font-extrabold dp-text-blue mb-2">📋 Bảng giá niêm yết tại ${s.name}:</div>
+                <div class="space-y-2">${cardsHtml}</div>
+                <div class="text-xs text-slate-500 mt-2">👉 Anh/Chị bấm <b class="dp-text-red">"Chọn mua"</b> hoặc nhắn <b>Số điện thoại</b> để nhận mã VietQR thanh toán ngay ạ!</div>
+            `);
+        }
+
+        function clickBuyProduct(idx) {
+            const s = shops[activeShopId];
+            selectedProduct = s.products[idx];
+            switchMainView('chat');
+            addBotBubble(`
+                Dạ Anh/Chị đã chọn: <b class="dp-text-blue">${selectedProduct.name}</b> (<b class="dp-text-red">${selectedProduct.price.toLocaleString('vi-VN')}đ</b>).<br/>
+                🎁 Ưu đãi: ${selectedProduct.promo}.<br/><br/>
+                👉 Anh/Chị nhập <b>Số Điện Thoại</b> vào ô chat bên dưới để em tạo <b>Mã VietQR</b> và phiếu bảo hành điện tử ngay nhé!
+            `);
+            document.getElementById('zaloChatInput').focus();
+        }
+
+        function quickAsk(text) {
+            document.getElementById('zaloChatInput').value = text;
+            sendZaloMessage();
+        }
+
+        function sendZaloMessage() {
+            const inp = document.getElementById('zaloChatInput');
+            const text = inp.value.trim();
+            if (!text) return;
+
+            inp.value = '';
+            addUserBubble(text);
+
+            const s = shops[activeShopId];
+            const lower = text.toLowerCase();
+
+            // 1. Kiểm tra nếu khách nhắn Số Điện Thoại -> Xuất ngay thẻ VietQR chuẩn Đỏ - Xanh Đất Phú
+            const phoneMatch = text.match(/(0[3|5|7|8|9])+([0-9]{8})\b/);
+            if (phoneMatch) {
+                const phone = phoneMatch[0];
+                const prod = selectedProduct || s.products[0];
+                const code = 'DP' + Math.floor(1000 + Math.random() * 9000);
+                const qrUrl = `https://img.vietqr.io/image/${s.bankCode}-${s.bankAcc}-compact2.png?amount=${prod.price}&addInfo=${encodeURIComponent(code + ' ' + phone)}&accountName=${encodeURIComponent(s.bankHolder)}`;
+
+                ordersList.unshift({
+                    time: "Vừa xong",
+                    phone,
+                    item: `${prod.name} (${code})`,
+                    amount: prod.price,
+                    shop: s.name
+                });
+                renderOrdersTable();
+
+                setTimeout(() => {
+                    addBotBubble(`
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-1.5 dp-text-red font-extrabold">
+                                <span>🦅 ĐÃ LÊN ĐƠN & KÍCH HOẠT BẢO HÀNH 6K ĐẤT PHÚ</span>
+                            </div>
+                            <div class="bg-[#e8ecf7] border border-[#1B2A6B]/20 rounded-xl p-3 text-xs space-y-1">
+                                <div>• Mã đơn bảo hành: <b class="dp-text-blue">${code}</b></div>
+                                <div>• SĐT Khách hàng: <b>${phone}</b></div>
+                                <div>• Sản phẩm/Gói: <b>${prod.name}</b></div>
+                                <div>• Tổng thanh toán: <b class="dp-text-red text-sm">${prod.price.toLocaleString('vi-VN')}đ</b></div>
+                            </div>
+                            <div class="text-center bg-white border-2 border-[#1B2A6B] rounded-xl p-3">
+                                <div class="text-[11px] font-bold dp-text-blue mb-1">Quét mã VietQR chuyển thẳng về TK ${s.name}</div>
+                                <img src="${qrUrl}" alt="VietQR" class="w-44 mx-auto rounded-lg border border-slate-200" />
+                                <div class="text-[11px] font-semibold dp-text-red mt-1">${s.bankCode} • ${s.bankAcc} • ${s.bankHolder}</div>
+                            </div>
+                        </div>
+                    `);
+                }, 350);
+                return;
+            }
+
+            if (lower.includes('gặp chủ tiệm') || lower.includes('gọi điện')) {
+                triggerHumanHandoff();
+                return;
+            }
+
+            setTimeout(() => {
+                const matched = s.products.find(p => {
+                    const words = p.name.toLowerCase().split(' ').filter(w => w.length > 2);
+                    return words.some(w => lower.includes(w));
+                });
+
+                if (matched) {
+                    selectedProduct = matched;
+                    addBotBubble(`
+                        Dạ món <b class="dp-text-blue">${matched.name}</b> có giá niêm yết là <b class="dp-text-red">${matched.price.toLocaleString('vi-VN')}đ</b> ạ!<br/>
+                        ✨ ${matched.desc}<br/>
+                        🎁 Ưu đãi: <b>${matched.promo}</b><br/><br/>
+                        Anh/Chị nhắn <b>Số điện thoại</b> vào đây để em xuất mã VietQR chốt đơn liền nghen!
+                    `);
+                } else if (lower.includes('giá') || lower.includes('menu') || lower.includes('gói')) {
+                    showMenuInChat();
+                } else {
+                    addBotBubble(`
+                        Dạ yêu cầu này hiện chưa có sẵn trong bảng giá tự động, em xin phép báo chủ tiệm <b class="dp-text-blue">${s.name}</b> hỗ trợ Anh/Chị ngay ạ!<br/>
+                        👉 Anh/Chị để lại <b>Số điện thoại</b> hoặc bấm xem <a href="javascript:showMenuInChat()" class="dp-text-red font-bold underline">Bảng giá niêm yết tại đây</a> nhé!
+                    `);
+                }
+            }, 350);
+        }
+
+        function triggerHumanHandoff() {
+            const s = shops[activeShopId];
+            addBotBubble(`
+                🔔 <b class="dp-text-red">Đã kết nối trực tiếp tới Chủ Tiệm (${s.name})!</b><br/>
+                Trợ lý AI đã tạm nghỉ 30 phút và vừa gửi chuông báo về Zalo cá nhân của chủ tiệm. Chủ tiệm sẽ hỗ trợ Anh/Chị ngay lập tức ạ!
+            `);
+        }
+
+        function switchMainView(viewName) {
+            ['chat', 'catalog', 'merchant', 'geostamp', 'worker6k', 'provas'].forEach(v => {
+                const viewEl = document.getElementById('view-' + v);
+                if (viewEl) viewEl.classList.add('hidden');
+                const btn = document.getElementById('nav-' + v);
+                if (btn) {
+                    btn.classList.remove('dp-bg-red', 'shadow');
+                }
+            });
+            const activeView = document.getElementById('view-' + viewName);
+            if (activeView) activeView.classList.remove('hidden');
+            const activeBtn = document.getElementById('nav-' + viewName);
+            if (activeBtn) {
+                activeBtn.classList.add('dp-bg-red', 'shadow');
+            }
+        }
+
+        function verifyOtp6k() {
+            const otpVal = document.getElementById('otp6kInput').value.trim();
+            const resEl = document.getElementById('otp6kResult');
+            if (!otpVal || otpVal.length < 4) {
+                alert('Vui lòng nhập đủ 4 số mã OTP nghiệm thu của khách hàng Chị Phượng!');
+                return;
+            }
+            resEl.classList.remove('hidden');
+            resEl.innerHTML = `✅ <b>ĐÃ KHỚP MÃ OTP (${otpVal}) — NGHIỆM THU K5 THÀNH CÔNG!</b><br/>` +
+                `⚡ Đã tự động giải ngân VietQR Tức Thì: <b>475.000đ (95%)</b> về TK Thợ <b>Lê Văn Hùng</b> | <b>25.000đ (5% phí nền tảng)</b> về TK Đất Phú OneBase.`;
+        }
+
+        function renderCatalogView() {
+            const s = shops[activeShopId];
+            document.getElementById('catalogShopName').innerText = `Bảng Giá Chính Thức — ${s.name}`;
+            document.getElementById('catalogGrid').innerHTML = s.products.map((p, idx) => `
+                <div class="bg-white rounded-2xl p-4 shadow-sm border-t-4 border-[#1B2A6B] flex flex-col justify-between">
+                    <div>
+                        <span class="text-[11px] font-bold dp-text-blue bg-[#e8ecf7] px-2.5 py-0.5 rounded-full">🎁 ${p.promo}</span>
+                        <h3 class="font-extrabold dp-text-blue text-base mt-2">${p.name}</h3>
+                        <div class="dp-text-red font-extrabold text-lg mt-1">${p.price.toLocaleString('vi-VN')}đ</div>
+                        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">${p.desc}</p>
+                    </div>
+                    <button onclick="clickBuyProduct(${idx})" class="mt-4 w-full dp-bg-red text-white font-bold text-xs py-2.5 rounded-xl shadow">
+                        🛒 Đặt mua món này qua Chat
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderOrdersTable() {
+            document.getElementById('navLeadBadge').innerText = ordersList.length;
+            document.getElementById('merchantStatOrders').innerText = ordersList.length + ' Đơn';
+            const total = ordersList.reduce((sum, o) => sum + o.amount, 0);
+            document.getElementById('merchantStatRev').innerText = total.toLocaleString('vi-VN') + 'đ';
+
+            document.getElementById('merchantOrdersBody').innerHTML = ordersList.map(o => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-2 text-slate-400">${o.time}</td>
+                    <td class="py-3 px-2 font-bold dp-text-blue font-mono text-sm">${o.phone}</td>
+                    <td class="py-3 px-2 font-semibold text-slate-800">
+                        ${o.item}
+                        <div class="text-[10px] text-slate-400">${o.shop}</div>
+                    </td>
+                    <td class="py-3 px-2 font-extrabold dp-text-red">${o.amount.toLocaleString('vi-VN')}đ</td>
+                    <td class="py-3 px-2">
+                        <a href="tel:${o.phone.replace(/\./g,'')}" class="dp-bg-red text-white px-2.5 py-1 rounded-lg font-bold text-[11px] shadow-sm">📞 Gọi ngay</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveMerchantSettings() {
+            const s = shops[activeShopId];
+            s.bankCode = document.getElementById('editBankCode').value.trim() || 'VCB';
+            s.bankAcc = document.getElementById('editBankAcc').value.trim() || '0751000025858';
+
+            const name = document.getElementById('addName').value.trim();
+            const price = Number(document.getElementById('addPrice').value) || 0;
+            const promo = document.getElementById('addPromo').value.trim() || 'Bảo hành chuẩn 6K Đất Phú';
+
+            if (name && price > 0) {
+                s.products.unshift({ id: Date.now(), name, price, promo, desc: 'Sản phẩm/dịch vụ niêm yết chính thức.' });
+                document.getElementById('addName').value = '';
+                document.getElementById('addPrice').value = '';
+                document.getElementById('addPromo').value = '';
+            }
+            renderCatalogView();
+            alert(`✅ Đã lưu cài đặt cho [${s.name}]!`);
+            switchMainView('chat');
+            showMenuInChat();
+        }
+
+        let lastGeostampDataUrl = "";
+        function processGeostampImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.getElementById('geostampCanvas');
+                    const maxW = 960;
+                    const scale = Math.min(1, maxW / img.width);
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    const barH = 70;
+                    ctx.fillStyle = "rgba(27, 42, 107, 0.9)";
+                    ctx.fillRect(0, canvas.height - barH, canvas.width, barH);
+
+                    ctx.fillStyle = "#D32027";
+                    ctx.fillRect(0, canvas.height - barH, 8, barH);
+
+                    ctx.fillStyle = "#F59E0B";
+                    ctx.font = "bold 15px Inter, sans-serif";
+                    const nowStr = new Date().toLocaleString('vi-VN');
+                    ctx.fillText(`🦅 ĐẤT PHÚ 6K VERIFIED • ${nowStr} • GPS: 13.0955°N, 109.3209°E`, 18, canvas.height - 40);
+
+                    ctx.fillStyle = "#ffffff";
+                    ctx.font = "13px Inter, sans-serif";
+                    ctx.fillText(`Bằng chứng hiện trường thực tế • Bảo hành điện tử QR`, 18, canvas.height - 15);
+
+                    lastGeostampDataUrl = canvas.toDataURL('image/webp', 0.78);
+                    document.getElementById('geostampPreviewBox').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function sendGeostampToChat() {
+            if (!lastGeostampDataUrl) return;
+            switchMainView('chat');
+            addBotBubble(`
+                <div class="space-y-1.5">
+                    <div class="text-xs font-extrabold dp-text-red">📸 ẢNH HIỆN TRƯỜNG ĐÃ ĐÓNG DẤU 6K ĐẤT PHÚ</div>
+                    <img src="${lastGeostampDataUrl}" class="rounded-xl border-2 border-[#1B2A6B] max-h-60" />
+                    <div class="text-[11px] text-slate-500">Đã lưu bằng chứng số xác thực hiện trạng trước/sau thi công.</div>
+                </div>
+            `);
+        }
+
+        function openQrModal() {
+            const s = shops[activeShopId];
+            document.getElementById('qrModalShopName').innerText = s.name;
+            document.getElementById('qrModalImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent('https://zalo.me/' + s.id)}`;
+            document.getElementById('qrModal').classList.remove('hidden');
+        }
+
+        function openQuickSetupModal() { document.getElementById('quickSetupModal').classList.remove('hidden'); }
+        function closeQuickSetupModal() { document.getElementById('quickSetupModal').classList.add('hidden'); }
+
+        function createNewShopQuick() {
+            const name = document.getElementById('newShopName').value.trim();
+            const bank = document.getElementById('newShopBank').value.trim() || 'VCB';
+            const acc = document.getElementById('newShopAcc').value.trim() || '0751000025858';
+            const prod = document.getElementById('newShopFirstProd').value.trim() || 'Sản phẩm tiêu chuẩn';
+            const price = Number(document.getElementById('newShopFirstPrice').value) || 250000;
+
+            if (!name) return alert('Vui lòng nhập tên cửa hàng!');
+            const id = 'shop-' + Date.now();
+            const initials = name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+            shops[id] = {
+                id,
+                avatar: initials,
+                avatarBg: "#D32027",
+                name,
+                tag: "Đối tác mới",
+                bankCode: bank,
+                bankAcc: acc,
+                bankHolder: name.toUpperCase(),
+                greeting: `Dạ ${name} xin chào Anh/Chị! 👋 Em là Trợ lý AI Đất Phú trực 24/7. Anh/Chị cần đặt mua ${prod} hay xem bảng giá ưu đãi hôm nay ạ?`,
+                quickPills: [`Giá ${prod}?`, "Có giao tận nơi không?", `Đặt 1 phần SĐT 0912345678`],
+                products: [
+                    { id: 1, name: prod, price, promo: "Bảo chứng chất lượng Đất Phú", desc: "Thanh toán VietQR nhanh chóng, phục vụ tận tâm." }
+                ]
+            };
+
+            closeQuickSetupModal();
+            selectShop(id);
+            switchMainView('chat');
+        }
+
+        function toggleMobileShopDrawer() {
+            const sb = document.getElementById('sidebarList');
+            sb.classList.toggle('hidden');
+            sb.classList.toggle('fixed');
+            sb.classList.toggle('inset-0');
+            sb.classList.toggle('z-50');
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        }
+        window.onload = initZaloApp;
+    </script>
+</body>
+</html>

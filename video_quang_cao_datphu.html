@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Quảng Cáo Sản Phẩm: Chatbox AI & Sàn Đất Phú 6K | Đất Phú</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #090d16; color: #ffffff; overflow-x: hidden; }
+        .dp-bg-blue { background-color: #1B2A6B; }
+        .dp-bg-red { background-color: #D32027; }
+        .dp-text-blue { color: #1B2A6B; }
+        .dp-text-red { color: #D32027; }
+        .dp-stage-gradient {
+            background: radial-gradient(circle at 20% 20%, #1B2A6B 0%, #0b1336 55%, #3a0b12 100%);
+        }
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(24px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(211, 32, 39, 0.7); }
+            50% { box-shadow: 0 0 30px 10px rgba(211, 32, 39, 0.25); }
+        }
+        .anim-up { animation: floatUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .glow-red { animation: pulseGlow 2s infinite; }
+
+        /* Khung Video 16:9 hoặc 9:16 */
+        .stage-16-9 { width: 100%; max-width: 1024px; height: 576px; }
+        .stage-9-16 { width: 390px; height: 693px; }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+
+    <!-- THANH ĐIỀU KHIỂN STUDIO QUẢNG CÁO -->
+    <header class="bg-[#0f172a] border-b border-slate-800 px-4 py-3 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <img src="./logo_datphu.jpg" alt="Đất Phú" class="w-10 h-10 rounded-xl object-cover border border-white/30" onerror="this.src='https://placehold.co/80x80/D32027/FFFFFF?text=DP'">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-[#D32027] text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">MOTION COMMERCIAL STUDIO</span>
+                        <span class="text-xs text-amber-300 font-bold">ĐẤT PHÚ ONEBASE GEN 4</span>
+                    </div>
+                    <h1 class="text-sm md:text-base font-black text-white">VIDEO QUẢNG CÁO MINH HỌA SẢN PHẨM: CHATBOX AI & SÀN ĐẤT PHÚ 6K</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="setAspectRatio('16:9')" id="btnRatio169" class="bg-[#1B2A6B] border border-blue-400 text-white text-xs font-bold px-3 py-2 rounded-xl">
+                    🖥️ Ngang 16:9 (Tivi / YouTube / Web)
+                </button>
+                <button onclick="setAspectRatio('9:16')" id="btnRatio916" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl">
+                    📱 Dọc 9:16 (TikTok / Zalo / Reels)
+                </button>
+                <button onclick="toggleVoiceover()" id="btnVoiceToggle" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">
+                    🔊 Thuyết Minh Tiếng Việt: BẬT
+                </button>
+                <a href="./zalo_ai_chat.html" class="bg-white text-[#1B2A6B] text-xs font-extrabold px-3 py-2 rounded-xl">
+                    💬 Mở App Thật
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- KHUNG TRÌNH CHIẾU VIDEO CHÍNH -->
+    <main class="max-w-6xl mx-auto px-4 mt-6 flex flex-col items-center">
+
+        <!-- SÂN KHẤU VIDEO (VIDEO STAGE) -->
+        <div id="videoStage" class="stage-16-9 dp-stage-gradient rounded-3xl border-4 border-[#D32027] shadow-2xl relative overflow-hidden flex flex-col justify-between select-none">
+
+            <!-- TOP WATERMARK THƯƠNG HIỆU ĐẤT PHÚ -->
+            <div class="px-5 pt-4 flex items-center justify-between z-20">
+                <div class="flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15">
+                    <img src="./logo_datphu.jpg" alt="Logo" class="w-8 h-8 rounded-lg object-cover" onerror="this.src='https://placehold.co/60x60/D32027/FFFFFF?text=DP'">
+                    <div>
+                        <div class="text-[11px] font-black tracking-wide text-white">CÔNG TY TNHH TM ĐẤT PHÚ</div>
+                        <div class="text-[9px] text-amber-300 font-semibold">MST: 4401020233 • Kín Kẽ OS™ Gen 4</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span id="sceneBadge" class="bg-[#D32027] text-white text-[11px] font-black px-3 py-1 rounded-full shadow">
+                        CẢNH 1 / 5 • NỖI ĐAU CHỦ TIỆM
+                    </span>
+                    <span id="timerDisplay" class="bg-black/50 text-white font-mono text-xs font-bold px-2.5 py-1 rounded-lg border border-white/10">
+                        00:00 / 00:50
+                    </span>
+                </div>
+            </div>
+
+            <!-- NỘI DUNG TỪNG CẢNH (DYNAMIC SCENE CONTAINER) -->
+            <div id="sceneContent" class="flex-1 flex items-center justify-center px-6 py-2 z-10 overflow-hidden">
+                <!-- Sẽ được render tự động bằng JS -->
+            </div>
+
+            <!-- PHỤ ĐỀ THUYẾT MINH (SUBTITLE BAR) & THANH TIẾN TRÌNH -->
+            <div class="z-20 bg-gradient-to-t from-black/95 via-black/80 to-transparent pt-4 pb-3 px-6">
+                <div id="subtitleBox" class="text-center text-sm md:text-base font-extrabold text-amber-300 drop-shadow mb-3 min-h-[2.5rem] flex items-center justify-center">
+                    "Bấm nút PHÁT VIDEO bên dưới để xem toàn bộ quy trình hoạt động của Chatbox AI & Sàn Đất Phú!"
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-full bg-[#D32027] transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BẢNG ĐIỀU KHIỂN PHÁT VIDEO & CHỌN CẢNH NHANH -->
+        <div class="w-full max-w-4xl mt-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <button onclick="startCommercial()" id="btnPlayPause" class="dp-bg-red hover:bg-red-700 text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg glow-red flex items-center gap-2">
+                    ▶️ PHÁT VIDEO QUẢNG CÁO (50 GIÂY)
+                </button>
+                <button onclick="restartCommercial()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-4 py-3 rounded-xl">
+                    🔄 Phát Lại Từ Đầu
+                </button>
+            </div>
+
+            <!-- Nút nhảy từng cảnh -->
+            <div class="flex flex-wrap items-center gap-1.5">
+                <button onclick="jumpToScene(0)" id="tabScene0" class="scene-tab bg-[#1B2A6B] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg">1. Nỗi đau</button>
+                <button onclick="jumpToScene(1)" id="tabScene1" class="scene-tab bg-slate-800 text-slate-300 text-[11px] font-bold px-3 py-1.5 rounded-lg">2. Chatbox AI</button>
+                <button onclick="jumpToScene(2)" id="tabScene2" class="scene-tab bg-slate-800 text-slate-300 text-[11px] font-bold px-3 py-1.5 rounded-lg">3. VietQR Tức thì</button>
+                <button onclick="jumpToScene(3)" id="tabScene3" class="scene-tab bg-slate-800 text-slate-300 text-[11px] font-bold px-3 py-1.5 rounded-lg">4. Gọi Thợ 6K</button>
+                <button onclick="jumpToScene(4)" id="tabScene4" class="scene-tab bg-slate-800 text-slate-300 text-[11px] font-bold px-3 py-1.5 rounded-lg">5. Báo giá 199K</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const SCENES = [
+            {
+                id: 0,
+                badge: "CẢNH 1 / 5 • NỖI ĐAU MẤT KHÁCH BAN ĐÊM",
+                durationSec: 10,
+                subtitle: "22 giờ 30 đêm... Khách nhắn Zalo hỏi mua hàng và gọi sửa máy lạnh, nhưng chủ quán đã ngủ say. Sáng hôm sau khách đã sang tiệm khác!",
+                voiceText: "Mười giờ rưỡi đêm. Khách nhắn Zalo hỏi mua đặc sản và gọi thợ sửa máy lạnh, nhưng chủ tiệm đã ngủ say. Sáng hôm sau, khách đã mua ở tiệm khác!",
+                renderHtml: () => `
+                    <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-5 items-center anim-up">
+                        <div class="space-y-3">
+                            <span class="bg-red-500/20 text-red-300 border border-red-400/30 text-xs font-extrabold px-3 py-1 rounded-full">🕙 22:30 ĐÊM • TẠI TP. TUY HÒA</span>
+                            <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
+                                Bạn Đang Đánh Rơi <span class="text-[#D32027] bg-white px-2 rounded-lg">40% Khách Hàng</span> Vì Trả Lời Tin Nhắn Chậm!
+                            </h2>
+                            <p class="text-xs md:text-sm text-blue-100 leading-relaxed">
+                                Khách hỏi giá lúc tối muộn, giờ nghỉ trưa hoặc lúc quán đang đông khách... Chỉ cần chậm 5 phút là khách lướt sang đối thủ ngay lập tức.
+                            </p>
+                        </div>
+                        <div class="bg-white text-slate-900 rounded-2xl p-4 shadow-2xl border-t-4 border-[#D32027] space-y-2.5">
+                            <div class="flex items-center justify-between border-b pb-2">
+                                <span class="font-extrabold text-xs text-slate-500">💬 Tin nhắn Zalo nhỡ (Chưa đọc)</span>
+                                <span class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full">3 Tin nhỡ</span>
+                            </div>
+                            <div class="bg-slate-100 p-2.5 rounded-xl text-xs">
+                                <b>Khách Minh Tuấn (22:15):</b> "Shop ơi có Bò một nắng 1kg giao về P.7 Tuy Hòa sáng mai không?"
+                            </div>
+                            <div class="bg-slate-100 p-2.5 rounded-xl text-xs">
+                                <b>Chị Phượng (22:28):</b> "Bên mình có nhận tháo lắp máy lạnh trọn gói không báo giá giúp chị?"
+                            </div>
+                            <div class="bg-red-50 border border-red-200 p-2.5 rounded-xl text-xs text-red-700 font-bold">
+                                ❌ Khách Minh Tuấn (22:40): "Thôi lâu quá mình đặt bên shop khác rồi nhé!"
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 1,
+                badge: "CẢNH 2 / 5 • TRỢ LÝ CHATBOX AI ĐẤT PHÚ 24/7",
+                durationSec: 10,
+                subtitle: "Giải pháp đột phá từ Đất Phú: Trợ lý Chatbox AI trực Zalo, Facebook, Website 24/7 — Phản hồi trong 2 giây, báo đúng bảng giá, không bao giờ nói sai!",
+                voiceText: "Giải pháp đột phá từ Công ty Đất Phú: Trợ lý Chatbox AI trực Zalo, Facebook và Website hai bốn trên bảy. Phản hồi trong hai giây, báo đúng bảng giá, cam kết không bao giờ bịa giá!",
+                renderHtml: () => `
+                    <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-5 items-center anim-up">
+                        <div class="space-y-3">
+                            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-extrabold px-3 py-1 rounded-full">⚡ TRẢ LỜI TRONG 1.5 GIÂY • 24/7</span>
+                            <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
+                                Trợ Lý <span class="text-amber-300">Chatbox AI Đất Phú</span> Tư Vấn & Báo Giá Chuẩn 100%
+                            </h2>
+                            <ul class="text-xs md:text-sm text-blue-100 space-y-1.5">
+                                <li>✅ Giao diện mượt mà, quen thuộc y hệt <b>Zalo</b></li>
+                                <li>✅ <b>Chống bịa giá tuyệt đối:</b> Chỉ báo giá các món chủ tiệm đã duyệt</li>
+                                <li>✅ Tự động dừng 30 phút khi chủ tiệm muốn vào chat trực tiếp</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#e2e8f0] text-slate-900 rounded-2xl overflow-hidden shadow-2xl border-2 border-white">
+                            <div class="dp-bg-blue text-white px-4 py-2.5 flex items-center justify-between">
+                                <div class="font-extrabold text-xs">🤖 Trợ lý AI — Đặc Sản Phú Yên Chị Ba</div>
+                                <span class="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full">● ONLINE 24/7</span>
+                            </div>
+                            <div class="p-3.5 space-y-2.5 text-xs">
+                                <div class="bg-[#d8e8ff] ml-auto max-w-[85%] p-2.5 rounded-xl text-slate-900">
+                                    Cho anh 1kg Bò một nắng Krông Pa giao về Phường 7 Tuy Hòa, SĐT 0914555888 nhé!
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow border-l-4 border-[#D32027]">
+                                    <div class="font-extrabold dp-text-blue">🤖 Trợ lý AI Đất Phú:</div>
+                                    <p class="mt-1 text-slate-700">Dạ em đã ghi nhận SĐT <b>0914.555.888</b>! Gói <b>Bò Một Nắng 1Kg (Tặng 2 hũ muối kiến vàng)</b> giá niêm yết là <b class="dp-text-red">550.000đ</b> (Freeship Tuy Hòa) ạ!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                badge: "CẢNH 3 / 5 • CHỐT ĐƠN VIETQR ZERO-FLOAT TỨC THÌ",
+                durationSec: 10,
+                subtitle: "Tự động tạo mã VietQR đã điền sẵn số tiền và nội dung chuyển khoản ngay trong khung chat. Tiền chảy 100% thẳng về tài khoản ngân hàng của Chủ tiệm!",
+                voiceText: "Hệ thống tự động xuất mã VietQR điền sẵn số tiền ngay trong khung chat. Một trăm phần trăm tiền hàng chảy thẳng về tài khoản ngân hàng của chính chủ tiệm!",
+                renderHtml: () => `
+                    <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-5 items-center anim-up">
+                        <div class="space-y-3">
+                            <span class="bg-amber-500/20 text-amber-300 border border-amber-400/40 text-xs font-extrabold px-3 py-1 rounded-full">💳 DÒNG TIỀN ZERO-FLOAT MINH BẠCH</span>
+                            <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
+                                Xuất Mã <span class="text-emerald-400">VietQR Động</span> — Tiền Về Thẳng Túi Chủ Quán!
+                            </h2>
+                            <p class="text-xs md:text-sm text-blue-100 leading-relaxed">
+                                Không lo nợ đọng, không qua ví trung gian giữ tiền. Khách quét QR là điện thoại chủ quán nổ tiền và hiện số điện thoại giao hàng ngay lập tức!
+                            </p>
+                        </div>
+                        <div class="bg-white text-slate-900 rounded-2xl p-4 shadow-2xl border-4 border-[#D32027] text-center">
+                            <div class="text-xs font-black dp-text-blue uppercase">MÃ VIETQR TỰ ĐỘNG TRONG KHUNG CHAT</div>
+                            <img src="https://img.vietqr.io/image/VCB-0751000025858-compact2.png?amount=550000&addInfo=MUA%20BO%201%20NANG%200914555888&accountName=CONG%20TY%20TNHH%20THUONG%20MAI%20DAT%20PHU" alt="VietQR" class="w-40 h-40 mx-auto my-2 rounded-xl border p-1">
+                            <div class="text-sm font-black dp-text-red">550.000 VNĐ</div>
+                            <div class="text-[11px] font-bold text-emerald-700 mt-1">✅ Chảy thẳng 100% về TK Ngân Hàng Của Tiệm</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                badge: "CẢNH 4 / 5 • SÀN CHỢ PHIÊN & GỌI THỢ 6K (OTP K5)",
+                durationSec: 10,
+                subtitle: "Liên thông trực tiếp lên Sàn Đất Phú Chợ Phiên & Gọi Thợ 6K: Khóa giá K3 500.000đ, định vị GPS thợ gần nhất và nghiệm thu bằng mã OTP 4 số an tâm tuyệt đối!",
+                voiceText: "Đặc biệt, cửa hàng được đồng bộ lên Sàn Đất Phú Chợ Phiên và Gọi Thợ Sáu Ca. Khóa giá minh bạch, định vị thợ gần nhất và nghiệm thu bằng mã OTP bốn số an tâm tuyệt đối!",
+                renderHtml: () => `
+                    <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-5 items-center anim-up">
+                        <div class="space-y-3">
+                            <span class="bg-blue-500/20 text-amber-300 border border-blue-400/30 text-xs font-extrabold px-3 py-1 rounded-full">🛠️ QUY CHUẨN GỌI THỢ 6K ĐẤT PHÚ</span>
+                            <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
+                                Từ Chatbox AI Tiến Tới <span class="text-amber-300">Chợ Phiên & Gọi Thợ 6K</span>
+                            </h2>
+                            <ul class="text-xs md:text-sm text-blue-100 space-y-1.5">
+                                <li>• <b>K1 – K3:</b> Chị Phượng đặt tháo lắp máy lạnh ➔ Khóa giá cứng <b>500.000đ</b></li>
+                                <li>• <b>K4:</b> Thợ Lê Văn Hùng (P.7, Tuy Hòa) check-in GPS đúng hẹn</li>
+                                <li>• <b>K5:</b> Nhập mã <b>OTP 6821</b> ➔ Giải ngân <b>475.000đ (95%)</b> cho Thợ ngay!</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white text-slate-900 rounded-2xl p-4 shadow-2xl border-t-4 border-[#1B2A6B] space-y-2.5 text-xs">
+                            <div class="flex items-center justify-between">
+                                <span class="font-black dp-text-blue">CA DỊCH VỤ: #REQ-882910</span>
+                                <span class="bg-emerald-100 text-emerald-800 font-black px-2 py-0.5 rounded-full text-[10px]">OTP K5: 6821</span>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-xl border">
+                                <div>👤 Khách hàng: <b>Chị Phượng (P.7, Tuy Hòa)</b></div>
+                                <div>🔧 Dịch vụ: <b>Tháo lắp máy lạnh Inverter 1.5HP</b></div>
+                                <div>🔒 Giá khóa cứng K3: <b class="dp-text-red">500.000đ (Không phụ phí)</b></div>
+                            </div>
+                            <div class="p-2.5 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-900 font-bold">
+                                ✅ Đã xác nhận OTP 6821! Tự động giải ngân 475.000đ (95%) về TK Thợ Lê Văn Hùng & Kích hoạt Bảo hành K6!
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                badge: "CẢNH 5 / 5 • ĐĂNG KÝ NGAY CHỈ TỪ 199.000Đ/THÁNG",
+                durationSec: 10,
+                subtitle: "Chi phí chỉ từ 199.000đ/tháng — Rẻ hơn 1 ly trà đá mỗi ngày để có nhân viên AI trực 24/24! Liên hệ ngay Công ty TNHH Thương Mại Đất Phú để cài đặt trong 15 phút!",
+                voiceText: "Chi phí chỉ từ một trăm chín mươi chín nghìn đồng một tháng, hoặc một triệu chín trăm chín mươi nghìn đồng một năm tặng hai tháng. Liên hệ ngay Công ty Trách nhiệm hữu hạn Thương mại Đất Phú để được cài đặt tận nơi trong mười lăm phút!",
+                renderHtml: () => `
+                    <div class="w-full max-w-3xl text-center space-y-4 anim-up">
+                        <span class="bg-[#D32027] text-white text-xs font-black px-4 py-1 rounded-full uppercase shadow-lg">
+                            🔥 ƯU ĐÃI TIÊN PHONG TẠI PHÚ YÊN • CÀI ĐẶT TẬN NƠI 15 PHÚT
+                        </span>
+                        <h2 class="text-2xl md:text-4xl font-black text-white">
+                            Sở Hữu Trợ Lý Chatbox AI Chỉ Từ <span class="text-amber-300">6.500đ / Ngày!</span>
+                        </h2>
+
+                        <div class="grid grid-cols-3 gap-3 text-left max-w-2xl mx-auto">
+                            <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-3 text-white">
+                                <div class="text-[10px] font-bold text-blue-200">GÓI KHỞI ĐẦU</div>
+                                <div class="text-lg font-black text-white mt-0.5">199.000đ<span class="text-xs font-normal">/tháng</span></div>
+                                <div class="text-[10px] text-slate-300 mt-1">1.500 lượt tư vấn + VietQR</div>
+                            </div>
+                            <div class="bg-[#D32027] border-2 border-amber-300 rounded-2xl p-3 text-white shadow-xl scale-105">
+                                <div class="text-[10px] font-black text-amber-200">⭐ GÓI NĂM (TẶNG 2 THÁNG)</div>
+                                <div class="text-lg font-black text-white mt-0.5">1.990.000đ<span class="text-xs font-normal">/năm</span></div>
+                                <div class="text-[10px] text-white mt-1">Đa kênh Zalo/FB + Lên Sàn Đất Phú</div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-3 text-white">
+                                <div class="text-[10px] font-bold text-amber-300">BÁN ĐỨT TRỌN ĐỜI</div>
+                                <div class="text-lg font-black text-white mt-0.5">3.900.000đ</div>
+                                <div class="text-[10px] text-slate-300 mt-1">Bàn giao Source + Không giới hạn</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white text-slate-900 rounded-2xl p-3 max-w-xl mx-auto flex items-center justify-between gap-3 shadow-xl">
+                            <div class="text-left text-xs">
+                                <div class="font-black dp-text-blue">CÔNG TY TNHH THƯƠNG MẠI ĐẤT PHÚ (MST: 4401020233)</div>
+                                <div class="text-slate-600">Giám đốc: <b>Phạm Thanh Hân</b> • VCB: <b class="dp-text-red">0751000025858</b></div>
+                            </div>
+                            <a href="./bao_gia_chatbox_ai.html" class="dp-bg-red text-white font-black text-xs px-4 py-2.5 rounded-xl shrink-0 shadow">
+                                ĐĂNG KÝ NGAY ➔
+                            </a>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSceneIdx = 0;
+        let isPlaying = false;
+        let voiceEnabled = true;
+        let elapsedSeconds = 0;
+        const totalVideoSeconds = 50;
+        let timerInterval = null;
+
+        function renderScene(idx) {
+            currentSceneIdx = idx;
+            const sc = SCENES[idx];
+            document.getElementById('sceneBadge').innerText = sc.badge;
+            document.getElementById('sceneContent').innerHTML = sc.renderHtml();
+            document.getElementById('subtitleBox').innerText = `"${sc.subtitle}"`;
+
+            document.querySelectorAll('.scene-tab').forEach((btn, i) => {
+                if (i === idx) {
+                    btn.className = 'scene-tab bg-[#D32027] text-white text-[11px] font-extrabold px-3 py-1.5 rounded-lg shadow';
+                } else {
+                    btn.className = 'scene-tab bg-slate-800 text-slate-300 text-[11px] font-bold px-3 py-1.5 rounded-lg';
+                }
+            });
+
+            if (isPlaying && voiceEnabled && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(sc.voiceText);
+                utter.lang = 'vi-VN';
+                utter.rate = 1.05;
+                window.speechSynthesis.speak(utter);
+            }
+        }
+
+        function startCommercial() {
+            if (isPlaying) {
+                pauseCommercial();
+                return;
+            }
+            isPlaying = true;
+            document.getElementById('btnPlayPause').innerHTML = '⏸️ TẠM DỪNG VIDEO';
+            renderScene(currentSceneIdx);
+
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                if (elapsedSeconds >= totalVideoSeconds) {
+                    pauseCommercial();
+                    elapsedSeconds = totalVideoSeconds;
+                    updateTimerUi();
+                    return;
+                }
+                updateTimerUi();
+                const targetScene = Math.min(4, Math.floor(elapsedSeconds / 10));
+                if (targetScene !== currentSceneIdx) {
+                    renderScene(targetScene);
+                }
+            }, 1000);
+        }
+
+        function pauseCommercial() {
+            isPlaying = false;
+            clearInterval(timerInterval);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('btnPlayPause').innerHTML = '▶️ TIẾP TỤC PHÁT VIDEO';
+        }
+
+        function restartCommercial() {
+            pauseCommercial();
+            elapsedSeconds = 0;
+            currentSceneIdx = 0;
+            updateTimerUi();
+            startCommercial();
+        }
+
+        function jumpToScene(idx) {
+            elapsedSeconds = idx * 10;
+            updateTimerUi();
+            renderScene(idx);
+        }
+
+        function updateTimerUi() {
+            const pct = Math.min(100, (elapsedSeconds / totalVideoSeconds) * 100);
+            document.getElementById('progressBar').style.width = pct + '%';
+            const secStr = String(elapsedSeconds).padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `00:${secStr} / 00:50`;
+        }
+
+        function setAspectRatio(ratio) {
+            const stage = document.getElementById('videoStage');
+            const b169 = document.getElementById('btnRatio169');
+            const b916 = document.getElementById('btnRatio916');
+            if (ratio === '9:16') {
+                stage.classList.remove('stage-16-9');
+                stage.classList.add('stage-9-16');
+                b916.className = 'bg-[#D32027] border border-red-400 text-white text-xs font-bold px-3 py-2 rounded-xl';
+                b169.className = 'bg-slate-800 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl';
+            } else {
+                stage.classList.remove('stage-9-16');
+                stage.classList.add('stage-16-9');
+                b169.className = 'bg-[#1B2A6B] border border-blue-400 text-white text-xs font-bold px-3 py-2 rounded-xl';
+                b916.className = 'bg-slate-800 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl';
+            }
+        }
+
+        function toggleVoiceover() {
+            voiceEnabled = !voiceEnabled;
+            const btn = document.getElementById('btnVoiceToggle');
+            if (voiceEnabled) {
+                btn.innerText = '🔊 Thuyết Minh Tiếng Việt: BẬT';
+                btn.className = 'bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl';
+            } else {
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+                btn.innerText = '🔇 Thuyết Minh Tiếng Việt: TẮT';
+                btn.className = 'bg-slate-700 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl';
+            }
+        }
+
+        // Khởi tạo Cảnh 1 sẵn sàng
+        renderScene(0);
+    </script>
+</body>
+</html>

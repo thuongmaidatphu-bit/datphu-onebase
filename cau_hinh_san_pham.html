@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Cấu Hình Sản Phẩm & Bảng Giá AI (3 Bước) | Đất Phú OneBase</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1B2A6B">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; }
+        .dp-bg-blue { background-color: #1B2A6B; }
+        .dp-bg-red { background-color: #D32027; }
+        .dp-text-blue { color: #1B2A6B; }
+        .dp-text-red { color: #D32027; }
+        .dp-gradient { background: linear-gradient(135deg, #1B2A6B 0%, #111c4e 55%, #D32027 100%); }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+
+    <!-- HEADER -->
+    <header class="dp-gradient text-white shadow-xl border-b-4 border-[#D32027] sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <img src="./logo_datphu.jpg" alt="Đất Phú" class="w-12 h-12 rounded-xl object-cover border-2 border-white shadow" onerror="this.src='https://placehold.co/80x80/D32027/FFFFFF?text=DP'">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-[#D32027] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">CÔNG CỤ CẤU HÌNH SẢN PHẨM 5 PHÚT</span>
+                        <span class="bg-white/15 text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full">KHÔNG CẦN BIẾT LẬP TRÌNH</span>
+                    </div>
+                    <h1 class="text-base md:text-lg font-black tracking-tight mt-0.5">TRÌNH CẤU HÌNH SẢN PHẨM, BẢNG GIÁ AI & TÀI KHOẢN VIETQR</h1>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="./zalo_ai_chat.html" target="_blank" class="bg-[#D32027] hover:bg-red-700 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+                    💬 Mở Siêu Ứng Dụng Zalo AI
+                </a>
+                <a href="./crm_tuan2_15_cua_hang.html" class="bg-white text-[#1B2A6B] font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+                    🎯 CRM 15 Cửa Hàng Tuần 2
+                </a>
+                <a href="./bo_cong_cu_ban_hang_tuan1.html" class="bg-white/15 hover:bg-white/25 text-white font-bold text-xs px-3 py-2 rounded-xl">
+                    ⚡ Trung Tâm Go-Live
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-6 space-y-6">
+
+        <!-- TÓM TẮT 3 CÔNG VIỆC CẦN LÀM -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-4 shadow border-t-4 border-[#1B2A6B]">
+                <span class="bg-[#1B2A6B] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">BƯỚC 1 (1 PHÚT)</span>
+                <h3 class="font-extrabold dp-text-blue text-sm mt-2">Điền Thông Tin Tiệm & Ngân Hàng</h3>
+                <p class="text-xs text-slate-600 mt-1">Nhập Tên cửa hàng, SĐT Zalo chủ quán và Số tài khoản ngân hàng để hệ thống tự động tạo mã <b>VietQR Zero-Float</b>.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow border-t-4 border-[#D32027]">
+                <span class="bg-[#D32027] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">BƯỚC 2 (3 PHÚT)</span>
+                <h3 class="font-extrabold dp-text-red text-sm mt-2">Thêm Danh Sách Sản Phẩm / Dịch Vụ</h3>
+                <p class="text-xs text-slate-600 mt-1">Nhập Tên món + Giá bán + Khuyến mãi (hoặc bấm nút <b>"Nạp Nhanh Theo Ngành"</b>). AI chỉ báo đúng bảng giá này.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow border-t-4 border-emerald-600">
+                <span class="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">BƯỚC 3 (1 PHÚT)</span>
+                <h3 class="font-extrabold text-emerald-800 text-sm mt-2">Bấm Lưu & Xuất Mã Tự Động</h3>
+                <p class="text-xs text-slate-600 mt-1">Hệ thống tự động tạo sẵn <b>Lệnh SQL Supabase</b>, <b>Mã nhúng Website 1 dòng</b> và cập nhật thẳng vào App Zalo AI.</p>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- CỘT TRÁI (7 CỘT): FORM CẤU HÌNH TRỰC QUAN -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- BƯỚC 1: THÔNG TIN CỬA HÀNG & VIETQR -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-[#1B2A6B]">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <h2 class="text-base font-black dp-text-blue">1️⃣ BƯỚC 1: THÔNG TIN CỬA HÀNG & TÀI KHOẢN NHẬN TIỀN (VIETQR)</h2>
+                        <select id="presetLoader" onchange="loadPresetIndustry(this.value)" class="border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-bold dp-text-red bg-red-50">
+                            <option value="">⚡ Nạp nhanh mẫu 5 ngành...</option>
+                            <option value="dac_san">🥩 Mẫu 1: Đặc Sản Phú Yên</option>
+                            <option value="dien_lanh">🛠️ Mẫu 2: Điện Lạnh & Thợ 6K</option>
+                            <option value="me_be">🍼 Mẫu 3: Siêu Thị Mẹ & Bé</option>
+                            <option value="am_thuc">🍲 Mẫu 4: Ẩm Thực & Bếp Chay</option>
+                            <option value="gara_spa">🚗 Mẫu 5: Gara Ô Tô & Spa</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-4 text-xs">
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Tên Cửa Hàng / Thương Hiệu (*):</label>
+                            <input id="cfgShopName" type="text" value="Đặc Sản Xứ Nẫu Chị Ba" oninput="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-900">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Mã Định Danh Bot (Viết liền không dấu):</label>
+                            <input id="cfgBotCode" type="text" value="bot-dac-san-chi-ba" oninput="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold dp-text-blue">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">SĐT / Zalo Chủ Tiệm (Nhận báo đơn):</label>
+                            <input id="cfgOwnerPhone" type="text" value="0914882341" oninput="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-900">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Ngân Hàng Nhận Tiền (VietQR):</label>
+                            <select id="cfgBankCode" onchange="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold dp-text-blue bg-white">
+                                <option value="VCB">Vietcombank (VCB)</option>
+                                <option value="MB">MBBank (MB)</option>
+                                <option value="ICB">VietinBank (ICB)</option>
+                                <option value="BIDV">BIDV</option>
+                                <option value="ACB">ACB</option>
+                                <option value="TCB">Techcombank (TCB)</option>
+                                <option value="VBA">Agribank (VBA)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Số Tài Khoản Ngân Hàng Chủ Tiệm (*):</label>
+                            <input id="cfgBankAcc" type="text" value="0751000025858" oninput="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-mono font-extrabold dp-text-red">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Tên Chủ Tài Khoản (In hoa không dấu):</label>
+                            <input id="cfgBankOwner" type="text" value="CONG TY TNHH THUONG MAI DAT PHU" oninput="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-900">
+                        </div>
+                    </div>
+
+                    <div class="mt-3.5 text-xs">
+                        <label class="font-bold text-slate-700 block mb-1">Chỉ thị Giọng điệu & Chốt chặn Chống Bịa Giá (System Prompt):</label>
+                        <textarea id="cfgSystemPrompt" rows="3" oninput="refreshConfigOutput()" class="w-full border border-slate-300 rounded-xl p-3 text-xs text-slate-800">Bạn là Trợ lý Bán hàng AI 24/7. Xưng "Em", gọi khách là "Anh/Chị" lễ phép, thân tình. CHỈ báo giá đúng các sản phẩm trong danh mục bên dưới, tuyệt đối không tự bịa giá. Nếu khách hỏi ngoài danh mục, hãy xin Số điện thoại để Chủ tiệm gọi lại ngay.</textarea>
+                    </div>
+                </div>
+
+                <!-- BƯỚC 2: DANH SÁCH SẢN PHẨM & BẢNG GIÁ -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-[#D32027]">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div>
+                            <h2 class="text-base font-black dp-text-blue">2️⃣ BƯỚC 2: CẤU HÌNH SẢN PHẨM / DỊCH VỤ NIÊM YẾT</h2>
+                            <p class="text-[11px] text-slate-500">Thêm các món chủ lực của quán để AI tư vấn và tạo mã thanh toán VietQR chính xác.</p>
+                        </div>
+                        <button onclick="addProductRow()" class="dp-bg-red hover:bg-red-700 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow">
+                            + Thêm Sản Phẩm Mới
+                        </button>
+                    </div>
+
+                    <div id="productRowsContainer" class="space-y-3 mt-4"></div>
+                </div>
+
+            </div>
+
+            <!-- CỘT PHẢI (5 CỘT): XEM TRƯỚC THẺ SẢN PHẨM VIETQR & XUẤT MÃ TỰ ĐỘNG -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- XEM TRƯỚC KẾT QUẢ HIỂN THỊ TRÊN KHUNG CHAT ZALO AI -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-t-4 border-emerald-600">
+                    <span class="text-[11px] font-black uppercase text-emerald-700">XEM TRƯỚC TRỰC TIẾP (LIVE PREVIEW)</span>
+                    <h3 class="text-base font-black dp-text-blue mt-0.5">Khách Hàng Sẽ Thấy Như Thế Này Khi Chat:</h3>
+
+                    <div class="mt-3 bg-[#e2e8f0] rounded-2xl p-4 space-y-3">
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border-l-4 border-[#1B2A6B] text-xs">
+                            <div class="font-extrabold dp-text-blue" id="prevBotHeader">🤖 Trợ lý AI — Đặc Sản Xứ Nẫu Chị Ba</div>
+                            <p class="text-slate-700 mt-1" id="prevBotReply">Dạ bên em hiện có các sản phẩm/dịch vụ chính hãng kèm ưu đãi dưới đây ạ:</p>
+                            <div id="prevProductsList" class="space-y-2 mt-2.5"></div>
+                        </div>
+
+                        <!-- Thẻ VietQR mẫu của món đầu tiên -->
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border-2 border-[#D32027] text-center">
+                            <div class="text-[11px] font-extrabold dp-text-blue">MÃ VIETQR TỰ ĐỘNG KHI KHÁCH BẤM MUA MÓN SỐ 1</div>
+                            <img id="prevVietQrImg" src="" alt="VietQR" class="w-44 h-44 mx-auto my-2 rounded-xl border p-1">
+                            <div id="prevQrMeta" class="text-[11px] font-bold dp-text-red"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BƯỚC 3: XUẤT MÃ SQL SUPABASE & MÃ NHÚNG WEBSITE -->
+                <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border-t-4 border-amber-400 space-y-4">
+                    <div>
+                        <span class="text-[11px] font-black uppercase text-amber-300">3️⃣ BƯỚC 3: BÀN GIAO & KÍCH HOẠT (1-CLICK)</span>
+                        <h3 class="text-base font-black text-white mt-0.5">Xuất Cấu Hình Lên Supabase Hoặc Nhúng Website</h3>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-xs font-bold text-emerald-300">A. Lệnh SQL nạp thẳng vào Supabase (`b2b_bot_configs`):</label>
+                            <button onclick="copyTextById('outSqlCode', 'Đã copy lệnh SQL! Bấm Mở Supabase SQL Editor và dán vào để chạy.')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] px-2.5 py-1 rounded-lg">
+                                📋 Copy Lệnh SQL
+                            </button>
+                        </div>
+                        <textarea id="outSqlCode" rows="5" readonly class="w-full bg-black/60 text-emerald-300 font-mono text-[11px] p-3 rounded-xl border border-slate-700"></textarea>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-xs font-bold text-amber-300">B. Mã Nhúng 1 Dòng vào Website Khách Hàng (`HTML`):</label>
+                            <button onclick="copyTextById('outWidgetCode', 'Đã copy mã nhúng Website 1 dòng!')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold text-[11px] px-2.5 py-1 rounded-lg">
+                                📋 Copy Mã Nhúng Web
+                            </button>
+                        </div>
+                        <textarea id="outWidgetCode" rows="4" readonly class="w-full bg-black/60 text-amber-200 font-mono text-[11px] p-3 rounded-xl border border-slate-700"></textarea>
+                    </div>
+
+                    <div class="pt-1 flex gap-2">
+                        <a href="https://supabase.com/dashboard/project/fxaqxgvounimfrxjcszw/sql/new" target="_blank" class="w-full text-center dp-bg-red hover:bg-red-700 text-white font-extrabold text-xs py-3 rounded-xl shadow-lg">
+                            ⚡ Mở Supabase SQL Editor Để Dán Lệnh SQL ↗
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const PRESET_DATA = {
+            dac_san: {
+                shopName: "Đặc Sản Xứ Nẫu Chị Ba",
+                botCode: "bot-dac-san-chi-ba",
+                phone: "0914882341",
+                bankCode: "VCB",
+                bankAcc: "0751000025858",
+                bankOwner: "CONG TY TNHH THUONG MAI DAT PHU",
+                prompt: 'Bạn là Trợ lý Bán hàng AI của Đặc Sản Xứ Nẫu Chị Ba. Chỉ báo giá đúng danh mục dưới đây. Luôn gợi ý Combo quà biếu Freeship Tuy Hòa.',
+                products: [
+                    { name: "Bò Một Nắng Krông Pa (Gói 500g)", price: 280000, promo: "Tặng 1 hũ muối kiến vàng" },
+                    { name: "Combo Quà Biếu Bò 1 Nắng 1Kg + Mực 1 Nắng", price: 820000, promo: "Freeship Tuy Hòa & Đóng thùng xốp" },
+                    { name: "Nước Mắm Nhỉ Gành Đỏ (Cặp 2 chai 500ml)", price: 160000, promo: "Chuẩn OCOP Phú Yên" }
+                ]
+            },
+            dien_lanh: {
+                shopName: "Trung Tâm Điện Lạnh & Thợ 6K Lê Văn Hùng",
+                botCode: "bot-dien-lanh-6k-hung",
+                phone: "0935668999",
+                bankCode: "VCB",
+                bankAcc: "0751000025858",
+                bankOwner: "CONG TY TNHH THUONG MAI DAT PHU",
+                prompt: 'Bạn là Trợ lý Điều phối Kỹ thuật 6K tại Tuy Hòa. Báo đúng khung giá 6K, cam kết Khóa giá K3 không phát sinh phụ phí, nghiệm thu OTP 4 số K5.',
+                products: [
+                    { name: "Tháo lắp & Di dời máy lạnh Inverter 1.5HP", price: 500000, promo: "Khóa giá K3 - Bảo hành 3 tháng" },
+                    { name: "Vệ sinh & Bơm gas bổ sung máy lạnh treo tường", price: 150000, promo: "Giảm còn 120K từ máy thứ 2" },
+                    { name: "Lắp đặt Camera WiFi EZVIZ Xoay 360 (Kèm thẻ 64GB)", price: 1050000, promo: "Miễn phí công lắp đặt Tuy Hòa" }
+                ]
+            },
+            me_be: {
+                shopName: "Hệ Thống Sữa Tã Mẹ & Bé Năm Tiền",
+                botCode: "bot-sieu-thi-nam-tien",
+                phone: "0989112567",
+                bankCode: "VCB",
+                bankAcc: "0751000025858",
+                bankOwner: "CONG TY TNHH THUONG MAI DAT PHU",
+                prompt: 'Bạn là Trợ lý Mẹ & Bé Năm Tiền. Hỏi tháng tuổi của bé để tư vấn đúng dòng sữa, tã bỉm chính hãng và giao nhanh 30 phút tại Tuy Hòa.',
+                products: [
+                    { name: "Combo 2 Bịch Tã Quần Nội Địa Đủ Size", price: 450000, promo: "Tặng 2 gói khăn ướt cao cấp" },
+                    { name: "Sữa Công Thức Tăng Đề Kháng Lon 800g", price: 520000, promo: "Cam kết chính hãng 100%" },
+                    { name: "Set Ăn Dặm Khởi Đầu Cho Bé 6 Tháng", price: 295000, promo: "Freeship nội thành Tuy Hòa" }
+                ]
+            },
+            am_thuc: {
+                shopName: "Bếp Chay Thanh Tịnh Tâm Đức",
+                botCode: "bot-bep-chay-tam-duc",
+                phone: "0935112233",
+                bankCode: "VCB",
+                bankAcc: "0751000025858",
+                bankOwner: "CONG TY TNHH THUONG MAI DAT PHU",
+                prompt: 'Bạn là Trợ lý Đặt tiệc & Món chay Tâm Đức. Báo đúng thực đơn mâm cỗ chay và hướng dẫn khách quét mã VietQR giữ lịch.',
+                products: [
+                    { name: "Mâm Cỗ Giỗ Chay Thanh Tịnh 8 Món (Tận nơi)", price: 850000, promo: "Miễn phí mượn bát đĩa & bàn ghế" },
+                    { name: "Lẩu Nấm Thực Dưỡng Gia Đình 4-6 Người", price: 320000, promo: "Tặng kèm rau nấm tươi" }
+                ]
+            },
+            gara_spa: {
+                shopName: "Gara Chăm Sóc Ô Tô AutoPro Tuy Hòa",
+                botCode: "bot-gara-autopro-tuyhoa",
+                phone: "0914777999",
+                bankCode: "VCB",
+                bankAcc: "0751000025858",
+                bankOwner: "CONG TY TNHH THUONG MAI DAT PHU",
+                prompt: 'Bạn là Trợ lý Đặt lịch Chăm sóc Ô tô AutoPro Tuy Hòa. Báo giá minh bạch và xin SĐT + Giờ hẹn để xếp khoang rửa/bảo dưỡng ưu tiên.',
+                products: [
+                    { name: "Rửa Xe Chi Tiết + Hút Bụi + Khử Mùi Nội Thất", price: 250000, promo: "Tặng nước rửa kính" },
+                    { name: "Đánh Bóng & Phủ Ceramic Bảo Vệ Sơn Ô Tô", price: 2500000, promo: "Bảo hành độ bóng 12 tháng" }
+                ]
+            }
+        };
+
+        let productsList = [...PRESET_DATA.dac_san.products];
+
+        function renderProductRows() {
+            const container = document.getElementById('productRowsContainer');
+            container.innerHTML = productsList.map((p, idx) => `
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center text-xs">
+                    <div class="md:col-span-5">
+                        <label class="text-[10px] font-bold text-slate-500 block">Tên Sản Phẩm / Dịch Vụ #${idx + 1}</label>
+                        <input type="text" value="${p.name}" oninput="updateProd(${idx}, 'name', this.value)" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 font-bold text-slate-900 mt-0.5">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="text-[10px] font-bold text-slate-500 block">Giá Bán (VNĐ)</label>
+                        <input type="number" value="${p.price}" oninput="updateProd(${idx}, 'price', Number(this.value))" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 font-extrabold dp-text-red mt-0.5">
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="text-[10px] font-bold text-slate-500 block">Ưu Đãi / Bảo Hành</label>
+                        <input type="text" value="${p.promo}" oninput="updateProd(${idx}, 'promo', this.value)" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-700 mt-0.5">
+                    </div>
+                    <div class="md:col-span-1 text-right pt-3">
+                        <button onclick="removeProd(${idx})" class="text-red-600 hover:bg-red-100 p-1.5 rounded-lg font-bold" title="Xóa món này">✕</button>
+                    </div>
+                </div>
+            `).join('');
+            refreshConfigOutput();
+        }
+
+        function updateProd(idx, field, val) {
+            productsList[idx][field] = val;
+            refreshConfigOutput();
+        }
+
+        function addProductRow() {
+            productsList.push({ name: "Sản phẩm / Dịch vụ mới", price: 250000, promo: "Ưu đãi chính hãng Đất Phú" });
+            renderProductRows();
+        }
+
+        function removeProd(idx) {
+            if (productsList.length <= 1) return;
+            productsList.splice(idx, 1);
+            renderProductRows();
+        }
+
+        function loadPresetIndustry(key) {
+            if (!key || !PRESET_DATA[key]) return;
+            const d = PRESET_DATA[key];
+            document.getElementById('cfgShopName').value = d.shopName;
+            document.getElementById('cfgBotCode').value = d.botCode;
+            document.getElementById('cfgOwnerPhone').value = d.phone;
+            document.getElementById('cfgBankCode').value = d.bankCode;
+            document.getElementById('cfgBankAcc').value = d.bankAcc;
+            document.getElementById('cfgBankOwner').value = d.bankOwner;
+            document.getElementById('cfgSystemPrompt').value = d.prompt;
+            productsList = d.products.map(x => ({ ...x }));
+            renderProductRows();
+        }
+
+        function refreshConfigOutput() {
+            const shopName = document.getElementById('cfgShopName').value.trim();
+            const botCode = document.getElementById('cfgBotCode').value.trim();
+            const phone = document.getElementById('cfgOwnerPhone').value.trim();
+            const bankCode = document.getElementById('cfgBankCode').value;
+            const bankAcc = document.getElementById('cfgBankAcc').value.trim();
+            const bankOwner = document.getElementById('cfgBankOwner').value.trim();
+            const prompt = document.getElementById('cfgSystemPrompt').value.trim();
+
+            document.getElementById('prevBotHeader').innerText = `🤖 Trợ lý AI — ${shopName}`;
+            document.getElementById('prevProductsList').innerHTML = productsList.map(p => `
+                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <div class="font-bold text-slate-900">${p.name}</div>
+                        <div class="text-[10px] dp-text-blue font-semibold">🎁 ${p.promo}</div>
+                    </div>
+                    <div class="font-extrabold dp-text-red shrink-0 ml-2">${Number(p.price).toLocaleString('vi-VN')}đ</div>
+                </div>
+            `).join('');
+
+            const firstProd = productsList[0] || { name: 'San pham', price: 199000 };
+            const memo = `MUA ${phone}`;
+            const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bankAcc}-compact2.png?amount=${firstProd.price}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(bankOwner)}`;
+            document.getElementById('prevVietQrImg').src = qrUrl;
+            document.getElementById('prevQrMeta').innerText = `${Number(firstProd.price).toLocaleString('vi-VN')}đ • ${bankCode}: ${bankAcc} (${bankOwner})`;
+
+            const catalogJsonStr = JSON.stringify(productsList).replace(/'/g, "''");
+            const safeShop = shopName.replace(/'/g, "''");
+            const safePrompt = prompt.replace(/'/g, "''");
+
+            const sql = `-- Nạp cấu hình cửa hàng [${safeShop}] vào Supabase Gen 4:\n` +
+`WITH new_merchant AS (\n` +
+`  INSERT INTO public.b2b_merchants (business_name, owner_phone, subscription_plan)\n` +
+`  VALUES ('${safeShop}', '${phone}', 'yearly_1990k')\n` +
+`  RETURNING id\n` +
+`)\n` +
+`INSERT INTO public.b2b_bot_configs (merchant_id, zalo_oa_id, bank_code, bank_account_number, bank_account_name, items_catalog, ai_system_prompt)\n` +
+`SELECT id, '${botCode}', '${bankCode}', '${bankAcc}', '${bankOwner}', '${catalogJsonStr}'::jsonb, '${safePrompt}'\n` +
+`FROM new_merchant;`;
+
+            document.getElementById('outSqlCode').value = sql;
+
+            const widgetHtml = `<!-- Nhúng Chatbox AI Đất Phú cho ${shopName} -->\n` +
+`<script src="https://cdn.datphu.vn/datphu-chat-widget.js"\n` +
+`  data-bot-key="${botCode}"\n` +
+`  data-shop-name="${shopName}"\n` +
+`  data-hotline="${phone}"\n` +
+`  data-bank-bin="${bankCode}"\n` +
+`  data-bank-acc="${bankAcc}"\n` +
+`  data-bank-owner="${bankOwner}">\n` +
+`<\/script>`;
+
+            document.getElementById('outWidgetCode').value = widgetHtml;
+        }
+
+        function copyTextById(id, msg) {
+            const val = document.getElementById(id).value;
+            navigator.clipboard.writeText(val);
+            alert(msg);
+        }
+
+        renderProductRows();
+    </script>
+</body>
+</html>

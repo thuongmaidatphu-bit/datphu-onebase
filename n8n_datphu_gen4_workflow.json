@@ -1,0 +1,108 @@
+{
+  "name": "Đất Phú Gen 4 - B2B AI Sales Bot (Zalo/FB + Supabase + Gemini JSON + VietQR)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "zalo-oa-bot-webhook",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "node-1-webhook",
+      "name": "Node 1: Webhook Zalo/FB",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT c.ai_system_prompt, c.bank_code, c.bank_account_number, c.bank_account_name, c.items_catalog, m.id as merchant_id, m.business_name \nFROM public.b2b_bot_configs c \nJOIN public.b2b_merchants m ON c.merchant_id = m.id \nWHERE c.zalo_oa_id = '{{ $json.body.oa_id }}' AND c.is_active = true AND c.human_handoff_until < NOW() \nLIMIT 1;"
+      },
+      "id": "node-2-supabase-config",
+      "name": "Node 2: Postgres Supabase (Lấy Prompt & STK)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"Bạn là Trợ lý AI của {{ $json.business_name }}.\\nQUY TẮC CHỐNG CHÉM GIÓ: Chỉ tư vấn các món trong bảng giá sau: {{ $json.items_catalog }}. Nếu khách hỏi món ngoài danh mục, trả lời đúng câu: 'Dạ món này cửa hàng hiện chưa có, em xin báo chủ tiệm hỗ trợ Anh/Chị ngay ạ!'\\nNếu khách muốn gặp chủ tiệm hoặc gọi điện, đặt need_human=true.\\nKhách nhắn: {{ $node['Node 1: Webhook Zalo/FB'].json.body.message.text }}\"\n    }]\n  }],\n  \"generationConfig\": {\n    \"response_mime_type\": \"application/json\",\n    \"response_schema\": {\n      \"type\": \"OBJECT\",\n      \"properties\": {\n        \"reply_text\": { \"type\": \"STRING\" },\n        \"is_order_confirmed\": { \"type\": \"BOOLEAN\" },\n        \"customer_phone\": { \"type\": \"STRING\" },\n        \"order_amount\": { \"type\": \"NUMBER\" },\n        \"order_Code\": { \"type\": \"STRING\" },\n        \"need_human\": { \"type\": \"BOOLEAN\" }\n      },\n      \"required\": [\"reply_text\", \"is_order_confirmed\", \"need_human\"]\n    }\n  }\n}"
+      },
+      "id": "node-3-gemini-json",
+      "name": "Node 3: Google AI Studio (Gemini JSON Output)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [740, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vietqr.io/v2/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"accountNo\": \"{{ $node['Node 2: Postgres Supabase (Lấy Prompt & STK)'].json.bank_account_number }}\",\n  \"accountName\": \"{{ $node['Node 2: Postgres Supabase (Lấy Prompt & STK)'].json.bank_account_name }}\",\n  \"acqId\": \"{{ $node['Node 2: Postgres Supabase (Lấy Prompt & STK)'].json.bank_code }}\",\n  \"amount\": {{ JSON.parse($json.candidates[0].content.parts[0].text).order_amount || 0 }},\n  \"addInfo\": \"TT DON HANG {{ JSON.parse($json.candidates[0].content.parts[0].text).order_Code || 'DATPHU' }}\",\n  \"format\": \"text\",\n  \"template\": \"compact2\"\n}"
+      },
+      "id": "node-4-vietqr",
+      "name": "Node 4: API VietQR (Tạo QR Zero-Float)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1020, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.b2b_ai_orders (merchant_id, customer_zalo_id, customer_phone, total_amount, vietqr_url, status) \nVALUES ('{{ $node[\"Node 2: Postgres Supabase (Lấy Prompt & STK)\"].json.merchant_id }}', '{{ $node[\"Node 1: Webhook Zalo/FB\"].json.body.sender.id }}', '{{ JSON.parse($node[\"Node 3: Google AI Studio (Gemini JSON Output)\"].json.candidates[0].content.parts[0].text).customer_phone }}', {{ JSON.parse($node[\"Node 3: Google AI Studio (Gemini JSON Output)\"].json.candidates[0].content.parts[0].text).order_amount || 0 }}, '{{ $json.data.qrDataURL }}', 'pending_payment');"
+      },
+      "id": "node-5-save-order",
+      "name": "Node 5: Postgres Supabase (Lưu đơn b2b_ai_orders)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1280, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openapi.zalo.me/v3.0/oa/message/cs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $env.ZALO_OA_ACCESS_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"user_id\": \"{{ $node['Node 1: Webhook Zalo/FB'].json.body.sender.id }}\"\n  },\n  \"message\": {\n    \"text\": \"{{ JSON.parse($node['Node 3: Google AI Studio (Gemini JSON Output)'].json.candidates[0].content.parts[0].text).reply_text }}\"\n  }\n}"
+      },
+      "id": "node-6-zalo-reply",
+      "name": "Node 6: API Zalo OA / FB (Gửi phản hồi & QR)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1540, 300]
+    }
+  ],
+  "connections": {
+    "Node 1: Webhook Zalo/FB": {
+      "main": [[{ "node": "Node 2: Postgres Supabase (Lấy Prompt & STK)", "type": "main", "index": 0 }]]
+    },
+    "Node 2: Postgres Supabase (Lấy Prompt & STK)": {
+      "main": [[{ "node": "Node 3: Google AI Studio (Gemini JSON Output)", "type": "main", "index": 0 }]]
+    },
+    "Node 3: Google AI Studio (Gemini JSON Output)": {
+      "main": [[{ "node": "Node 4: API VietQR (Tạo QR Zero-Float)", "type": "main", "index": 0 }]]
+    },
+    "Node 4: API VietQR (Tạo QR Zero-Float)": {
+      "main": [[{ "node": "Node 5: Postgres Supabase (Lưu đơn b2b_ai_orders)", "type": "main", "index": 0 }]]
+    },
+    "Node 5: Postgres Supabase (Lưu đơn b2b_ai_orders)": {
+      "main": [[{ "node": "Node 6: API Zalo OA / FB (Gửi phản hồi & QR)", "type": "main", "index": 0 }]]
+    }
+  }
+}
